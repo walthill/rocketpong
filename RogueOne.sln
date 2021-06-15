@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RocketEngine", "RocketEngine\RocketEngine.vcxproj", "{43E733DA-2F4A-C37E-D8CF-FB34C4118F01}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RogueOne", "RogueOne\RogueOne.vcxproj", "{691E0B82-55EB-658D-7E04-54356A309B1B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Dist|Win32 = Dist|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43E733DA-2F4A-C37E-D8CF-FB34C4118F01}.Debug|Win32.ActiveCfg = Debug|Win32
+		{43E733DA-2F4A-C37E-D8CF-FB34C4118F01}.Debug|Win32.Build.0 = Debug|Win32
+		{43E733DA-2F4A-C37E-D8CF-FB34C4118F01}.Dist|Win32.ActiveCfg = Dist|Win32
+		{43E733DA-2F4A-C37E-D8CF-FB34C4118F01}.Dist|Win32.Build.0 = Dist|Win32
+		{43E733DA-2F4A-C37E-D8CF-FB34C4118F01}.Release|Win32.ActiveCfg = Release|Win32
+		{43E733DA-2F4A-C37E-D8CF-FB34C4118F01}.Release|Win32.Build.0 = Release|Win32
+		{691E0B82-55EB-658D-7E04-54356A309B1B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{691E0B82-55EB-658D-7E04-54356A309B1B}.Debug|Win32.Build.0 = Debug|Win32
+		{691E0B82-55EB-658D-7E04-54356A309B1B}.Dist|Win32.ActiveCfg = Dist|Win32
+		{691E0B82-55EB-658D-7E04-54356A309B1B}.Dist|Win32.Build.0 = Dist|Win32
+		{691E0B82-55EB-658D-7E04-54356A309B1B}.Release|Win32.ActiveCfg = Release|Win32
+		{691E0B82-55EB-658D-7E04-54356A309B1B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
