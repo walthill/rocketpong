@@ -13,7 +13,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "RocketEngine"
     location "RocketEngine"
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -28,7 +28,8 @@ project "RocketEngine"
     includedirs 
     {
         -- logging includes
-        --"%{prj.name}/vendor/spdlog/include",
+        "%{prj.name}/vendor/spdlog/include",
+        "%{prj.name}/vendor/RocketUtils/RocketUtils/includes"
     }
 
     filter "system:windows"

@@ -23,19 +23,19 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
@@ -54,31 +54,29 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\Debug-windows-x86\RocketEngine\</OutDir>
     <IntDir>..\bin-int\Debug-windows-x86\RocketEngine\</IntDir>
     <TargetName>RocketEngine</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\Release-windows-x86\RocketEngine\</OutDir>
     <IntDir>..\bin-int\Release-windows-x86\RocketEngine\</IntDir>
     <TargetName>RocketEngine</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|Win32'">
-    <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\Dist-windows-x86\RocketEngine\</OutDir>
     <IntDir>..\bin-int\Dist-windows-x86\RocketEngine\</IntDir>
     <TargetName>RocketEngine</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RG_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\rocketUtils\src\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -87,10 +85,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ImportLibrary>..\bin\Debug-windows-x86\RocketEngine\RocketEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug-windows-x86\RocketEngine\RocketEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86\RocketEngine\RocketEngine.dll ..\bin\Debug-windows-x86\RogueOne &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86\RocketEngine\RocketEngine.dll ..\bin\Debug-windows-x86\RogueOne &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Debug-windows-x86\RocketEngine\RocketEngine.lib\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86\RocketEngine\RocketEngine.lib ..\bin\Debug-windows-x86\RogueOne &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86\RocketEngine\RocketEngine.lib ..\bin\Debug-windows-x86\RogueOne &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -98,6 +95,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RG_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\rocketUtils\src\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -106,10 +104,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ImportLibrary>..\bin\Release-windows-x86\RocketEngine\RocketEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release-windows-x86\RocketEngine\RocketEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86\RocketEngine\RocketEngine.dll ..\bin\Release-windows-x86\RogueOne &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86\RocketEngine\RocketEngine.dll ..\bin\Release-windows-x86\RogueOne &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Release-windows-x86\RocketEngine\RocketEngine.lib\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86\RocketEngine\RocketEngine.lib ..\bin\Release-windows-x86\RogueOne &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86\RocketEngine\RocketEngine.lib ..\bin\Release-windows-x86\RogueOne &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|Win32'">
@@ -117,6 +114,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RG_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\rocketUtils\src\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -125,12 +123,17 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ImportLibrary>..\bin\Dist-windows-x86\RocketEngine\RocketEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Dist-windows-x86\RocketEngine\RocketEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86\RocketEngine\RocketEngine.dll ..\bin\Dist-windows-x86\RogueOne &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86\RocketEngine\RocketEngine.dll ..\bin\Dist-windows-x86\RogueOne &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Dist-windows-x86\RocketEngine\RocketEngine.lib\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86\RocketEngine\RocketEngine.lib ..\bin\Dist-windows-x86\RogueOne &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86\RocketEngine\RocketEngine.lib ..\bin\Dist-windows-x86\RogueOne &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\core\RK_Log.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\core\RK_Log.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
