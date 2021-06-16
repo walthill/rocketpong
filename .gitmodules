@@ -1,3 +1,6 @@
 [submodule "RocketEngine/vendor/spdlog"]
 	path = RocketEngine/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "RocketEngine/vendor/RocketUtils"]
+	path = RocketEngine/vendor/RocketUtils
+	url = https://github.com/walthill/RocketUtils.git
