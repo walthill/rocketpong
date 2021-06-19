@@ -2,14 +2,13 @@
 workspace "RogueOne"
     architecture "x86"
 
-    configurations 
-    { 
-        "Debug", 
-        "Release",
-        "Dist"
-    }
+    configurations { "Debug", "Release", "Dist" }
+    startproject "RogueOne"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+enginevendordir = "RocketEngine/vendor"
+
+--------------------------------------------------------------------
 
 project "RocketEngine"
     location "RocketEngine"
@@ -29,13 +28,18 @@ project "RocketEngine"
     {
         -- logging includes
         "%{prj.name}/vendor/spdlog/include",
-        "%{prj.name}/vendor/RocketUtils/RocketUtils/includes"
+        "%{prj.name}/vendor/RocketUtils/RocketUtils/include"
     }
 
     filter "system:windows"
         cppdialect "C++17"
         staticruntime "On"
         systemversion "latest"
+    
+    links
+    {
+        "RocketUtils"
+    }
 
     defines
     {
@@ -44,7 +48,7 @@ project "RocketEngine"
 
     postbuildcommands
     {
-        ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/RogueOne")
+        ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/%{wks.name}")
     }
 
     filter "configurations:Debug"
@@ -53,12 +57,12 @@ project "RocketEngine"
 
     filter "configurations:Release"
         defines "RG_RELEASE"
-        symbols "On"
+        optimize "On"
     
     filter "configurations:Dist"
         defines "RG_DIST"
-        symbols "On"
-
+        optimize "On"
+    
 --------------------------------------------------------------------------
 
 project "RogueOne"
@@ -79,12 +83,14 @@ project "RogueOne"
     {
         -- logging includes
         --"%{prj.name}/vendor/spdlog/include"
-        "RocketEngine/src"
+        "RocketEngine/src",
+        "RocketEngine/vendor/spdlog/include",
+        "RocketEngine/vendor/RocketUtils/RocketUtils/include"
     }
         
-    links
+    links 
     {
-        "RocketEngine.dll"
+        "RocketEngine"
     }
 
     filter "system:windows"
@@ -114,5 +120,6 @@ project "RogueOne"
         defines "RG_DIST"
         optimize  "On"
 
-----------------------------------------------------------
+    ----------------------------------------------------------
 
+include "RocketEngine/vendor/RocketUtils/lib"
