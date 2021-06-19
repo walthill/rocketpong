@@ -1,19 +1,18 @@
-#include <iostream>
-
+#include "core/RK_Log.h"
 
 int main()
 {
-	std::cout << "Hi mom I'm bob" << std::endl;
+	RKT_LOGGER_INIT();
+	RKT_CORE_INFO("Rocket Engine Core Logger initialized");
 
-	/*RK_LOGGER_INIT();
-	RK_CORE_INFO_ALL("Rocket Engine Core Logger initialized");
+	/*	
 	GameApp::initInstance();
 
 	if (!GameApp::getInstance()->run())
 		GameApp::cleanInstance();
+	*/
 
-	RK_MEMREPORT();
-	RK_LOGGER_CLEAN();	*/
+	RKT_MEMREPORT();
 
 	return 0;
 }
