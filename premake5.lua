@@ -6,7 +6,6 @@ workspace "RogueOne"
     startproject "RogueOne"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-enginevendordir = "RocketEngine/vendor"
 
 --------------------------------------------------------------------
 
@@ -52,15 +51,15 @@ project "RocketEngine"
     }
 
     filter "configurations:Debug"
-        defines "RG_DEBUG"
+        defines "RKT_DEBUG"
         symbols "On"
 
     filter "configurations:Release"
-        defines "RG_RELEASE"
+        defines "RKT_RELEASE"
         optimize "On"
     
     filter "configurations:Dist"
-        defines "RG_DIST"
+        defines "RKT_DIST"
         optimize "On"
     
 --------------------------------------------------------------------------
@@ -102,6 +101,11 @@ project "RogueOne"
     {
          
     }
+
+    flags
+	{
+		"MultiProcessorCompile"
+	}
 
     postbuildcommands
     {
