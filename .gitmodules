@@ -4,3 +4,6 @@
 [submodule "RocketEngine/vendor/RocketUtils"]
 	path = RocketEngine/vendor/RocketUtils
 	url = https://github.com/walthill/RocketUtils.git
+[submodule "RocketEngine/vendor/glfw"]
+	path = RocketEngine/vendor/glfw
+	url = https://github.com/walthill/glfw.git
