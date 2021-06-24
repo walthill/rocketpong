@@ -27,7 +27,9 @@ project "RocketEngine"
     {
         -- logging includes
         "%{prj.name}/vendor/spdlog/include",
-        "%{prj.name}/vendor/RocketUtils/RocketUtils/include"
+        "%{prj.name}/vendor/RocketUtils/RocketUtils/include",
+        "%{prj.name}/vendor/glad/include",
+        "%{prj.name}/vendor/glfw/include/glfw"
     }
 
     filter "system:windows"
@@ -37,7 +39,9 @@ project "RocketEngine"
     
     links
     {
-        "RocketUtils"
+        "RocketUtils",
+        "Glad",
+        "GLFW"
     }
 
     defines
@@ -126,4 +130,6 @@ project "RogueOne"
 
     ----------------------------------------------------------
 
+include "RocketEngine/vendor/glad"
+include "RocketEngine/vendor/glfw"
 include "RocketEngine/vendor/RocketUtils/lib"
