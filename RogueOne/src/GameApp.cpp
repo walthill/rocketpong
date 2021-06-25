@@ -31,7 +31,7 @@ bool GameApp::initialize()
 
 bool GameApp::runGame()
 {
-	//while (mIsRunning)
+	while (mIsRunning)
 	{
 		mpPerformanceTracker->startTracking(mLOOP_TRACKER_NAME);
 		mpFrameTimer->start();

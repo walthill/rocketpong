@@ -1,8 +1,8 @@
 #ifndef ROCKET_ENGINE_H
 #define ROCKET_ENGINE_H
 
-#include "core/RK_Log.h"
-#include "core/EngineCore.h"
+#include "RocketEngine/core/Log.h"
+#include "RocketEngine/core/EngineCore.h"
 
 namespace RKTEngine
 {

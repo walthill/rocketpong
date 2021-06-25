@@ -1,7 +1,7 @@
 #include "EngineCore.h"
 #include "RenderCore.h"
 #include "../input/InputSystem.h"
-#include "RK_Log.h"
+#include "Log.h"
 
 namespace RKTEngine
 {

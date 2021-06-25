@@ -19,7 +19,7 @@
 ********/
 
 #include "Window.h"
-#include "RK_Log.h"
+#include "Log.h"
 #include <glad/glad.h>
 #include <glfw3.h>
 
