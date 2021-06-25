@@ -84,8 +84,6 @@ project "RogueOne"
 
     includedirs
     {
-        -- logging includes
-        --"%{prj.name}/vendor/spdlog/include"
         "RocketEngine/src",
         "RocketEngine/vendor/spdlog/include",
         "RocketEngine/vendor/RocketUtils/RocketUtils/include"
