@@ -1,17 +1,17 @@
 #include "WindowCallbacks.h"
-#include "InputSystem.h"
-#include "../core/Window.h"
+#include "RocketEngine/core/Window.h"
 #include <glfw3.h>
 
 namespace RKTEngine
 {
-	#pragma region Callbacks
+#pragma region Callbacks
 
 	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	void mouse_move_callback(GLFWwindow* window, double xpos, double ypos);
 	void mouse_click_callback(GLFWwindow* window, int button, int action, int modifier);
 	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+	void window_close_callback(GLFWwindow* window);
 
 	void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	{
@@ -48,30 +48,59 @@ namespace RKTEngine
 		wind->onMouseScroll(xoffset, yoffset);
 	}
 
+	void window_close_callback(GLFWwindow* window)
+	{
+		InputSystem* wind = reinterpret_cast<InputSystem*>(glfwGetWindowUserPointer(window));
+		wind->onWindowClose();
+	}
+
 	#pragma endregion
 
 	void WindowCallbacks::initialize(Window* window)
 	{
-		mpWindowHandle = window;
+		mpWindow = window;
+		auto wind = window->getWindowHandle();
 
 		//give this class "user" access to callbacks
-		glfwSetWindowUserPointer(window->getWindowHandle(), reinterpret_cast<void*>(this));
-
-		auto wind = window->getWindowHandle();
-		glfwSetCursorPosCallback(wind, mouse_move_callback);
-		glfwSetScrollCallback(wind, scroll_callback);
-		glfwSetMouseButtonCallback(wind, mouse_click_callback);
-		glfwSetKeyCallback(wind, key_callback);
-		glfwSetFramebufferSizeCallback(wind, framebuffer_size_callback);
+		glfwSetWindowUserPointer(wind, reinterpret_cast<void*>(this));
+		registerCallbacks(wind);
 	}
+
+	void WindowCallbacks::registerCallbacks(GLFWwindow* window)
+	{
+		glfwSetCursorPosCallback(window, mouse_move_callback);
+		glfwSetScrollCallback(window, scroll_callback);
+		glfwSetMouseButtonCallback(window, mouse_click_callback);
+		glfwSetKeyCallback(window, key_callback);
+		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+		glfwSetWindowCloseCallback(window, window_close_callback);
+	}
+
+#pragma region GLFW Polling
+
+	//polling
+	bool WindowCallbacks::getKeyDown(const KeyCode& key)
+	{
+		auto state = glfwGetKey(mpWindow->getWindowHandle(), key);
+		return state == GLFW_PRESS;
+	}
+
+	bool WindowCallbacks::getKeyUp(const KeyCode& key)
+	{
+		auto state = glfwGetKey(mpWindow->getWindowHandle(), key);
+		return state == GLFW_RELEASE;
+	}
+
+#pragma endregion
 
 	void WindowCallbacks::onWindowResize(int width, int height)
 	{
-		mpWindowHandle->setViewport(0, 0, width, height);
+		mpWindow->setViewport(0, 0, width, height);
 	}
 
 	void WindowCallbacks::pollEvents()
 	{
 		glfwPollEvents();
 	}
+
 }

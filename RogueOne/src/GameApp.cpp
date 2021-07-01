@@ -1,32 +1,48 @@
 #include "GameApp.h"
+#include "RocketEngine.h"
+
+GameApp::~GameApp()
+{
+	clean();
+}
 
 void GameApp::clean()
 {
-	delete mpEngineCore;
-	delete mpMasterTimer;
+	RKTEngine::EngineCore::cleanInstance();
 }
 
 bool GameApp::initialize()
 {
-	RKTUtil::PerformanceTracker* pPerformanceTracker = new RKTUtil::PerformanceTracker();
-	pPerformanceTracker->startTracking(mINIT_TRACKER_NAME);
+	beginInit();
 
-	mpEngineCore = new RKTEngine::EngineCore();
-	mpMasterTimer = new RKTUtil::Timer();
-
-	if (!mpEngineCore->initialize())
+	RKTEngine::EngineCore::initInstance();
+	if (!RKTEngine::EngineCore::getInstance()->initialize())
 		return false;
 
-	pPerformanceTracker->stopTracking(mINIT_TRACKER_NAME);
-	RKT_INFO("Time to init: " + std::to_string(pPerformanceTracker->getElapsedTime(mINIT_TRACKER_NAME)) + "ms\n");
+	RKTEngine::EngineCore::getInstance()->getMessageManager()->setMessageCallback(RKT_BIND_MESSAGE_FN(GameApp::onMessage));
 
-	delete pPerformanceTracker;
+	endInit();
+
+	return mIsRunning;
+}
+
+void GameApp::beginInit()
+{
+	pinitPerformanceTracker = new RKTUtil::PerformanceTracker();
+	pinitPerformanceTracker->startTracking(mINIT_TRACKER_NAME);
+}
+
+void GameApp::endInit()
+{
+	pinitPerformanceTracker->stopTracking(mINIT_TRACKER_NAME);
+	RKT_INFO("Time to init: " + std::to_string(pinitPerformanceTracker->getElapsedTime(mINIT_TRACKER_NAME)) + "ms\n");
+
+	delete pinitPerformanceTracker;
 
 	mpPerformanceTracker = new RKTUtil::PerformanceTracker();
 	mpFrameTimer = new RKTUtil::Timer();
 
 	mIsRunning = true;
-	return mIsRunning;
 }
 
 bool GameApp::runGame()
@@ -55,7 +71,7 @@ bool GameApp::runGame()
 			else
 			{
 				mFPS = (int)(1000.0 / mpPerformanceTracker->getElapsedTime(mDRAW_TRACKER_NAME));
-				RKT_TRACE("FPS: " + std::to_string(mFPS));	
+				RKT_TRACE("FPS: " + std::to_string(mFPS));
 			}
 		}
 #endif  
@@ -70,10 +86,34 @@ bool GameApp::runGame()
 
 void GameApp::update()
 {
-	mpEngineCore->update();
+	RKTEngine::EngineCore::getInstance()->update();
+
+	if (Input::getKeyDown(KeyCode::Escape))
+	{
+		mIsRunning = false;
+	}
 }
 
 void GameApp::render()
 {
-	mpEngineCore->render();
+	RKTEngine::EngineCore::getInstance()->render();
+}
+
+void GameApp::onMessage(RKTEngine::Message& message)
+{
+	RKTEngine::MessageDispatcher dispatcher(message);
+	dispatcher.dispatch<RKTEngine::ExitMessage>(RKT_BIND_MESSAGE_FN(GameApp::quit));
+
+	RKTEngine::EngineCore::getInstance()->onMessage(message);
+}
+
+double GameApp::getTime()
+{
+	return RKTEngine::EngineCore::getInstance()->getTime();
+}
+
+bool GameApp::quit(RKTEngine::ExitMessage& msg)
+{
+	mIsRunning = false;
+	return true;
 }

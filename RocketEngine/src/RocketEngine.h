@@ -3,6 +3,12 @@
 
 #include "RocketEngine/core/Log.h"
 #include "RocketEngine/core/EngineCore.h"
+#include "RocketEngine/core/InputSystem.h"
+#include "RocketEngine/core/MessageManager.h"
+
+using Input = RKTEngine::InputSystem;
+namespace KeyCode = RKTEngine::Key;
+namespace MouseCode = RKTEngine::Mouse;
 
 namespace RKTEngine
 {

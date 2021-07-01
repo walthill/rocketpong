@@ -1,4 +1,4 @@
-#include "core/RK_Log.h"
+#include <RocketEngine/core/Log.h>
 #include "GameApp.h"
 
 int main()
@@ -8,11 +8,10 @@ int main()
 
 	GameApp::initInstance();
 
-	GameApp::getInstance().initialize();
+	GameApp::getInstance()->initialize();
 
-	if (!GameApp::getInstance().runGame())
+	if (!GameApp::getInstance()->runGame())
 	{
-		GameApp::getInstance().clean();
 		GameApp::cleanInstance();
 	}
 

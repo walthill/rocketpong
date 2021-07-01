@@ -1,0 +1,17 @@
+#include "RocketEngine/Defines.h"
+
+enum class MessageType
+{
+	EXIT = 0,
+	NUM_MSG_TYPES
+};
+
+enum MessageCategory
+{
+	NONE = 0,
+	MSG_CATEGORY_APP = BITSHIFT(0),
+	MSG_CATEGORY_INPUT = BITSHIFT(1),
+	MSG_CATEGORY_KEY = BITSHIFT(2),
+	MSG_CATEGORY_MOUSE = BITSHIFT(3),
+	MSG_CATEGORY_MOUSEDOWN = BITSHIFT(4)
+};

@@ -21,6 +21,8 @@
 #define INPUT_SYS_H
 
 #include <RKTUtils/Trackable.h>
+#include "RocketEngine/input/KeyCodes.h"
+#include "RocketEngine/input/MouseCodes.h"
 
 namespace RKTEngine
 {
@@ -30,7 +32,7 @@ namespace RKTEngine
 	class InputSystem : public RKTUtil::Trackable
 	{
 		public:
-
+			
 			/***
 				* Constructor that takes a GLFW Window context
 			***/
@@ -38,6 +40,8 @@ namespace RKTEngine
 
 			~InputSystem();
 
+
+		#pragma region Callback Input
 			/***
 				* Callback for resizing the window
 			***/
@@ -53,7 +57,18 @@ namespace RKTEngine
 			***/
 			void onMouseMove(double xpos, double ypos);
 
-			void onKeyEvent(int key, int scancode, int action, int mods);
+			void onKeyEvent(int button, int scancode, int action, int modifier);
+			void onWindowClose();
+
+	#pragma endregion
+
+
+	#pragma region Polling Input
+			static bool getKeyDown(const KeyCode& button);
+			static bool getKeyUp(const KeyCode& button);
+			static bool getMouseButtonDown(const MouseCode& button);
+			static bool getMouseButtonUp(const MouseCode& button);
+	#pragma endregion
 
 			/***
 				* Checks for inputs every frame and queues input message
@@ -61,10 +76,7 @@ namespace RKTEngine
 			void processInput();
 
 		private:
-			WindowCallbacks* mpCallbacks = nullptr;
-
-			bool mIsPlayMode = true;
-			bool modeSwitched = false;
+			static WindowCallbacks* mpsCallbacks;
 	};
 }
 

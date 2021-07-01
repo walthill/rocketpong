@@ -4,7 +4,7 @@
 #include <RKTUtils/Singleton.h>
 #include <RKTUtils/PerformanceTracker.h>
 #include <RKTUtils/Timer.h>
-#include <RocketEngine.h>
+#include <RocketEngine/input/MessageDefines.h>
 
 class GameApp : public RKTUtil::Singleton<GameApp>
 {
@@ -19,8 +19,15 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 		void update();
 		void render();
 
+		void onMessage(RKTEngine::Message& message);
+
+		double getTime(); 
+
+		bool quit(RKTEngine::ExitMessage& msg);
+
 	protected:
 		GameApp() {};
+		~GameApp();
 		
 	private:
 		const std::string mINIT_TRACKER_NAME = "init";
@@ -33,11 +40,13 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 		bool mShowFPS = false;
 
 		//Performance tracker data
+		RKTUtil::PerformanceTracker* pinitPerformanceTracker = nullptr;
 		RKTUtil::PerformanceTracker* mpPerformanceTracker = nullptr;
 		RKTUtil::Timer* mpFrameTimer = nullptr;
-		RKTUtil::Timer* mpMasterTimer = nullptr;
 
-		RKTEngine::EngineCore *mpEngineCore = nullptr;
+		void beginInit();
+		void endInit();
+
 };
 
 #endif // !GAME_APP_H
