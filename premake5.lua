@@ -26,10 +26,13 @@ project "RocketEngine"
     includedirs 
     {
         -- logging includes
+        "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
         "%{prj.name}/vendor/RocketUtils/RocketUtils/include",
         "%{prj.name}/vendor/glad/include",
-        "%{prj.name}/vendor/glfw/include/glfw"
+        "%{prj.name}/vendor/glfw/include/glfw",
+        "%{prj.name}/vendor/stb_image",
+        "%{prj.name}/vendor/glm"
     }
 
     filter "system:windows"
