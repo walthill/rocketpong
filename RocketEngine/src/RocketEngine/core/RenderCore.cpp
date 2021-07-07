@@ -1,11 +1,15 @@
 #include "RenderCore.h"
 #include "Window.h"
+#include "RocketEngine/render/shader/ShaderManager.h"
 
 namespace RKTEngine
 {
+	using BufferType = Renderer::BufferType;
+
 	RenderCore::RenderCore()
 	{
 		mpWindowHandle = nullptr;
+		mpShaderManager = nullptr;
 	}
 
 	RenderCore::~RenderCore()
@@ -15,6 +19,7 @@ namespace RKTEngine
 
 	void RenderCore::clean()
 	{
+		delete mpShaderManager;
 		delete mpWindowHandle;
 	}
 
@@ -26,11 +31,15 @@ namespace RKTEngine
 			return false;
 		}
 
+		mpShaderManager = new ShaderManager();
+
 		return true;
 	}
 
 	void RenderCore::beginRender()
 	{
+		RenderCommand::clearColor(Color::blue);
+		RenderCommand::clearBuffer(BufferType::COLOR_BUFFER);
 	}
 
 	void RenderCore::render()
