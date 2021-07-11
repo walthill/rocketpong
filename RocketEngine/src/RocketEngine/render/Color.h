@@ -21,6 +21,9 @@ namespace RKTEngine
 			void setColor(float setAllRGB);
 			void setColor(float r, float g, float b, float a = 255);
 
+			inline glm::vec3 getColor() { return glm::vec3(mColorValue.x, mColorValue.y, mColorValue.z); }
+			inline glm::vec4 getColorAlpha() { return mColorValue; }
+
 			//Get individual rgb values
 			inline float getR() { return mColorValue.x; }
 			inline float getG() { return mColorValue.y; }

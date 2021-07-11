@@ -21,6 +21,11 @@ bool GameApp::initialize()
 
 	RKTEngine::EngineCore::getInstance()->getMessageManager()->setMessageCallback(RKT_BIND_MESSAGE_FN(GameApp::onMessage));
 
+	auto shader = RKTEngine::EngineCore::getInstance()->getShaderManager()->getShaderByKey("sprite");
+	auto transformData = RKTEngine::TransformData(glm::vec2(400, 300), glm::vec2(0.5f,0.5f), 45.0f);
+	auto spriteData = RKTEngine::SpriteComponentData("smiles.png", "sprite", shader);
+	RKTEngine::EngineCore::getInstance()->getEntityManager()->createGameObject(transformData, spriteData);
+
 	endInit();
 
 	return mIsRunning;

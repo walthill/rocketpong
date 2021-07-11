@@ -20,7 +20,9 @@ project "RocketEngine"
     files   
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/stb_image/**.h",
+        "%{prj.name}/vendor/stb_image/**.cpp"
     }
 
     includedirs 
@@ -89,7 +91,10 @@ project "RogueOne"
     {
         "RocketEngine/src",
         "RocketEngine/vendor/spdlog/include",
-        "RocketEngine/vendor/RocketUtils/RocketUtils/include"
+        "RocketEngine/vendor/RocketUtils/RocketUtils/include",
+        "RocketEngine/vendor/stb_image",
+        "RocketEngine/vendor/glm"
+
     }
         
     links 
@@ -131,6 +136,8 @@ project "RogueOne"
 
     ----------------------------------------------------------
 
-include "RocketEngine/vendor/glad"
-include "RocketEngine/vendor/glfw"
-include "RocketEngine/vendor/RocketUtils/lib"
+group "Dependencies"
+	include "RocketEngine/vendor/GLFW"
+	include "RocketEngine/vendor/Glad"
+	include "RocketEngine/vendor/RocketUtils/lib"
+group ""

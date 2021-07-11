@@ -7,6 +7,7 @@ namespace RKTEngine
 {
 	class Window;
 	class ShaderManager;
+	class ComponentManager;
 
 	class RenderCore
 	{
@@ -18,17 +19,23 @@ namespace RKTEngine
 			void clean();
 
 			void beginRender();
-			void render();
+			void render(ComponentManager* componentsToDraw);
 			void endRender();
 
 			inline Window* getWindow() { return mpWindowHandle; }
+			inline ShaderManager* getShaderManager() { return mpShaderManager; }
+			inline static std::shared_ptr<VertexArray> getSpriteVertexData() { return mSpriteVA; }
 			inline static Renderer::API getAPI() { return Renderer::getAPI(); }
 
 		private:
+			static std::shared_ptr<VertexArray> mSpriteVA;
+			
 			Window* mpWindowHandle;
 			ShaderManager* mpShaderManager;
 
 			bool createWindow();
+			void init2DVertexData();
+			void init2DShaderData();
 	};
 }
 

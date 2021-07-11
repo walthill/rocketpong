@@ -3,6 +3,9 @@
 
 #include <RKTUtils/Singleton.h>
 #include <RKTUtils/Timer.h>
+#include "ComponentManager.h"
+#include "RocketEngine/gameobject/GameObjectManager.h"
+#include "RocketEngine/asset/AssetManager.h"
 #include "RocketEngine/input/message/Message.h"
 
 namespace RKTEngine
@@ -30,8 +33,12 @@ namespace RKTEngine
 			double getTime();
 			inline float getDeltaTime() { return mDeltaTime; }
 
-			InputSystem* getInputSystem();		
+			inline ComponentManager* getComponentManager() { return mpComponentManager; }
+			inline AssetManager* getAssetManager() { return mpAssetManager; }
+			inline GameObjectManager* getEntityManager() { return mpEntityManager; }
+			InputSystem* getInputSystem();
 			MessageManager* getMessageManager();
+			ShaderManager* getShaderManager();
 
 		private:
 			RKTUtil::Timer* mpMasterTimer = nullptr;
@@ -39,6 +46,9 @@ namespace RKTEngine
 			RenderCore* mpRenderCore = nullptr;
 			InputSystem* mpInputSystem = nullptr;
 			MessageManager* mpMessageManager = nullptr;
+			AssetManager* mpAssetManager = nullptr;
+			GameObjectManager* mpEntityManager = nullptr;
+			ComponentManager* mpComponentManager = nullptr;
 
 			float mDeltaTime = 0 , mLastFrame =0 ;
 

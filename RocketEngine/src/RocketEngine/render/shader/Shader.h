@@ -35,9 +35,6 @@ namespace RKTEngine
 	class Shader
 	{
 	public:
-
-		unsigned int shaderID; ///< Shader program ID
-
 		/**********************************************************************//**
 		 * Constructor that takes in shader filenames
 		 *
@@ -105,7 +102,7 @@ namespace RKTEngine
 		 * @param value Matrix4 value to pass to the shader's uniform
 		 * Set Matrix4 uniform to the given value at the location of the given name in the shader
 		 *************************************************************************/
-		void setMat4(const std::string& name, const glm::mat4& mat) const;
+		void setMat4(const std::string& name, const glm::mat4& value) const;
 
 		/**********************************************************************//**
 		 * Set Vector3 uniform in the shader
@@ -114,9 +111,9 @@ namespace RKTEngine
 		 * @param value Vector3 value to pass to the shader's uniform
 		 * Set Vector3 uniform to the given value at the location of the given name in the shader
 		 *************************************************************************/
-		void setVec3(const std::string& name, const glm::vec3& value);
+		void setVec3(const std::string& name, const glm::vec3& value) const;
 
-		void setVec2(const std::string& name, const glm::vec2& value);
+		void setVec2(const std::string& name, const glm::vec2& value) const;
 
 		/**********************************************************************//**
 		 * Get uniform location, either from cache or an OpenGL call
@@ -127,12 +124,10 @@ namespace RKTEngine
 		 *************************************************************************/
 		UniformLocation getUniformLocation(std::string name) const;
 
+		int shaderID;
+
 	private:
-		//TODO: add ability to re-set bools, ints, floats - vectors that are reapplied on build?
-		//reapply vars w/ reassignVariables()
-		std::string mSHADER_FILE_PATH = "../RocketEngine/shader/glsl/"; ///> Shader file path
-		std::string mVERTEX_PATH = "vertex/";
-		std::string mFRAG_PATH = "fragment/";
+		std::string mShaderAssetPath = "assets/shaders/"; ///> Shader file path
 		std::string mVertShaderPath;
 		std::string mFragShaderPath;
 

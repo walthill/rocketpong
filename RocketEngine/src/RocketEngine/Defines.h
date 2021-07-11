@@ -1,3 +1,4 @@
+#include <string>
 
 namespace RKTEngine
 {
@@ -9,4 +10,7 @@ namespace RKTEngine
 	#define OVERRIDE_REQUIRED =0
 
 	typedef unsigned int uint32;
+	typedef uint32 ComponentId;
+	typedef uint32 GameObjectId;
+	typedef std::string ShaderKey;
 }

@@ -1,7 +1,7 @@
 #include "OpenGLTexture.h"
 #include "RocketEngine/render/Renderer.h"
-#include <glad/glad.h>
 #include <stb_image.h>
+#include <glad/glad.h>
 
 
 namespace RKTEngine
@@ -18,6 +18,10 @@ namespace RKTEngine
 		//stbi_set_flip_vertically_on_load(1);
 
 		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+
+		if (data == nullptr)
+			RKT_CORE_ERROR(stbi_failure_reason());
+
 		RKT_ASSERT(data);
 
 		mWidth = width;

@@ -19,6 +19,9 @@ namespace RKTEngine
 	void EngineCore::clean()
 	{
 		delete mpMasterTimer;
+		delete mpEntityManager;
+		delete mpAssetManager;
+		delete mpComponentManager;
 		delete mpMessageManager;
 		delete mpInputSystem;
 		delete mpRenderCore;
@@ -33,7 +36,17 @@ namespace RKTEngine
 		{
 			return false;
 		}
-	
+		
+
+		mpComponentManager = new ComponentManager(1000, mpRenderCore->getShaderManager());
+		mpEntityManager = new GameObjectManager(1000);
+
+		mpAssetManager = new AssetManager();
+		if (!mpAssetManager->initialize())
+		{
+			return false;
+		}
+
 		initInputSystem();
 
 		mpMasterTimer->start();
@@ -60,6 +73,10 @@ namespace RKTEngine
 	void EngineCore::update()
 	{
 		mpMessageManager->processMessagesForThisFrame(mDeltaTime);
+
+		mpComponentManager->update(mDeltaTime);
+		mpEntityManager->updateAll(mDeltaTime);
+
 		mpInputSystem->processInput();
 		calculateDeltaTime();
 	}
@@ -67,13 +84,13 @@ namespace RKTEngine
 	void EngineCore::render()
 	{
 		mpRenderCore->beginRender();
-		mpRenderCore->render();
+		mpRenderCore->render(mpComponentManager);
 		mpRenderCore->endRender();
 	}
 
 	void EngineCore::onMessage(Message& message)
 	{
-
+		//TODO: update orthographic projection on window resize
 	}
 
 	void EngineCore::calculateDeltaTime()
@@ -86,5 +103,10 @@ namespace RKTEngine
 	double EngineCore::getTime() { return mpMasterTimer->getTimeElapsedMs(); }
 	InputSystem* EngineCore::getInputSystem() { return mpInputSystem; }
 	MessageManager* EngineCore::getMessageManager() { return mpMessageManager; }
+
+	ShaderManager* EngineCore::getShaderManager()
+	{
+		return mpRenderCore->getShaderManager();
+	}
 
 }

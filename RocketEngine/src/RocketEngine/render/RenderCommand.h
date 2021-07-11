@@ -2,6 +2,8 @@
 #define RENDER_COMMAND_H
 
 #include "Renderer.h"
+#include <glm/vec2.hpp>
+#include "RocketEngine/render/buffers/Texture.h"
 
 namespace RKTEngine
 {
@@ -65,6 +67,11 @@ namespace RKTEngine
 			inline static void drawInstanced(const std::shared_ptr<VertexArray>& vertexArray, int instanceCount)
 			{
 				spRendererAPI->drawInstanced(vertexArray, instanceCount);
+			}
+
+			inline static void drawSprite(const std::shared_ptr<VertexArray>& vertexArray, int instanceCount = 1)
+			{
+				drawInstancedTriangles(vertexArray, instanceCount);
 			}
 
 		private:

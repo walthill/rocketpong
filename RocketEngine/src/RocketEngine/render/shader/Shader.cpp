@@ -1,10 +1,8 @@
 #include "Shader.h"
+#include "ShaderCommand.h"
 #include "RocketEngine/core/Log.h"
 #include <fstream>
 #include <sstream>
-#include <glad/glad.h>
-
-//TODO: abstract shader API calls
 
 namespace RKTEngine
 {
@@ -42,8 +40,8 @@ namespace RKTEngine
 			//Constructor only needs file name and not path
 			std::string vFilePath, fFilePath;
 
-			vFilePath = mSHADER_FILE_PATH + mVERTEX_PATH + mVertShaderPath;
-			fFilePath = mSHADER_FILE_PATH + mFRAG_PATH + mFragShaderPath;
+			vFilePath = mShaderAssetPath + mVertShaderPath;
+			fFilePath = mShaderAssetPath + mFragShaderPath;
 
 			vertShaderFile.open(vFilePath, std::ifstream::in);
 			fragShaderFile.open(fFilePath, std::ifstream::in);
@@ -71,125 +69,67 @@ namespace RKTEngine
 
 	void Shader::compileShaders(const char* vertShaderCode, const char* fragShaderCode)
 	{
-		// Compile shaders
-		// ---------------------------------------------------------------
-		RKT_CORE_TRACE("=======\tSHADER -- BUILD STARTED =======");
+		int index = mVertShaderPath.find_first_of(".");
+		RKT_CORE_TRACE(mVertShaderPath.substr(0, index) + " SHADER COMPLIATION");
 
-		unsigned int vertexShader, fragmentShader; //Shader obj
-
-		//Debug vars
-		int success;
-		char infoLog[512];
-
-		//VERTEX SHADER
-		RKT_CORE_TRACE("(" + mVertShaderPath + ") -- VERTEX SHADER COMPILATION");
-		vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertexShader, 1, &vertShaderCode, NULL);
-		glCompileShader(vertexShader);
-
-		//Check if compilation successful
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-		if (!success)
-		{
-			glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-			RKT_CORE_ERROR("ERROR::SHADER::VERTEX::COMPILATION_FAILED");
-		}
-		else { RKT_CORE_INFO("COMPILATION >>>>>>> [SUCCESSFUL]"); }
-
-		//FRAGMENT SHADER
-		RKT_CORE_TRACE("(" + mFragShaderPath + ") -- FRAGMENT SHADER COMPILATION");
-		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShader, 1, &fragShaderCode, NULL);
-		glCompileShader(fragmentShader);
-
-		//Check if compilation successful
-		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-		if (!success)
-		{
-			glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-			RKT_CORE_ERROR("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED");
-		}
-		else { RKT_CORE_INFO("COMPILATION >>>>>>> [SUCCESSFUL]"); }
-
-		//SHADER PROGRAM
-		RKT_CORE_TRACE("PERFORMING SHADER LINK");
-		shaderID = glCreateProgram();
-		glAttachShader(shaderID, vertexShader);
-		glAttachShader(shaderID, fragmentShader);
-		glLinkProgram(shaderID);
-
-		// Check if linking successful
-		glGetProgramiv(shaderID, GL_LINK_STATUS, &success);
-		if (!success)
-		{
-			glGetProgramInfoLog(shaderID, 512, NULL, infoLog);
-			RKT_CORE_ERROR("ERROR::SHADER::PROGRAM::LINKING_FAILED");
-		}
-		else
-		{
-			RKT_CORE_INFO("LINKING >>>>>>> [SUCCESSFUL]");
-		}
-
-		//Clean up
-		destroyShader(vertexShader);
-		destroyShader(fragmentShader);
+		shaderID = ShaderCommand::compileShader(vertShaderCode, fragShaderCode);
 	}
 
 	void Shader::use()
 	{
-		glUseProgram(shaderID);
+		ShaderCommand::use();
 	}
 
 	void Shader::destroyShader(int shaderObject)
 	{
-		glDeleteShader(shaderObject);
+		ShaderCommand::cleanup(shaderObject);
 	}
 
 	void Shader::setBool(const std::string& name, const bool& value) const
 	{
 		UniformLocation location = getUniformLocation(name);
-		glUniform1i(location, (int)value);
+		ShaderCommand::setBool(location, value);
 	}
 
 	void Shader::setInt(const std::string& name, const int& value) const
 	{
 		UniformLocation location = getUniformLocation(name);
-		glUniform1i(location, value);
+		ShaderCommand::setInt(location, value);
 	}
 
 	void Shader::setFloat(const std::string& name, const float& value) const
 	{
 		UniformLocation location = getUniformLocation(name);
-		glUniform1f(location, value);
+		ShaderCommand::setFloat(location, value);
 	}
 
-	void Shader::setMat4(const std::string& name, const glm::mat4& mat) const
+	void Shader::setMat4(const std::string& name, const glm::mat4& value) const
 	{
 		UniformLocation location = getUniformLocation(name);
-		glUniformMatrix4fv(location, MODIFY_SINGLE_OBJECT, GL_TRUE, &mat[0][0]);
+		ShaderCommand::setMat4(location, value);
 	}
 
-	void Shader::setVec3(const std::string& name, const glm::vec3& value)
+	void Shader::setVec3(const std::string& name, const glm::vec3& value) const
 	{
 		UniformLocation location = getUniformLocation(name);
-		glUniform3fv(location, MODIFY_SINGLE_OBJECT, &value[0]);
+		ShaderCommand::setVec3(location, value);
 	}
 
-	void Shader::setVec2(const std::string& name, const glm::vec2& value)
+	void Shader::setVec2(const std::string& name, const glm::vec2& value) const
 	{
 		UniformLocation location = getUniformLocation(name);
-		glUniform2fv(location, MODIFY_SINGLE_OBJECT, &value[0]);
+		ShaderCommand::setVec2(location, value);
 	}
 
 	UniformLocation Shader::getUniformLocation(std::string name) const
 	{
 		//Find existing uniform, return its location value
-		auto locationIndex = mUniformLocationCache.find(name);
+		const auto& locationIndex = mUniformLocationCache.find(name);
 		if (locationIndex != mUniformLocationCache.end())
 			return locationIndex->second;
 
 		//Get location from OpenGL, store in cache, and return
-		UniformLocation location = glGetUniformLocation(shaderID, name.c_str());
+		UniformLocation location = ShaderCommand::getUniformLocation(shaderID, name.c_str());
 		mUniformLocationCache[name] = location;
 		return location;
 	}
