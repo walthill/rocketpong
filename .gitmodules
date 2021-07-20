@@ -10,3 +10,6 @@
 [submodule "RocketEngine/vendor/glm"]
 	path = RocketEngine/vendor/glm
 	url = https://github.com/walthill/glm.git
+[submodule "RocketEngine/vendor/Freetype"]
+	path = RocketEngine/vendor/Freetype
+	url = https://github.com/walthill/freetype.git
