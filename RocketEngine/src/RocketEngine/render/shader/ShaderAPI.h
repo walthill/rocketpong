@@ -9,7 +9,7 @@ namespace RKTEngine
 	class ShaderAPI
 	{
 		public:
-			virtual void use() OVERRIDE_REQUIRED;
+			virtual void use(uint32 shaderID) OVERRIDE_REQUIRED;
 			virtual void cleanup(int shaderObject) OVERRIDE_REQUIRED;
 			virtual int compileShader(const char* vertShaderCode, const char* fragShaderCode) OVERRIDE_REQUIRED;
 

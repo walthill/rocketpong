@@ -41,6 +41,7 @@ namespace RKTEngine
 
 	void SpriteComponent::process(glm::vec2 position, glm::vec2 scale, float rotationAngle)
 	{
+		mSpriteData.shader->use();
 		//scale sprite based on dimensions
 		//allows scale vector to modify existing sprite and maintain aspect ration, dimension, etc
 		scale = glm::vec2(scale.x * mSpriteData.sprite->getWidth(), scale.y * mSpriteData.sprite->getHeight());
@@ -62,14 +63,14 @@ namespace RKTEngine
 			if (mSpriteData.instanceCount == 1)
 			{	
 				mSpriteData.shader->setMat4(mMODEL_MATRIX_ID, mModelMatrix);
-				mSpriteData.shader->setVec3("spriteColor", mSpriteData.mColor.getColor());
+				mSpriteData.shader->setVec3("spriteColor", mSpriteData.mColor.getColor01());
 			}
 
 			if (mIsEnabled && mSpriteData.sprite != nullptr)
 			{
 				RenderCommand::setActiveTexture(Renderer::TextureChannel::TEX_CHANNEL0);
 				attatchSpriteData();
-				RenderCommand::drawSprite(RenderCore::getSpriteVertexData(), 1);
+				RenderCore::submit(RenderCore::getSpriteVertexData());
 			}
 		}
 	}

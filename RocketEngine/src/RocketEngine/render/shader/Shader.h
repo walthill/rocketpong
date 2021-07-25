@@ -59,7 +59,7 @@ namespace RKTEngine
 		void compileShaders(const char* vertShaderCode, const char* fragShaderCode);
 
 		///Executre shader program
-		void use();
+		void use() const;
 
 		/**********************************************************************//**
 		 * Cleanup shader initialization objects

@@ -4,9 +4,9 @@
 
 namespace RKTEngine
 {
-	void OpenGLShader::use()
+	void OpenGLShader::use(uint32 shaderID)
 	{
-		glUseProgram(mShaderID);
+		glUseProgram(shaderID);
 	}
 
 	void OpenGLShader::cleanup(int shaderObject)
@@ -52,16 +52,16 @@ namespace RKTEngine
 
 		//SHADER PROGRAM
 		RKT_CORE_TRACE("PERFORMING SHADER LINK");
-		mShaderID = glCreateProgram();
-		glAttachShader(mShaderID, vertexShader);
-		glAttachShader(mShaderID, fragmentShader);
-		glLinkProgram(mShaderID);
+		uint32 shaderID = glCreateProgram();
+		glAttachShader(shaderID, vertexShader);
+		glAttachShader(shaderID, fragmentShader);
+		glLinkProgram(shaderID);
 
 		// Check if linking successful
-		glGetProgramiv(mShaderID, GL_LINK_STATUS, &success);
+		glGetProgramiv(shaderID, GL_LINK_STATUS, &success);
 		if (!success)
 		{
-			glGetProgramInfoLog(mShaderID, 512, NULL, infoLog);
+			glGetProgramInfoLog(shaderID, 512, NULL, infoLog);
 			RKT_CORE_ERROR("ERROR::SHADER::PROGRAM::LINKING_FAILED");
 		}
 
@@ -69,7 +69,7 @@ namespace RKTEngine
 		cleanup(vertexShader);
 		cleanup(fragmentShader);
 
-		return mShaderID;
+		return shaderID;
 	}
 
 	void OpenGLShader::setBool(int layoutLocation, const bool& value) const

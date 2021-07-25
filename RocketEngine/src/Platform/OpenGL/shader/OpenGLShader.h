@@ -8,7 +8,7 @@ namespace RKTEngine
 	class OpenGLShader : public ShaderAPI
 	{
 		public:
-			virtual void use() override;
+			virtual void use(uint32 shaderID) override;
 			virtual void cleanup(int shaderObject) override;
 			virtual int compileShader(const char* vertShaderCode, const char* fragShaderCode) override;
 
@@ -21,7 +21,6 @@ namespace RKTEngine
 
 			virtual int getUniformLocation(uint32 shaderID, const char* uniformName) override;
 		private:
-			int mShaderID;
 			const int MODIFY_SINGLE_OBJECT = 1;
 	};
 }

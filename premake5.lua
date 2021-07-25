@@ -34,7 +34,9 @@ project "RocketEngine"
         "%{prj.name}/vendor/glad/include",
         "%{prj.name}/vendor/glfw/include/glfw",
         "%{prj.name}/vendor/stb_image",
-        "%{prj.name}/vendor/glm"
+        "%{prj.name}/vendor/glm",
+		"%{prj.name}/vendor/freetype/include"
+
     }
 
     filter "system:windows"
@@ -46,7 +48,8 @@ project "RocketEngine"
     {
         "RocketUtils",
         "Glad",
-        "GLFW"
+        "GLFW",
+		"freetype"
     }
 
     defines
@@ -93,8 +96,8 @@ project "RogueOne"
         "RocketEngine/vendor/spdlog/include",
         "RocketEngine/vendor/RocketUtils/RocketUtils/include",
         "RocketEngine/vendor/stb_image",
-        "RocketEngine/vendor/glm"
-
+        "RocketEngine/vendor/glm",
+        "RocketEngine/vendor/Freetype/include"
     }
         
     links 
@@ -140,4 +143,5 @@ group "Dependencies"
 	include "RocketEngine/vendor/GLFW"
 	include "RocketEngine/vendor/Glad"
 	include "RocketEngine/vendor/RocketUtils/lib"
+	include "RocketEngine/vendor/Freetype"
 group ""

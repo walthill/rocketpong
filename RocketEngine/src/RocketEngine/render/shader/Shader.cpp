@@ -75,9 +75,9 @@ namespace RKTEngine
 		shaderID = ShaderCommand::compileShader(vertShaderCode, fragShaderCode);
 	}
 
-	void Shader::use()
+	void Shader::use() const
 	{
-		ShaderCommand::use();
+		ShaderCommand::use(shaderID);
 	}
 
 	void Shader::destroyShader(int shaderObject)

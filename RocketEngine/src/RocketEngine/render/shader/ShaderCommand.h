@@ -8,9 +8,9 @@ namespace RKTEngine
 	class ShaderCommand
 	{
 	public:
-		static void use()
+		static void use(uint32 shaderID)
 		{
-			spShaderAPI->use();
+			spShaderAPI->use(shaderID);
 		}
 
 		static void cleanup(int shaderObject)

@@ -5,7 +5,7 @@ namespace RKTEngine
 	const float Color::RGB01_CONVERSION = 0.00392156863f;
 
 	Color Color::black(0, 0, 0);
-	Color Color::white(255, 255, 255);
+	Color Color::white(255.0f, 255.0f, 255.0f);
 	Color Color::grey(127.5f, 127.5f, 127.5f);
 
 	Color Color::red(255, 0, 0);
