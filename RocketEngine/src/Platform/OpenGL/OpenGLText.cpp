@@ -1,92 +1,67 @@
+//Public Domain @ https://github.com/kevinmkchin/TrueTypeAssembler
+
 #include "OpenGLText.h"
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <glad/glad.h>
-#include "RocketEngine/core/Log.h"
+#include "RocketEngine/core/EngineCore.h"
 #include "RocketEngine/core/RenderCore.h"
+#include "RocketEngine/render/shader/ShaderManager.h"
+#include <truetype/kc_truetypeassembler.cpp>
+#include <glad/glad.h>
+#include <fstream>
+#include <glm\ext\matrix_transform.hpp>
+
+//TODO: update model matrix for position, rotation, scale
+//TODO: implement text change at runtime
+//TODO: add gameobject abstraction
 
 namespace RKTEngine
 {
-	OpenGLText::OpenGLText(std::string fontName, const Shader& shader) :
-		mpShader(shader)
+	OpenGLText::OpenGLText(std::string fontName)
 	{
-		mTextData.color = Color::red;
-		mTextData.position = glm::vec2(100,100); //0,0 is bottom left. for now
+		mTextData.color = Color::white;
+		mTextData.position = glm::vec2(20,20); //0,0 is bottom left. for now
 		mTextData.scale = 1;
-		mTextData.text = "New Text";
+		mTextData.text = "[New] Text";
 
-		//mpShader = shader;
+		const auto& shaderManager = EngineCore::getInstance()->getShaderManager();
+		shaderManager->useShaderByKey(mSHADER_ID);
+		auto mat = glm::mat4(1.0f);
+		auto scale = glm::vec3(1.0f, 1.0f, 1.0f);
+		mat = glm::scale(mat, scale); // last scale
+		shaderManager->setShaderMat4("model", mat);
 
-		// FreeType
-		FT_Library ft;
+		initFont(fontName);
+		createFontData();
+	}
 
-		// All functions return a value different than 0 whenever an error occurred
-		if (FT_Init_FreeType(&ft))
-		{
-			RKT_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
-		}
-		// Load font as face
-		FT_Face face;
-		if (FT_New_Face(ft, (mFONT_ASSET_PATH + fontName).c_str(), 0, &face))
-		{
-			RKT_CORE_ERROR("ERROR::FREETYPE: Failed to load font");
-		}
+	OpenGLText::~OpenGLText()
+	{
+		free(mFontHandle.font_atlas.pixels);
+	}
 
-		// Set size to load glyphs as
-		FT_Set_Pixel_Sizes(face, 0, 48);
+	void OpenGLText::initFont(std::string fontName)
+	{
+		kctta_setflags(KCTTA_CREATE_INDEX_BUFFER);
 
-		// Disable byte-alignment restriction
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		mFontFileData = loadFont(fontName);
 
-		// Load first 128 characters of ASCII set
-		for (GLubyte c = 0; c < 128; c++)
-		{
-			// Load character glyph 
-			if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-			{
-				RKT_CORE_ERROR("ERROR::FREETYTPE: Failed to load Glyph");
-				continue;
-			}
-			// Generate texture
-			GLuint texture;
-			glGenTextures(1, &texture);
-			glBindTexture(GL_TEXTURE_2D, texture);
-			glTexImage2D(
-				GL_TEXTURE_2D,
-				0,
-				GL_RED,
-				face->glyph->bitmap.width,
-				face->glyph->bitmap.rows,
-				0,
-				GL_RED,
-				GL_UNSIGNED_BYTE,
-				face->glyph->bitmap.buffer
-			);
-			// Set texture options
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			// Now store character for later use
-			Character character = {
-				texture,
-				glm::vec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-				glm::vec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-				(uint32)face->glyph->advance.x
-			};
-			characters.insert(std::pair<GLchar, Character>(c, character));
-		}
-		glBindTexture(GL_TEXTURE_2D, 0);
+		kctta_init_font(&mFontHandle, mFontFileData, defaultFontLoadedSize);
+		width = mFontHandle.font_atlas.width;
+		height = mFontHandle.font_atlas.height;
 
-		// Destroy FreeType once we're finished
-		FT_Done_Face(face);
-		FT_Done_FreeType(ft);
+		kctta_clear_buffer();
+		kctta_move_cursor((int)mTextData.position.x, (int)mTextData.position.y);
+
+		setText(mTextData.text);
+	}
+
+	void OpenGLText::createFontData()
+	{
+		vb = kctta_grab_buffer();
 
 		// Configure VAO/VBO for texture quads
 		glyphVA.reset(VertexArray::create());
 
-		const float* f = {};
-		glyphVB.reset(VertexBuffer::create(f, sizeof(GLfloat) * 6 * 4, VertexBuffer::DataType::DYNAMIC));
+		glyphVB.reset(VertexBuffer::create(vb.vertex_buffer, sizeof(GLfloat) * vb.vertices_array_count, VertexBuffer::DataType::STATIC));
 
 		BufferLayout layout = {
 			{ ShaderDataType::Float4, "vertex" }
@@ -96,18 +71,37 @@ namespace RKTEngine
 		glyphVA->addVertexBuffer(glyphVB);
 		glyphVA->processVertexBuffers();
 
-		uint32 quadIndicies[6] = { 0,1,2,3,4,5 };
-		std::shared_ptr<IndexBuffer> glyphIB;
-		glyphIB.reset(IndexBuffer::create(quadIndicies, sizeof(quadIndicies) / sizeof(uint32)));
+		glyphIB.reset(IndexBuffer::create(vb.index_buffer, vb.indices_array_count));
 		glyphVA->setIndexBuffer(glyphIB);
 
 		glyphVB->unbind();
 		glyphVA->unbind();
+
+		// Creating the font texture in GPU memory
+
+		glGenTextures(1, &textureId);
+		glBindTexture(GL_TEXTURE_2D, textureId);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,       // for both the target and source format, we can put GL_RED
+			mFontHandle.font_atlas.width,			 // this just means the bit depth is 1 byte (just the alpha)
+			mFontHandle.font_atlas.height,
+			0, GL_RED, GL_UNSIGNED_BYTE,
+			mFontHandle.font_atlas.pixels);
+
+		// Set texture options
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		RenderCommand::setActiveTexture(Renderer::TEX_CHANNEL0);
 	}
 
-	OpenGLText::~OpenGLText()
+	void OpenGLText::setText(std::string text)
 	{
-		//mpShader = nullptr;
+		kctta_append_line(text.c_str(), &mFontHandle, defaultTextDisplaySize);
+		/*kctta_clear_buffer();
+		
+		createFontData();*/
 	}
 
 	void OpenGLText::renderText()
@@ -117,53 +111,44 @@ namespace RKTEngine
 
 	void OpenGLText::renderText(TextData data)
 	{
-		// Activate corresponding render state	
-		mpShader.use();
+		const auto& shaderManager = EngineCore::getInstance()->getShaderManager();
+		shaderManager->useShaderByKey(mSHADER_ID);
+		shaderManager->setShaderVec3(mTEXT_COLOR_UNIFORM, data.color.getColor01());
 
-		//allow for values from 0 to 255
-		mpShader.setVec3(mTEXT_COLOR_UNIFORM, data.color.getColor01());
+		RenderCommand::setActiveTexture(Renderer::TEX_CHANNEL0);
+		glBindTexture(GL_TEXTURE_2D, textureId);
+		RenderCore::submit(glyphVA);
+	}
 
-		RenderCommand::setActiveTexture(Renderer::TextureChannel::TEX_CHANNEL0);
-		glyphVA->bind();
-
-		// Iterate through all characters
-		std::string::const_iterator c;
-		for (c = data.text.begin(); c != data.text.end(); c++)
+	unsigned char* OpenGLText::loadFont(std::string fontName)
+	{
+		unsigned char* buffer = new unsigned char[1 << 20];
+		uint32 bufferSize = 1 << 20;
+		if (!fontName.empty())
 		{
-			Character ch = characters[*c];
+			auto path = mFONT_ASSET_PATH + fontName;
 
-			GLfloat xpos = data.position.x + ch.bearing.x * data.scale;
-			GLfloat ypos = data.position.y - (ch.size.y - ch.bearing.y) * data.scale;
+			//open file
 
-			GLfloat w = ch.size.x * data.scale;
-			GLfloat h = ch.size.y * data.scale;
-			// Update VBO for each character
-			float vertices[] = {
-				 xpos,     ypos + h,   0.0, 0.0 ,
-				 xpos,     ypos,       0.0, 1.0 ,
-				 xpos + w, ypos,       1.0, 1.0 ,
+			std::basic_ifstream<unsigned char> infile(path, std::ios::in | std::ifstream::binary);
+			
+			//get length of file
+			infile.seekg(0, std::ios::end);
+			auto length = infile.tellg();
+			infile.seekg(0, std::ios::beg);
 
-				 xpos,     ypos + h,   0.0, 0.0 ,
-				 xpos + w, ypos,       1.0, 1.0 ,
-				 xpos + w, ypos + h,   1.0, 0.0
-			};
+			// don't overflow the buffer!
+			if (length > bufferSize)
+			{
+				length = bufferSize;
+			}
 
-			// Render glyph texture over quad
-			glBindTexture(GL_TEXTURE_2D, ch.textureId);
+			//read file
+			infile.read(buffer, length);
 
-			// Update content of VBO memory
-			glyphVB->bind();
-			glyphVB->updateBufferData(vertices, sizeof(vertices), 0);
-			glyphVB->unbind();
-
-			RenderCore::submit(glyphVA);
-
-			// Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-			float x = (ch.advance >> 6) * data.scale;
-			data.position = glm::vec2(data.position.x + x, data.position.y);
+			return (unsigned char*)buffer;
 		}
 
-		glyphVA->unbind();
-		glBindTexture(GL_TEXTURE_2D, 0);
+		return nullptr;
 	}
 }

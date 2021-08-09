@@ -63,10 +63,11 @@ namespace RKTEngine
 			if (iter != mShaderList.end())
 			{
 				mpCurrentShader = iter->second;
-				mpCurrentShader->use();
 				mShaderInUse = key;
 			}
 		}
+
+		mpCurrentShader->use();
 	}
 
 	void ShaderManager::setShaderInt(const std::string& intName, int value)

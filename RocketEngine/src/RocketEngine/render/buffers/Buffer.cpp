@@ -30,7 +30,7 @@ namespace RKTEngine
 		switch (RenderCore::getAPI())
 		{
 		case Renderer::API::NONE:		return nullptr;
-		case Renderer::API::OPENGL:		return new OpenGLIndexBuffer(indicies, count * sizeof(indicies));
+		case Renderer::API::OPENGL:		return new OpenGLIndexBuffer(indicies, count);
 		}
 		return nullptr;
 	}

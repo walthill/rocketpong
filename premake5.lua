@@ -22,7 +22,9 @@ project "RocketEngine"
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/vendor/stb_image/**.h",
-        "%{prj.name}/vendor/stb_image/**.cpp"
+        "%{prj.name}/vendor/stb_image/**.cpp",
+        "%{prj.name}/vendor/kc_truetypeassembler/**.h",
+        "%{prj.name}/vendor/kc_truetypeassembler/**.cpp"
     }
 
     includedirs 
@@ -34,6 +36,7 @@ project "RocketEngine"
         "%{prj.name}/vendor/glad/include",
         "%{prj.name}/vendor/glfw/include/glfw",
         "%{prj.name}/vendor/stb_image",
+        "%{prj.name}/vendor/kc_truetypeassembler",
         "%{prj.name}/vendor/glm",
 		"%{prj.name}/vendor/freetype/include"
 
@@ -48,8 +51,7 @@ project "RocketEngine"
     {
         "RocketUtils",
         "Glad",
-        "GLFW",
-		"freetype"
+        "GLFW"
     }
 
     defines
@@ -96,8 +98,8 @@ project "RogueOne"
         "RocketEngine/vendor/spdlog/include",
         "RocketEngine/vendor/RocketUtils/RocketUtils/include",
         "RocketEngine/vendor/stb_image",
-        "RocketEngine/vendor/glm",
-        "RocketEngine/vendor/Freetype/include"
+        "RocketEngine/vendor/kc_truetypeassembler",
+        "RocketEngine/vendor/glm"
     }
         
     links 
@@ -143,5 +145,4 @@ group "Dependencies"
 	include "RocketEngine/vendor/GLFW"
 	include "RocketEngine/vendor/Glad"
 	include "RocketEngine/vendor/RocketUtils/lib"
-	include "RocketEngine/vendor/Freetype"
 group ""

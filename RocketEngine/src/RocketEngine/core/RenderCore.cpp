@@ -40,11 +40,11 @@ namespace RKTEngine
 		mpShaderManager->addShader("sprite", new Shader("BaseSprite.vert", "BaseSprite.frag"));
 		mpShaderManager->addShader("text", new Shader("TextRender.vert", "TextRender.frag"));
 
-		txt = Text::create("calibri.ttf", *mpShaderManager->getShaderByKey("text"));
-		txt->setText("Testing Text Rendering");
-
 		init2DVertexData();
 		init2DShaderData();
+
+		txt = Text::create("calibri.ttf");
+		//txt->setText("Testing Text Rendering");
 
 		return true;
 	}
@@ -81,8 +81,7 @@ namespace RKTEngine
 		glm::mat4 spriteProjection = glm::ortho(0.0f, static_cast<float>(mpWindowHandle->getWidth()),
 			static_cast<float>(mpWindowHandle->getHeight()), 0.0f, -1.0f, 1.0f);
 
-		glm::mat4 uiProjection = glm::ortho(0.0f, static_cast<float>(mpWindowHandle->getWidth()),
-			0.0f, static_cast<float>(mpWindowHandle->getHeight()));
+		glm::mat4 uiProjection = glm::ortho(0.0f, static_cast<float>(mpWindowHandle->getWidth()), static_cast<float>(mpWindowHandle->getHeight()), 0.0f);
 
 		mpShaderManager->useShaderByKey("sprite");
 		mpShaderManager->setShaderMat4("projection", spriteProjection);
@@ -111,7 +110,7 @@ namespace RKTEngine
 	bool RenderCore::createWindow()
 	{
 		mpWindowHandle = new Window();
-		if (!mpWindowHandle->initialize(1280, 720, "RogueOne", CULL_FACE | BLEND))
+		if (!mpWindowHandle->initialize(1280, 720, "RogueOne", BLEND))
 		{
 			return false;
 		}

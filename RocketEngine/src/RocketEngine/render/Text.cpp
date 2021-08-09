@@ -4,13 +4,12 @@
 
 namespace RKTEngine
 {
-
-	Text* Text::create(std::string fontName, const Shader& shader)
+	Text* Text::create(std::string fontName/*, const Shader& shader*/)
 	{
 		switch (RenderCore::getAPI())
 		{
 			case Renderer::API::NONE:		return nullptr;
-			case Renderer::API::OPENGL:		return new OpenGLText(fontName, shader);
+			case Renderer::API::OPENGL:		return new OpenGLText(fontName);
 		}
 
 		return nullptr;
