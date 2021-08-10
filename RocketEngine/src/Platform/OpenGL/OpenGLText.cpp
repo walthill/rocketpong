@@ -5,7 +5,6 @@
 #include "RocketEngine/core/RenderCore.h"
 #include "RocketEngine/render/shader/ShaderManager.h"
 #include <truetype/kc_truetypeassembler.cpp>
-#include <glad/glad.h>
 #include <fstream>
 #include <glm\ext\matrix_transform.hpp>
 
@@ -35,7 +34,6 @@ namespace RKTEngine
 
 	OpenGLText::~OpenGLText()
 	{
-		free(mFontHandle.font_atlas.pixels);
 	}
 
 	void OpenGLText::initFont(std::string fontName)
@@ -61,7 +59,7 @@ namespace RKTEngine
 		// Configure VAO/VBO for texture quads
 		glyphVA.reset(VertexArray::create());
 
-		glyphVB.reset(VertexBuffer::create(vb.vertex_buffer, sizeof(GLfloat) * vb.vertices_array_count, VertexBuffer::DataType::STATIC));
+		glyphVB.reset(VertexBuffer::create(vb.vertex_buffer, sizeof(float) * vb.vertices_array_count, VertexBuffer::DataType::STATIC));
 
 		BufferLayout layout = {
 			{ ShaderDataType::Float4, "vertex" }
@@ -79,19 +77,8 @@ namespace RKTEngine
 
 		// Creating the font texture in GPU memory
 
-		glGenTextures(1, &textureId);
-		glBindTexture(GL_TEXTURE_2D, textureId);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,       // for both the target and source format, we can put GL_RED
-			mFontHandle.font_atlas.width,			 // this just means the bit depth is 1 byte (just the alpha)
-			mFontHandle.font_atlas.height,
-			0, GL_RED, GL_UNSIGNED_BYTE,
-			mFontHandle.font_atlas.pixels);
-
-		// Set texture options
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		auto fontAtlasData = mFontHandle.font_atlas;
+		rawTexture.reset(RawTexture::create(fontAtlasData.pixels, fontAtlasData.width, fontAtlasData.height));
 
 		RenderCommand::setActiveTexture(Renderer::TEX_CHANNEL0);
 	}
@@ -116,7 +103,7 @@ namespace RKTEngine
 		shaderManager->setShaderVec3(mTEXT_COLOR_UNIFORM, data.color.getColor01());
 
 		RenderCommand::setActiveTexture(Renderer::TEX_CHANNEL0);
-		glBindTexture(GL_TEXTURE_2D, textureId);
+		rawTexture->bind();
 		RenderCore::submit(glyphVA);
 	}
 

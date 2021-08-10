@@ -5,6 +5,7 @@
 #include "RocketEngine/Defines.h"
 #include "RocketEngine/render/Text.h"
 #include "RocketEngine/render/buffers/VertexArray.h"
+#include "RocketEngine/render/buffers/Texture.h"
 #include "RocketEngine/render/shader/Shader.h"
 #include <glm/vec2.hpp>
 #include <truetype/kc_truetypeassembler.h>
@@ -34,10 +35,10 @@ namespace RKTEngine
 			
 			TTAFont mFontHandle;
 			TTAVertexBuffer vb;
+			std::shared_ptr<RawTexture> rawTexture;
 			std::shared_ptr<VertexArray> glyphVA;
 			std::shared_ptr<VertexBuffer> glyphVB;
 			std::shared_ptr<IndexBuffer> glyphIB;
-			uint32 textureId;
 			int width, height;
 			unsigned char* mFontFileData;
 

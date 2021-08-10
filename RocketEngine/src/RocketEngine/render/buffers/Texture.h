@@ -19,6 +19,7 @@ namespace RKTEngine
 				NEAREST_MIPMAP_LINEAR, LINEAR_MIPMAP_LINEAR
 			};
 
+			enum ColorChannel { RED = 1, RGB = 3, RGB_ALPHA = 4};
 			enum MagnifyFilter { MAG_LINEAR = 0, MAG_NEAREST };
 
 		public:
@@ -41,6 +42,15 @@ namespace RKTEngine
 				int miniFilter = MinifyFilter::MIN_LINEAR, int magFilter = MagnifyFilter::MAG_LINEAR, int detailReductionLevel = 0);
 
 		private:
+	};
+
+	class RawTexture : public Texture
+	{
+	public:
+		static RawTexture* create(unsigned char* data, int width, int height, int sWrapParam = WrapType::REPEAT, int tWrapParam = WrapType::REPEAT,
+			int miniFilter = MinifyFilter::MIN_LINEAR, int magFilter = MagnifyFilter::MAG_LINEAR, int detailReductionLevel = 0);
+
+	private:
 	};
 
 	class CubemapTexture : public Texture
