@@ -1,6 +1,7 @@
 #include "GameObjectManager.h"
 #include "GameObject.h"
 #include "RocketEngine/core/EngineCore.h"
+#include "RocketEngine/render/shader/ShaderManager.h"
 
 namespace RKTEngine
 {
@@ -16,7 +17,7 @@ namespace RKTEngine
 	{
 	}
 
-	GameObject* GameObjectManager::createGameObject(const TransformData& transform, const SpriteComponentData& meshData,
+	GameObject* GameObjectManager::createGameObject(const TransformData& transform, const SpriteComponentData& spriteData,
 													const GameObjectId& id)
 	{
 		GameObject* newObj = nullptr;
@@ -46,13 +47,24 @@ namespace RKTEngine
 			newObj->connectTransform(newTransformId);
 			newObj->setTransformHandle(pComponentManager->getTransformComponent(newTransformId));
 
-			//MESH
-			//Create mesh component, store id in new object, and load the mesh to the component
-			ComponentId newMeshId = pComponentManager->allocateMeshComponent(newObj->getTransformId(), meshData);
-			newObj->connectMesh(newMeshId);
+			//SPRITE
+			//Create sprite component, store id in new object, and load the mesh to the component
+			ComponentId newSpriteId = pComponentManager->allocateSpriteComponent(newObj->getTransformId(), spriteData);
+			newObj->connectSprite(newSpriteId);
 
 		}
 		return newObj;
+	}
+
+	GameObject* GameObjectManager::createSprite(const std::string& spriteToLoad, glm::vec2 position, glm::vec2 scale, float rotation)
+	{
+		const std::string& spriteShaderID = EngineCore::getInstance()->getAssetManager()->getSpriteShaderID();
+
+		Shader* shader = RKTEngine::EngineCore::getInstance()->getShaderManager()->getShaderByKey(spriteShaderID);
+		TransformData transformData = RKTEngine::TransformData(position, glm::vec2(1.0f, 1.0f), 0.0f);
+		SpriteComponentData spriteData = RKTEngine::SpriteComponentData(spriteToLoad);
+
+		return createGameObject(transformData, spriteData);
 	}
 
 
@@ -79,7 +91,7 @@ namespace RKTEngine
 			//remove components from manager
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
 			pComponentManager->deallocateTransformComponent(obj->getTransformId());
-			pComponentManager->deallocateMeshComponent(obj->getMeshId());
+			pComponentManager->deallocateMeshComponent(obj->getSpriteId());
 
 			//call destructor on gameObj
 			obj->~GameObject();
@@ -93,7 +105,6 @@ namespace RKTEngine
 	{
 		for (auto const& it : mGameObjMap)
 		{
-			//no update function currently
 			it.second->update(elapsedTime);
 		}
 	}

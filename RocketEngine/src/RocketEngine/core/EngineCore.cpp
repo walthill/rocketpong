@@ -38,7 +38,7 @@ namespace RKTEngine
 		}
 		
 
-		mpComponentManager = new ComponentManager(1000, mpRenderCore->getShaderManager());
+		mpComponentManager = new ComponentManager(1000);
 		mpEntityManager = new GameObjectManager(1000);
 
 		mpAssetManager = new AssetManager();

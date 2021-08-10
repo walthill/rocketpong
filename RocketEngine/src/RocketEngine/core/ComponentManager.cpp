@@ -5,13 +5,12 @@ namespace RKTEngine
 {
 
 	ComponentId ComponentManager::msNextMaterialComponentId = 0;
-	ComponentId ComponentManager::msNextMeshComponentId = 0;
+	ComponentId ComponentManager::msNextSpriteComponentId = 0;
 	ComponentId ComponentManager::msNextTransformComponentId = 0;
 
-	ComponentManager::ComponentManager(uint32 maxSize, ShaderManager* shaderMan)
+	ComponentManager::ComponentManager(uint32 maxSize)
 		: mTransformPool(maxSize, sizeof(TransformComponent))
 		, mSpritePool(maxSize, sizeof(SpriteComponent))
-		, mpShaderManagerHandle(shaderMan)
 	{
 	}
 
@@ -28,7 +27,7 @@ namespace RKTEngine
 			TransformComponent* pComponent = it.second;
 			pComponent->~TransformComponent();
 		}
-		for (auto& it : mMeshComponentMap)
+		for (auto& it : mSpriteComponentMap)
 		{
 			SpriteComponent* pComponent = it.second;
 			pComponent->~SpriteComponent();
@@ -36,7 +35,7 @@ namespace RKTEngine
 		
 		//clear maps
 		mTransformComponentMap.clear();
-		mMeshComponentMap.clear();
+		mSpriteComponentMap.clear();
 		
 		//reset memory pools
 		mTransformPool.reset();
@@ -103,30 +102,30 @@ namespace RKTEngine
 	*****************************************************************************/
 
 
-	SpriteComponent* ComponentManager::getMeshComponent(const ComponentId& id)
+	SpriteComponent* ComponentManager::getSpriteComponent(const ComponentId& id)
 	{
-		auto it = mMeshComponentMap.find(id);
+		auto it = mSpriteComponentMap.find(id);
 
-		if (it != mMeshComponentMap.end())
+		if (it != mSpriteComponentMap.end())
 			return it->second;
 		else
 			return nullptr;
 	}
 
 	//Load model and assign to gameobject
-	ComponentId ComponentManager::allocateMeshComponent(const ComponentId& meshId, const SpriteComponentData& data)
+	ComponentId ComponentManager::allocateSpriteComponent(const ComponentId& spriteID, const SpriteComponentData& data)
 	{
 		ComponentId newID = INVALID_COMPONENT_ID;
 		RKTUtil::Byte* ptr = mSpritePool.allocateObject();
 
 		if (ptr != nullptr)
 		{
-			newID = msNextMeshComponentId;
+			newID = msNextSpriteComponentId;
 			SpriteComponent* pComponent = ::new (ptr)SpriteComponent(newID);
 			pComponent->setData(data);
 			pComponent->load();			//load model mesh
-			mMeshComponentMap[newID] = pComponent;
-			msNextMeshComponentId++;//increment id
+			mSpriteComponentMap[newID] = pComponent;
+			msNextSpriteComponentId++;//increment id
 		}
 
 		return newID;
@@ -134,12 +133,12 @@ namespace RKTEngine
 
 	void ComponentManager::deallocateMeshComponent(const ComponentId& id)
 	{
-		auto it = mMeshComponentMap.find(id);
+		auto it = mSpriteComponentMap.find(id);
 
-		if (it != mMeshComponentMap.end())//found it
+		if (it != mSpriteComponentMap.end())//found it
 		{
 			SpriteComponent* ptr = it->second;
-			mMeshComponentMap.erase(it);
+			mSpriteComponentMap.erase(it);
 
 			ptr->~SpriteComponent();
 			mSpritePool.freeObject((RKTUtil::Byte*)ptr);
@@ -153,7 +152,7 @@ namespace RKTEngine
 	void ComponentManager::renderSprites()
 	{
 		SpriteComponent* tempComponent = nullptr;
-		for (auto& it : mMeshComponentMap)
+		for (auto& it : mSpriteComponentMap)
 		{
 			if (tempComponent != nullptr)
 			{

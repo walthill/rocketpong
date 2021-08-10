@@ -37,7 +37,7 @@ namespace RKTEngine
 
 	SpriteComponent* GameObject::getSprite()
 	{
-		auto pComponent = EngineCore::getInstance()->getComponentManager()->getMeshComponent(mSpriteId);
+		auto pComponent = EngineCore::getInstance()->getComponentManager()->getSpriteComponent(mSpriteId);
 		return pComponent;
 	}
 }

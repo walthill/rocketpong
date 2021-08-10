@@ -41,25 +41,24 @@ namespace RKTEngine
 	{
 		bool isLoaded;			///< Flag to set when model is loaded
 		std::string mSpriteName;  ///< Name of model to load
-		std::string shaderKey;	///< Shader identifier
 
 		int instanceCount;
 		glm::mat4* instanceMatrices;
 
+		Shader* mpShader;
 		Texture2D* sprite;			///< Reference to the model
-		Shader* shader;		///< Reference to the mesh's shader
 		Color mColor;
 
 		///Default constructor sets all values to zero
 		SpriteComponentData() :
-			isLoaded(false), sprite(nullptr), shader(nullptr), mSpriteName(""), mColor(Color::white), shaderKey(""), instanceCount(0), instanceMatrices(nullptr) {};
+			isLoaded(false), sprite(nullptr), mSpriteName(""), mColor(Color::white), instanceCount(0), instanceMatrices(nullptr), mpShader(nullptr) {};
 
 		///Constructor that takes in values for struct variables
-		SpriteComponentData(std::string name, std::string shaderKey, Shader* s, Color color = Color::white, int instanceAmount = 1, glm::mat4* matrices = nullptr) :
-			isLoaded(false), sprite(nullptr), shader(s), shaderKey(shaderKey), mSpriteName(name), mColor(color), instanceCount(instanceAmount), instanceMatrices(matrices) {};
+		SpriteComponentData(std::string name, Color color = Color::white, int instanceAmount = 1, glm::mat4* matrices = nullptr) :
+			isLoaded(false), sprite(nullptr), mSpriteName(name), mColor(color), instanceCount(instanceAmount), instanceMatrices(matrices), mpShader(nullptr) {};
 	};
 
-	const SpriteComponentData ZERO_MESH_DATA;
+	const SpriteComponentData ZERO_SPRITE_DATA;
 
 	/***************************************************************************//**
 	 * @brief 	The component for Meshes.
@@ -88,8 +87,10 @@ namespace RKTEngine
 
 		///Access the mesh component data
 		SpriteComponentData* getData() { return &mSpriteData; }
-		///Access the mesh shader reference
-		Shader* getShader() { return mSpriteData.shader; }
+
+		/// Access sprite shader reference
+		const Shader& getShader() { return *mSpriteData.mpShader; }
+
 		///Access the mesh model reference
 		Texture2D* getSprite();
 
@@ -98,14 +99,7 @@ namespace RKTEngine
 		 *
 		 * @param data MeshComponent struct with mesh data to store in the component
 		 *************************************************************************/
-		void setData(const SpriteComponentData& data) { mSpriteData = data; }
-
-		/**********************************************************************//**
-		 * Set shader refernce
-		 *
-		 * @param shader A reference to a RK_Shader to be assign to the component's mesh data
-		 *************************************************************************/
-		void setShader(Shader* shader) { mSpriteData.shader = shader; }
+		void setData(const SpriteComponentData& data);
 
 		/**********************************************************************//**
 		 * Set model refernce
@@ -143,6 +137,8 @@ namespace RKTEngine
 	private:
 		const std::string mMODEL_MATRIX_ID = "model";
 		const std::string mSPRITE_COLOR_ID = "spriteColor";
+		const std::string mSPRITE_IMAGE_ID = "image";
+
 		glm::mat4 mModelMatrix = glm::mat4();
 		SpriteComponentData mSpriteData;
 

@@ -12,7 +12,7 @@ namespace RKTEngine
 	{
 	}
 
-	void TransformComponent::setPosition(glm::vec3 pos)
+	void TransformComponent::setPosition(glm::vec2 pos)
 	{
 		mTransformData.mPosition = pos;
 		mDataChanged = true;
@@ -27,7 +27,7 @@ namespace RKTEngine
 		mDataChanged = true;
 	}
 
-	void TransformComponent::setScale(glm::vec3 mScale)
+	void TransformComponent::setScale(glm::vec2 mScale)
 	{
 		mTransformData.mScale = mScale;
 		mDataChanged = true;

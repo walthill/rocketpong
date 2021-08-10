@@ -1,6 +1,7 @@
 #include "AssetManager.h"
 #include "RocketEngine/render/buffers/Texture.h"
 
+
 namespace RKTEngine
 {
 	AssetManager::AssetManager()
@@ -28,21 +29,23 @@ namespace RKTEngine
 		}
 	}
 
-	Texture2D* AssetManager::loadSpriteAsset(std::string path)
+	Texture2D* AssetManager::loadSpriteAsset(std::string spriteName)
 	{
-		const auto& key = path.substr(path.find_last_of('/') + 1, path.find_last_of('.'));
-		const auto& iter = mSpriteAssetCache.find(key);
-
+		const auto& iter = mSpriteAssetCache.find(spriteName);
 		if (iter != mSpriteAssetCache.end())
 		{
 			return iter->second;
 		}
 		else
 		{
-			Texture2D* newSprite = Texture2D::create(path);
-			mSpriteAssetCache[key] = newSprite;
+			Texture2D* newSprite = Texture2D::create(mSPRITE_ASSET_PATH + spriteName + mSPRITE_FILE_ENDING);
+			mSpriteAssetCache[spriteName] = newSprite;
 
 			return newSprite;
 		}
+	}
+	unsigned char* AssetManager::loadFont(std::string fontName)
+	{
+		return nullptr;
 	}
 }

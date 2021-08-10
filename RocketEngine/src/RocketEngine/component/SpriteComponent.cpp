@@ -2,6 +2,7 @@
 #include "RocketEngine/render/shader/Shader.h"
 #include "RocketEngine/core/EngineCore.h"
 #include "RocketEngine/core/RenderCore.h"
+#include "RocketEngine/render/shader/ShaderManager.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/vec2.hpp>
 
@@ -20,12 +21,13 @@ namespace RKTEngine
 
 	void SpriteComponent::load()
 	{
-		if (mSpriteData.mSpriteName != "null" && mSpriteData.mSpriteName != "")
+		if (!mSpriteData.mSpriteName.empty())
 		{
-			std::string folderName = mSpriteData.mSpriteName.substr(0, mSpriteData.mSpriteName.find('.'));
-			mSpriteData.sprite = EngineCore::getInstance()->getAssetManager()->loadSpriteAsset(modelFileLocation + mSpriteData.mSpriteName);
-			mSpriteData.shader->use();
-			mSpriteData.shader->setInt("image", 0);
+			mSpriteData.sprite = EngineCore::getInstance()->getAssetManager()->loadSpriteAsset(mSpriteData.mSpriteName);
+		}
+		else
+		{
+			RKT_ERROR("Sprite component missing sprite name");
 		}
 	}
 
@@ -39,9 +41,15 @@ namespace RKTEngine
 		return mSpriteData.sprite;
 	}
 
+	void SpriteComponent::setData(const SpriteComponentData& data)
+	{
+		mSpriteData = data; 
+		const std::string& spriteShaderID = EngineCore::getInstance()->getAssetManager()->getSpriteShaderID();
+		mSpriteData.mpShader = EngineCore::getInstance()->getShaderManager()->getShaderByKey(spriteShaderID);
+	}
+
 	void SpriteComponent::process(glm::vec2 position, glm::vec2 scale, float rotationAngle)
 	{
-		mSpriteData.shader->use();
 		//scale sprite based on dimensions
 		//allows scale vector to modify existing sprite and maintain aspect ration, dimension, etc
 		scale = glm::vec2(scale.x * mSpriteData.sprite->getWidth(), scale.y * mSpriteData.sprite->getHeight());
@@ -57,13 +65,13 @@ namespace RKTEngine
 
 	void SpriteComponent::render()
 	{
-		if (mSpriteData.shader != nullptr)
+		if (mSpriteData.mpShader != nullptr)
 		{
-			mSpriteData.shader->use();
+			mSpriteData.mpShader->use();
 			if (mSpriteData.instanceCount == 1)
 			{	
-				mSpriteData.shader->setMat4(mMODEL_MATRIX_ID, mModelMatrix);
-				mSpriteData.shader->setVec3("spriteColor", mSpriteData.mColor.getColor01());
+				mSpriteData.mpShader->setMat4(mMODEL_MATRIX_ID, mModelMatrix);
+				mSpriteData.mpShader->setVec3(mSPRITE_COLOR_ID, mSpriteData.mColor.getColor01());
 			}
 
 			if (mIsEnabled && mSpriteData.sprite != nullptr)

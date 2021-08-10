@@ -45,7 +45,7 @@ namespace RKTEngine
 		* @param shaderMan Refernce to the shader manager
 		* @param lightingShaderKey Identifier for the shader used in lighting components
 		*************************************************************************/
-		ComponentManager(uint32 maxSize, ShaderManager* shaderMan);
+		ComponentManager(uint32 maxSize);
 
 		///Default decconstructor
 		~ComponentManager();
@@ -82,7 +82,7 @@ namespace RKTEngine
 		*
 		* @param id Component identifier
 		*************************************************************************/
-		SpriteComponent* getMeshComponent(const ComponentId& id);
+		SpriteComponent* getSpriteComponent(const ComponentId& id);
 
 		/**********************************************************************//**
 		* Create mesh component based on data passed in and return the component identifier.
@@ -90,7 +90,7 @@ namespace RKTEngine
 		* @param meshId mesh component identifier
 		* @param data data Mesh component data
 		*************************************************************************/
-		ComponentId allocateMeshComponent(const ComponentId& meshId, const	SpriteComponentData& data = ZERO_MESH_DATA);
+		ComponentId allocateSpriteComponent(const ComponentId& spriteID, const SpriteComponentData& data = ZERO_SPRITE_DATA);
 
 		/**********************************************************************//**
 		* Remove and destroy mesh component from the collection based on the component identifier.
@@ -111,21 +111,18 @@ namespace RKTEngine
 		void renderSprites();
 
 		///Get number of Mesh Components
-		int getNumberOfMeshes() { return mMeshComponentMap.size(); }
+		int getNumberOfMeshes() { return mSpriteComponentMap.size(); }
 		///Get number of Transform Components
 		int getNumberOfTransforms() { return mTransformComponentMap.size(); }
 	private:
-		ShaderManager* mpShaderManagerHandle;
-		ShaderKey mLightingShaderKey;
-
 		RKTUtil::MemoryPool mTransformPool;
 		RKTUtil::MemoryPool mSpritePool;
 
 		std::map<ComponentId, TransformComponent*> mTransformComponentMap;
-		std::map<ComponentId, SpriteComponent*> mMeshComponentMap;
+		std::map<ComponentId, SpriteComponent*> mSpriteComponentMap;
 
 		static ComponentId msNextTransformComponentId;
-		static ComponentId msNextMeshComponentId;
+		static ComponentId msNextSpriteComponentId;
 		static ComponentId msNextMaterialComponentId;
 	};
 }

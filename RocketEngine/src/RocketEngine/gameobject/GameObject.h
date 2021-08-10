@@ -79,14 +79,14 @@ namespace RKTEngine
 			*
 			* @param meshId MeshComponent identifier
 			*************************************************************************/
-			void connectMesh(ComponentId meshId) { mSpriteId = meshId; }
+			void connectSprite(ComponentId meshId) { mSpriteId = meshId; }
 
 			///Access the GameObject's id
 			inline uint32 getId() { return mId; }
 			///Access the GameObject's transform component id
 			inline ComponentId getTransformId() { return mTransformId; };
 			///Access the GameObject's mesh component id
-			inline ComponentId getMeshId() { return mSpriteId; };
+			inline ComponentId getSpriteId() { return mSpriteId; };
 			///Access the GameObject's material component id
 			
 			///Acesss the GameObject's transform 

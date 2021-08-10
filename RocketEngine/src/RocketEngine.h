@@ -6,6 +6,7 @@
 #include "RocketEngine/core/InputSystem.h"
 #include "RocketEngine/core/MessageManager.h"
 #include "RocketEngine/render/shader/ShaderManager.h"
+#include "RocketEngine/gameobject/GameObject.h"
 
 using Input = RKTEngine::InputSystem;
 namespace KeyCode = RKTEngine::Key;

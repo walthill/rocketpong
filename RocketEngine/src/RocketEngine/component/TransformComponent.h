@@ -58,17 +58,17 @@ namespace RKTEngine
 		};
 		*/
 		Rotation mRotation;	///< Transform rotation data
-		glm::vec3 mPosition;	///< Transform position value
-		glm::vec3 mScale;		///< Transform scale value
+		glm::vec2 mPosition;	///< Transform position value
+		glm::vec2 mScale;		///< Transform scale value
 
 		///Default constructor sets all values to zero
-		TransformData() : mPosition(glm::vec3(0,0,0)), mScale(glm::vec3(1,1,1)), mRotation() {};
+		TransformData() : mPosition(glm::vec2(0,0)), mScale(glm::vec2(1,1)), mRotation() {};
 
 		///Constructor that takes in 2D values for struct variables
-		TransformData(glm::vec2 pos, glm::vec2 scale, float angle) : mPosition(glm::vec3(pos,0)), mScale(glm::vec3(scale, 0)), mRotation(glm::vec3(0.0f,0.0f, 1.0f), angle) {};
+		TransformData(glm::vec2 pos, glm::vec2 scale, float angle) : mPosition(pos), mScale(glm::vec2(scale)), mRotation(glm::vec3(0.0f,0.0f, 1.0f), angle) {};
 
 		///Constructor that takes in values for struct variables
-		TransformData(glm::vec3 pos, glm::vec3 scale, glm::vec3 rotation, float angle) : mPosition(pos), mScale(scale), mRotation(rotation, angle) {};
+		TransformData(glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation, float angle) : mPosition(pos), mScale(scale), mRotation(rotation, angle) {};
 	};
 
 	const TransformData ZERO_TRANSFORM_DATA;
@@ -96,9 +96,9 @@ namespace RKTEngine
 			///Access the transform component data
 			inline TransformData getData() { return mTransformData; }
 			///Access the transform component position
-			inline glm::vec3 getPosition() { return mTransformData.mPosition; };
+			inline glm::vec2 getPosition() { return mTransformData.mPosition; };
 			///Access the transform component scale
-			inline glm::vec3 getScale() { return mTransformData.mScale; };
+			inline glm::vec2 getScale() { return mTransformData.mScale; };
 			///Access the transform component rotation data
 			inline Rotation getRotation() { return mTransformData.mRotation; };
 			///Check if the transform component data has changed
@@ -109,7 +109,7 @@ namespace RKTEngine
 			 *
 			 * @param pos New position vector
 			 *************************************************************************/
-			void setPosition(glm::vec3 pos);
+			void setPosition(glm::vec2 pos);
 
 			/**********************************************************************//**
 			 * Set position value
@@ -123,7 +123,7 @@ namespace RKTEngine
 			 *
 			 * @param pos New position vector
 			 *************************************************************************/
-			void setScale(glm::vec3 mScale);
+			void setScale(glm::vec2 mScale);
 
 			/**********************************************************************//**
 			 * Set rotation value

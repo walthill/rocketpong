@@ -68,8 +68,12 @@ namespace RKTEngine
 			* @param id The identifier for the GameObject. Defaults to an invalid value and is assigned in the function
 			*************************************************************************/
 			GameObject* createGameObject(const TransformData& transform = ZERO_TRANSFORM_DATA,
-										 const SpriteComponentData& spriteData = ZERO_MESH_DATA,
+										 const SpriteComponentData& spriteData = ZERO_SPRITE_DATA,
 						 				 const GameObjectId& id = INVALID_GAMEOBJECT_ID);
+
+			GameObject* createSprite(const std::string& spriteToLoad, glm::vec2 position = glm::vec2(0,0),
+									 glm::vec2 scale = glm::vec2(0, 0), float rotation = 0);
+
 
 			/**********************************************************************//**
 			* Destroy GameObject and remove from manager based on its id
