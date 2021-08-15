@@ -14,6 +14,7 @@ namespace RKTEngine
 
 	TextComponent::~TextComponent()
 	{
+		delete mTextData.mTextInfo;
 	}
 
 	void TextComponent::load()
