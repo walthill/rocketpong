@@ -18,7 +18,7 @@ namespace RKTEngine
 	}
 
 	GameObject* GameObjectManager::createGameObject(const TransformData& transform, const SpriteComponentData& spriteData,
-													const GameObjectId& id)
+													const TextData& labelData, const GameObjectId& id)
 	{
 		GameObject* newObj = nullptr;
 
@@ -48,23 +48,39 @@ namespace RKTEngine
 			newObj->setTransformHandle(pComponentManager->getTransformComponent(newTransformId));
 
 			//SPRITE
-			//Create sprite component, store id in new object, and load the mesh to the component
-			ComponentId newSpriteId = pComponentManager->allocateSpriteComponent(newObj->getTransformId(), spriteData);
-			newObj->connectSprite(newSpriteId);
+			//Create sprite component, store id in new object, and load the sprite to the component
+			if (!spriteData.mSpriteName.empty())
+			{
+				ComponentId newSpriteId = pComponentManager->allocateSpriteComponent(newObj->getTransformId(), spriteData);
+				newObj->connectSprite(newSpriteId);
+			}
 
+			//TEXT LABEL
+			//Create text component, store id in new object, and load the text to the component
+			if (!labelData.mFontName.empty())
+			{
+				ComponentId newLabelId = pComponentManager->allocateTextComponent(newObj->getTransformId(), labelData);
+				newObj->connectLabel(newLabelId);
+			}
 		}
 		return newObj;
 	}
 
 	GameObject* GameObjectManager::createSprite(const std::string& spriteToLoad, glm::vec2 position, glm::vec2 scale, float rotation)
 	{
-		const std::string& spriteShaderID = EngineCore::getInstance()->getAssetManager()->getSpriteShaderID();
-
-		Shader* shader = RKTEngine::EngineCore::getInstance()->getShaderManager()->getShaderByKey(spriteShaderID);
-		TransformData transformData = RKTEngine::TransformData(position, glm::vec2(1.0f, 1.0f), 0.0f);
-		SpriteComponentData spriteData = RKTEngine::SpriteComponentData(spriteToLoad);
+		TransformData transformData = TransformData(position,scale, rotation);
+		SpriteComponentData spriteData = SpriteComponentData(spriteToLoad);
 
 		return createGameObject(transformData, spriteData);
+	}
+
+	GameObject* GameObjectManager::createLabel(const std::string& text, const std::string& fontName, int fontSize, glm::vec2 position,	
+												glm::vec2 scale, float rotation)
+	{
+		TransformData transformData = TransformData(position, scale, rotation);
+		TextData textData = TextData(fontName, text, fontSize);
+
+		return createGameObject(transformData, ZERO_SPRITE_DATA, textData);
 	}
 
 
@@ -91,7 +107,8 @@ namespace RKTEngine
 			//remove components from manager
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
 			pComponentManager->deallocateTransformComponent(obj->getTransformId());
-			pComponentManager->deallocateMeshComponent(obj->getSpriteId());
+			pComponentManager->deallocateSpriteComponent(obj->getSpriteId());
+			pComponentManager->deallocateTextComponent(obj->getLabelId());
 
 			//call destructor on gameObj
 			obj->~GameObject();

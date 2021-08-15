@@ -24,10 +24,14 @@ bool GameApp::initialize()
 	auto pEntityManager = RKTEngine::EngineCore::getInstance()->getEntityManager();
 
 	auto sprite = pEntityManager->createSprite("smiles", glm::vec2(400, 300));
-	sprite->getTransform()->setScale(glm::vec2(.5f, .5f));
+	sprite->getTransform()->setScale(glm::vec2(0.5f, 0.5f));
 
-	//auto uiLabel = GameObject->createTextUI("calibri.ttf", "Hello World"[, 28]);
+	auto uiLabel = pEntityManager->createLabel("Hello World", "calibri.ttf");
+	uiLabel->getUILabel()->setColor(RKTEngine::Color::red);
+	uiLabel->getUILabel()->setText("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
+	uiLabel = pEntityManager->createLabel("Hello World", "calibri.ttf", 28, glm::vec2(0, 200));
+	
 	endInit();
 
 	return mIsRunning;

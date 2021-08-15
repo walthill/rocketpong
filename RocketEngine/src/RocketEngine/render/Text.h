@@ -8,37 +8,26 @@
 
 namespace RKTEngine
 {
-
-	struct TextData
-	{
-		std::string text;
-		Color color;
-		glm::vec2 position;
-		float scale;
-	};
-
-	class Shader;
+	class Font;
 
 	class Text : public RKTUtil::Trackable
 	{
 		public:
 			virtual ~Text() {};
 
-			static Text* create(std::string fontName/*, const Shader& shader*/);
-			void initTextData(TextData data);
+			static Text* create(Font* fontData, std::string& text, int fontSize);
 
-			virtual void setText(std::string newText) OVERRIDE_REQUIRED;
+			virtual void setText(const std::string& newText, int fontSize = sDefaultTextSize) OVERRIDE_REQUIRED;
+
+			virtual void process(glm::vec2 position) OVERRIDE_REQUIRED;
 
 			virtual void renderText() OVERRIDE_REQUIRED;
-			virtual void renderText(TextData data) OVERRIDE_REQUIRED;
 
 			virtual int getWidth() OVERRIDE_REQUIRED;
 			virtual int getHeight() OVERRIDE_REQUIRED;
-
-			inline std::string getText() { return mTextData.text; }
-
+		
+			static int sDefaultTextSize;
 		protected:
-			TextData mTextData;
 	};
 }
 #endif // !TEXT_H

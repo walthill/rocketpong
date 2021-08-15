@@ -31,6 +31,14 @@ namespace RKTEngine
 				spriteComponent->process(data.mPosition, data.mScale, data.mRotation.angle);
 			}
 
+			TextComponent* textComponent = getUILabel();
+			if (textComponent != nullptr)
+			{
+				TransformData data = mpTransform->getData();
+				textComponent->process(data.mPosition, data.mScale, data.mRotation.angle);
+			}
+
+
 			mpTransform->setHasChanged(false);
 		}
 	}
@@ -38,6 +46,12 @@ namespace RKTEngine
 	SpriteComponent* GameObject::getSprite()
 	{
 		auto pComponent = EngineCore::getInstance()->getComponentManager()->getSpriteComponent(mSpriteId);
+		return pComponent;
+	}
+
+	TextComponent* GameObject::getUILabel()
+	{
+		auto pComponent = EngineCore::getInstance()->getComponentManager()->getTextComponent(mLabelId);
 		return pComponent;
 	}
 }

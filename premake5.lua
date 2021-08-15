@@ -37,9 +37,7 @@ project "RocketEngine"
         "%{prj.name}/vendor/glfw/include/glfw",
         "%{prj.name}/vendor/stb_image",
         "%{prj.name}/vendor/kc_truetypeassembler",
-        "%{prj.name}/vendor/glm",
-		"%{prj.name}/vendor/freetype/include"
-
+        "%{prj.name}/vendor/glm"
     }
 
     filter "system:windows"
@@ -89,7 +87,9 @@ project "RogueOne"
     files   
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+		"%{prj.name}/assets/shaders/**.frag",
+		"%{prj.name}/assets/shaders/**.vert"
     }
 
     includedirs

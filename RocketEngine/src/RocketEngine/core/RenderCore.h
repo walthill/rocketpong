@@ -8,8 +8,7 @@ namespace RKTEngine
 	class Window;
 	class ShaderManager;
 	class ComponentManager;
-	class Text;
-
+	
 	class RenderCore
 	{
 		public:
@@ -29,15 +28,11 @@ namespace RKTEngine
 			inline static Renderer::API getAPI() { return Renderer::getAPI(); }
 
 			static void submit(const std::shared_ptr<VertexArray>& vertexArray, int instanceCount = 1);
-
 		private:
 			static std::shared_ptr<VertexArray> mSpriteVA;
 			
 			Window* mpWindowHandle;
 			ShaderManager* mpShaderManager;
-
-			//temp
-			Text* txt;
 
 			bool createWindow();
 			void init2DVertexData();

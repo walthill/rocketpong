@@ -28,6 +28,7 @@ namespace RKTEngine
 {
 	class SpriteComponent;
 	class TransformComponent;
+	class TextComponent;
 
 	/***************************************************************************//**
 	 * @brief 	GameObject class with identifiers for components.
@@ -75,11 +76,19 @@ namespace RKTEngine
 			void connectTransform(ComponentId transfromId) { mTransformId = transfromId; }
 
 			/**********************************************************************//**
-			* Set GameObject's mesh id
+			* Set GameObject's sprite id
 			*
-			* @param meshId MeshComponent identifier
+			* @param spriteId SpriteComponent identifier
 			*************************************************************************/
-			void connectSprite(ComponentId meshId) { mSpriteId = meshId; }
+			void connectSprite(ComponentId spriteId) { mSpriteId = spriteId; }
+
+			/**********************************************************************//**
+			* Set GameObject's label id
+			*
+			* @param labelId TextComponent identifier
+			*************************************************************************/
+			void connectLabel(ComponentId labelId) { mLabelId = labelId; }
+
 
 			///Access the GameObject's id
 			inline uint32 getId() { return mId; }
@@ -87,20 +96,23 @@ namespace RKTEngine
 			inline ComponentId getTransformId() { return mTransformId; };
 			///Access the GameObject's mesh component id
 			inline ComponentId getSpriteId() { return mSpriteId; };
-			///Access the GameObject's material component id
-			
+			///Access the GameObject's text component id
+			inline ComponentId getLabelId() { return mLabelId; };
+
 			///Acesss the GameObject's transform 
 			TransformComponent* getTransform() { return mpTransform; }
 			///Acesss the GameObject's mesh 
 			SpriteComponent* getSprite();
 			///Acesss the GameObject's material
-			
+			TextComponent* getUILabel();
+
 			std::string name = "New Gameobject";
 
 		private:
 			uint32 mId;
 			ComponentId mSpriteId;
 			ComponentId mTransformId;
+			ComponentId mLabelId;
 
 			TransformComponent* mpTransform;
 	};

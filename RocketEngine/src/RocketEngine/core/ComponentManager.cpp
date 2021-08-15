@@ -6,10 +6,12 @@ namespace RKTEngine
 
 	ComponentId ComponentManager::msNextMaterialComponentId = 0;
 	ComponentId ComponentManager::msNextSpriteComponentId = 0;
+	ComponentId ComponentManager::msNextTextComponentId = 0;
 	ComponentId ComponentManager::msNextTransformComponentId = 0;
 
 	ComponentManager::ComponentManager(uint32 maxSize)
 		: mTransformPool(maxSize, sizeof(TransformComponent))
+		, mLabelPool(maxSize, sizeof(TextComponent))
 		, mSpritePool(maxSize, sizeof(SpriteComponent))
 	{
 	}
@@ -32,14 +34,21 @@ namespace RKTEngine
 			SpriteComponent* pComponent = it.second;
 			pComponent->~SpriteComponent();
 		}
-		
+		for (auto& it : mTextComponentMap)
+		{
+			TextComponent* pComponent = it.second;
+			pComponent->~TextComponent();
+		}
+
 		//clear maps
 		mTransformComponentMap.clear();
 		mSpriteComponentMap.clear();
+		mTextComponentMap.clear();
 		
 		//reset memory pools
 		mTransformPool.reset();
 		mSpritePool.reset();
+		mLabelPool.reset();
 	}
 
 
@@ -54,7 +63,7 @@ namespace RKTEngine
 
 	TransformComponent* ComponentManager::getTransformComponent(const ComponentId& id)
 	{
-		auto it = mTransformComponentMap.find(id);
+		auto& it = mTransformComponentMap.find(id);
 
 		if (it != mTransformComponentMap.end())
 			return it->second;
@@ -96,7 +105,7 @@ namespace RKTEngine
 	/******************************************************************************
 	******************************************************************************
 
-		MESH COMPONENT
+		SPRITE COMPONENT
 
 	******************************************************************************
 	*****************************************************************************/
@@ -104,7 +113,7 @@ namespace RKTEngine
 
 	SpriteComponent* ComponentManager::getSpriteComponent(const ComponentId& id)
 	{
-		auto it = mSpriteComponentMap.find(id);
+		auto& it = mSpriteComponentMap.find(id);
 
 		if (it != mSpriteComponentMap.end())
 			return it->second;
@@ -131,7 +140,7 @@ namespace RKTEngine
 		return newID;
 	}
 
-	void ComponentManager::deallocateMeshComponent(const ComponentId& id)
+	void ComponentManager::deallocateSpriteComponent(const ComponentId& id)
 	{
 		auto it = mSpriteComponentMap.find(id);
 
@@ -145,8 +154,65 @@ namespace RKTEngine
 		}
 	}
 
+	/******************************************************************************
+	******************************************************************************
+
+	TEXT LABEL COMPONENT
+
+	******************************************************************************
+	*****************************************************************************/
+
+
+	TextComponent* ComponentManager::getTextComponent(const ComponentId& id)
+	{
+		auto& it = mTextComponentMap.find(id);
+
+		if (it != mTextComponentMap.end())
+			return it->second;
+		else
+			return nullptr;
+	}
+
+	ComponentId ComponentManager::allocateTextComponent(const ComponentId& labelID, const TextData& data)
+	{
+		ComponentId newID = INVALID_COMPONENT_ID;
+		RKTUtil::Byte* ptr = mLabelPool.allocateObject();
+
+		if (ptr != nullptr)
+		{
+			newID = msNextTextComponentId;
+			TextComponent* pComponent = ::new (ptr)TextComponent(newID);
+			pComponent->setData(data);
+			pComponent->load();			
+			mTextComponentMap[newID] = pComponent;
+			msNextTextComponentId++;
+		}
+
+		return newID;
+	}
+
+	void ComponentManager::deallocateTextComponent(const ComponentId& id)
+	{
+		auto it = mTextComponentMap.find(id);
+
+		if (it != mTextComponentMap.end())
+		{
+			TextComponent* ptr = it->second;
+			mTextComponentMap.erase(it);
+
+			ptr->~TextComponent();
+			mLabelPool.freeObject((RKTUtil::Byte*)ptr);
+		}
+	}
+
 	void ComponentManager::update(float elapsedTime)
 	{
+	}
+
+	void ComponentManager::renderComponents()
+	{
+		renderSprites();
+		renderText();
 	}
 
 	void ComponentManager::renderSprites()
@@ -169,6 +235,13 @@ namespace RKTEngine
 			}
 
 			tempComponent = it.second;
+			it.second->render();
+		}
+	}
+	void ComponentManager::renderText()
+	{
+		for (auto& it : mTextComponentMap)
+		{
 			it.second->render();
 		}
 	}

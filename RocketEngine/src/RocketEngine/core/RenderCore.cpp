@@ -1,7 +1,6 @@
 #include "RenderCore.h"
 #include "Window.h"
 #include "RocketEngine/render/shader/ShaderManager.h"
-#include "Platform/OpenGL/OpenGLText.h"
 #include "ComponentManager.h"
 #include <glm\ext\matrix_clip_space.hpp>
 
@@ -24,7 +23,6 @@ namespace RKTEngine
 	void RenderCore::clean()
 	{
 		mSpriteVA.reset();
-		delete txt;
 		delete mpShaderManager;
 		delete mpWindowHandle;
 	}
@@ -42,9 +40,6 @@ namespace RKTEngine
 
 		init2DVertexData();
 		init2DShaderData();
-
-		txt = Text::create("calibri.ttf");
-		//txt->setText("Testing Text Rendering");
 
 		return true;
 	}
@@ -98,8 +93,7 @@ namespace RKTEngine
 
 	void RenderCore::render(ComponentManager* componentsToDraw)
 	{
-		componentsToDraw->renderSprites();
-		txt->renderText();
+		componentsToDraw->renderComponents();
 	}
 
 	void RenderCore::endRender()

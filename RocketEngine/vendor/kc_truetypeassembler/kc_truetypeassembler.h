@@ -266,7 +266,11 @@ Maybe:
 #define KCTTA_ASCII_TO '~'      // ending ASCII codepoint to collect font data for
 #endif
 #define KCTTA_GLYPH_COUNT KCTTA_ASCII_TO - KCTTA_ASCII_FROM + 1
-#define kctta_internal static   // kctta internal function
+#define kctta_internal extern   // kctta internal function
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /** Stores a pointer to the vertex buffer assembly array and the count of vertices in the 
     array (total length of array would be count of vertices * 4).
@@ -379,6 +383,10 @@ kctta_internal TTAVertexBuffer kctta_grab_buffer();
 */
 kctta_internal void kctta_clear_buffer();
 
+#ifdef __cplusplus
+}
+#endif
+
 #undef kctta_internal
 #endif // _INCLUDE_KC_TRUETYPEASSEMBLER_H_
 
@@ -386,7 +394,7 @@ kctta_internal void kctta_clear_buffer();
 ///////////////////// IMPLEMENTATION //////////////////////////
 #ifdef KC_TRUETYPEASSEMBLER_IMPLEMENTATION
 
-#define kctta_internal static           // kctta internal function
+#define kctta_internal extern           // kctta internal function
 #define kctta_local_persist static      // kctta local static variable
 #ifndef KCTTA_MAX_CHAR_IN_BUFFER
 #define KCTTA_MAX_CHAR_IN_BUFFER 800    // maximum characters allowed in vertex buffer ("canvas")

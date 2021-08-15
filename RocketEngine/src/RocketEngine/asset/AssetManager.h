@@ -4,10 +4,12 @@
 #include "RocketEngine/Defines.h"
 #include <RKTUtils/Trackable.h>
 #include <map>
+#include <RocketEngine\component\TextComponent.h>
 
 namespace RKTEngine
 {
 	class Texture2D;
+	class Font;
 
 	class AssetManager : public RKTUtil::Trackable
 		{
@@ -19,10 +21,11 @@ namespace RKTEngine
 
 			void clean();
 
-			Texture2D* loadSpriteAsset(std::string spriteName); //take model name and make it the key, add to map if not there, else return model ref
-			unsigned char* loadFont(std::string fontName);
+			Texture2D* loadSpriteAsset(const std::string& spriteName); //take model name and make it the key, add to map if not there, else return model ref
+			Font* loadFontAsset(const std::string& fontName);
 
 			inline const std::string& getSpriteShaderID() { return mSPRITE_SHADER_ID; }
+			inline const std::string& getTextShaderID() { return mTEXT_SHADER_ID; }
 
 		private:
 			const std::string mSPRITE_ASSET_PATH = "assets/sprites/";
@@ -32,6 +35,9 @@ namespace RKTEngine
 			const std::string mTEXT_SHADER_ID = "text";
 
 			std::map<std::string, Texture2D*> mSpriteAssetCache;
+			std::map<std::string, Font*> mFontAssetCache;
+
+			unsigned char* loadByteData(const std::string& path);
 	};
 }
 #endif // !ASSET_MANAGER_H

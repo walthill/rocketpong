@@ -1,62 +1,32 @@
-//Public Domain @ https://github.com/kevinmkchin/TrueTypeAssembler
-
 #include "OpenGLText.h"
-#include "RocketEngine/core/EngineCore.h"
 #include "RocketEngine/core/RenderCore.h"
-#include "RocketEngine/render/shader/ShaderManager.h"
-#include <truetype/kc_truetypeassembler.cpp>
-#include <fstream>
-#include <glm\ext\matrix_transform.hpp>
+#include "Platform/OpenGL/OpenGLFont.h"
 
-//TODO: update model matrix for position, rotation, scale
-//TODO: implement text change at runtime
-//TODO: add gameobject abstraction
+//TODO: word wrapping
 
 namespace RKTEngine
 {
-	OpenGLText::OpenGLText(std::string fontName)
+	OpenGLText::OpenGLText(Font* fontData, std::string& text, int fontSize)
 	{
-		mTextData.color = Color::white;
-		mTextData.position = glm::vec2(20,20); //0,0 is bottom left. for now
-		mTextData.scale = 1;
-		mTextData.text = "[New] Text";
-
-		const auto& shaderManager = EngineCore::getInstance()->getShaderManager();
-		shaderManager->useShaderByKey(mSHADER_ID);
-		auto mat = glm::mat4(1.0f);
-		auto scale = glm::vec3(1.0f, 1.0f, 1.0f);
-		mat = glm::scale(mat, scale); // last scale
-		shaderManager->setShaderMat4("model", mat);
-
-		initFont(fontName);
-		createFontData();
+		mFontData = dynamic_cast<OpenGLFont*>(fontData);
+		cursorX = 0;
+		cursorY = mSTART_CURSOR_Y;
+		initText(text, fontSize);
 	}
 
 	OpenGLText::~OpenGLText()
 	{
+		mFontData = nullptr;
 	}
 
-	void OpenGLText::initFont(std::string fontName)
+	void OpenGLText::initText(std::string& text, int fontSize)
 	{
-		kctta_setflags(KCTTA_CREATE_INDEX_BUFFER);
-
-		mFontFileData = loadFont(fontName);
-
-		kctta_init_font(&mFontHandle, mFontFileData, defaultFontLoadedSize);
-		width = mFontHandle.font_atlas.width;
-		height = mFontHandle.font_atlas.height;
-
-		kctta_clear_buffer();
-		kctta_move_cursor((int)mTextData.position.x, (int)mTextData.position.y);
-
-		setText(mTextData.text);
+		setText(text, fontSize);
 	}
 
-	void OpenGLText::createFontData()
+	void OpenGLText::generateBuffers()
 	{
-		vb = kctta_grab_buffer();
-
-		// Configure VAO/VBO for texture quads
+		TTAVertexBuffer vb = kctta_grab_buffer();
 		glyphVA.reset(VertexArray::create());
 
 		glyphVB.reset(VertexBuffer::create(vb.vertex_buffer, sizeof(float) * vb.vertices_array_count, VertexBuffer::DataType::STATIC));
@@ -74,68 +44,24 @@ namespace RKTEngine
 
 		glyphVB->unbind();
 		glyphVA->unbind();
-
-		// Creating the font texture in GPU memory
-
-		auto fontAtlasData = mFontHandle.font_atlas;
-		rawTexture.reset(RawTexture::create(fontAtlasData.pixels, fontAtlasData.width, fontAtlasData.height));
-
-		RenderCommand::setActiveTexture(Renderer::TEX_CHANNEL0);
 	}
 
-	void OpenGLText::setText(std::string text)
+	void OpenGLText::setText(const std::string& text, int fontSize)
 	{
-		kctta_append_line(text.c_str(), &mFontHandle, defaultTextDisplaySize);
-		/*kctta_clear_buffer();
-		
-		createFontData();*/
+		kctta_clear_buffer();
+		kctta_move_cursor(cursorX, mSTART_CURSOR_Y);
+		kctta_append_line(text.c_str(), mFontData->getFontData(), fontSize);
+
+		generateBuffers();
+	}
+
+	void OpenGLText::process(glm::vec2 position)
+	{	
 	}
 
 	void OpenGLText::renderText()
 	{
-		renderText(mTextData);
-	}
-
-	void OpenGLText::renderText(TextData data)
-	{
-		const auto& shaderManager = EngineCore::getInstance()->getShaderManager();
-		shaderManager->useShaderByKey(mSHADER_ID);
-		shaderManager->setShaderVec3(mTEXT_COLOR_UNIFORM, data.color.getColor01());
-
-		RenderCommand::setActiveTexture(Renderer::TEX_CHANNEL0);
-		rawTexture->bind();
+		mFontData->attachFontData();
 		RenderCore::submit(glyphVA);
-	}
-
-	unsigned char* OpenGLText::loadFont(std::string fontName)
-	{
-		unsigned char* buffer = new unsigned char[1 << 20];
-		uint32 bufferSize = 1 << 20;
-		if (!fontName.empty())
-		{
-			auto path = mFONT_ASSET_PATH + fontName;
-
-			//open file
-
-			std::basic_ifstream<unsigned char> infile(path, std::ios::in | std::ifstream::binary);
-			
-			//get length of file
-			infile.seekg(0, std::ios::end);
-			auto length = infile.tellg();
-			infile.seekg(0, std::ios::beg);
-
-			// don't overflow the buffer!
-			if (length > bufferSize)
-			{
-				length = bufferSize;
-			}
-
-			//read file
-			infile.read(buffer, length);
-
-			return (unsigned char*)buffer;
-		}
-
-		return nullptr;
 	}
 }

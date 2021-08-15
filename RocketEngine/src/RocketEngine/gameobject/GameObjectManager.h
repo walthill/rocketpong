@@ -24,6 +24,7 @@
 #include <RKTUtils/DeanLib_MemoryPool.h>
 #include "RocketEngine/component/TransformComponent.h"
 #include "RocketEngine/component/SpriteComponent.h"
+#include "RocketEngine/component/TextComponent.h"
 
 namespace RKTEngine
 {
@@ -69,11 +70,14 @@ namespace RKTEngine
 			*************************************************************************/
 			GameObject* createGameObject(const TransformData& transform = ZERO_TRANSFORM_DATA,
 										 const SpriteComponentData& spriteData = ZERO_SPRITE_DATA,
+										 const TextData& labelData = ZERO_LABEL_DATA,
 						 				 const GameObjectId& id = INVALID_GAMEOBJECT_ID);
 
 			GameObject* createSprite(const std::string& spriteToLoad, glm::vec2 position = glm::vec2(0,0),
-									 glm::vec2 scale = glm::vec2(0, 0), float rotation = 0);
+									 glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
 
+			GameObject* createLabel(const std::string& text, const std::string& fontName, int fontSize = Text::sDefaultTextSize, glm::vec2 position = glm::vec2(0, 0),
+				glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
 
 			/**********************************************************************//**
 			* Destroy GameObject and remove from manager based on its id

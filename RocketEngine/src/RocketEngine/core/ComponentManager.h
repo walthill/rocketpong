@@ -25,6 +25,7 @@
 #include <RKTUtils/DeanLib_MemoryPool.h>
 #include "RocketEngine/component/SpriteComponent.h"
 #include "RocketEngine/component/TransformComponent.h"
+#include "RocketEngine/component/TextComponent.h"
 
 namespace RKTEngine
 {
@@ -53,7 +54,9 @@ namespace RKTEngine
 		///Cleanup
 		void clean();
 
-		//TRANSFORM
+
+//------	TRANSFORM	------ //
+
 
 		/**********************************************************************//**
 		* Access the transform component based on the component identifier.
@@ -76,7 +79,10 @@ namespace RKTEngine
 		*************************************************************************/
 		void deallocateTransformComponent(const ComponentId& id);
 
-		//MESH
+
+//------	SPRITE	------ //
+
+
 		/**********************************************************************//**
 		* Access the mesh component based on its component identifier.
 		*
@@ -97,7 +103,31 @@ namespace RKTEngine
 		*
 		* @param id Component identifier
 		*************************************************************************/
-		void deallocateMeshComponent(const ComponentId& id);
+		void deallocateSpriteComponent(const ComponentId& id);
+
+
+//------	TEXT	------ //
+
+		/**********************************************************************//**
+		* Access the transform component based on the component identifier.
+		*
+		* @param id Component identifier
+		*************************************************************************/
+		TextComponent* getTextComponent(const ComponentId& id);
+
+		/**********************************************************************//**
+		* Create transform component based on data passed in and return the component identifier.
+		*
+		* @param data data Transform component data
+		*************************************************************************/
+		ComponentId allocateTextComponent(const ComponentId& labelID, const TextData& data = ZERO_LABEL_DATA);
+
+		/**********************************************************************//**
+		* Remove and destroy transform component from the collection based on the component identifier.
+		*
+		* @param id Component identifier
+		*************************************************************************/
+		void deallocateTextComponent(const ComponentId& id);
 
 		
 		/**********************************************************************//**
@@ -107,21 +137,31 @@ namespace RKTEngine
 		*************************************************************************/
 		void update(float elapsedTime);
 
-		///Draw model meshes to screen
+		void renderComponents();
+
+		///Draw sprites to screen
 		void renderSprites();
 
-		///Get number of Mesh Components
-		int getNumberOfMeshes() { return mSpriteComponentMap.size(); }
+		///Draw text to screen
+		void renderText();
+
+		///Get number of Sprite Components
+		int getNumberOfLabels() { return mTextComponentMap.size(); }
+		///Get number of Sprite Components
+		int getNumberOfSprites() { return mSpriteComponentMap.size(); }
 		///Get number of Transform Components
 		int getNumberOfTransforms() { return mTransformComponentMap.size(); }
 	private:
 		RKTUtil::MemoryPool mTransformPool;
+		RKTUtil::MemoryPool mLabelPool;
 		RKTUtil::MemoryPool mSpritePool;
-
+		
 		std::map<ComponentId, TransformComponent*> mTransformComponentMap;
+		std::map<ComponentId, TextComponent*> mTextComponentMap;
 		std::map<ComponentId, SpriteComponent*> mSpriteComponentMap;
 
 		static ComponentId msNextTransformComponentId;
+		static ComponentId msNextTextComponentId;
 		static ComponentId msNextSpriteComponentId;
 		static ComponentId msNextMaterialComponentId;
 	};
