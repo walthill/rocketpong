@@ -5,7 +5,7 @@
 #include "RocketEngine/core/EngineCore.h"
 #include "RocketEngine/core/InputSystem.h"
 #include "RocketEngine/core/MessageManager.h"
-#include "RocketEngine/render/shader/ShaderManager.h"
+#include "RocketEngine/input/MessageDefines.h"
 #include "RocketEngine/gameobject/GameObject.h"
 
 using Input = RKTEngine::InputSystem;

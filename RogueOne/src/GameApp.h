@@ -6,6 +6,8 @@
 #include <RKTUtils/Timer.h>
 #include <RocketEngine/input/MessageDefines.h>
 
+class Player;
+
 class GameApp : public RKTUtil::Singleton<GameApp>
 {
 	friend class RKTUtil::Singleton<GameApp>;
@@ -36,13 +38,15 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 		int mFPS = 0;
 
 		bool mIsRunning = false;
-		bool mDisplayFrameTime = true;
+		bool mDisplayFrameTime = false;
 		bool mShowFPS = false;
 
 		//Performance tracker data
 		RKTUtil::PerformanceTracker* pinitPerformanceTracker = nullptr;
 		RKTUtil::PerformanceTracker* mpPerformanceTracker = nullptr;
 		RKTUtil::Timer* mpFrameTimer = nullptr;
+
+		static Player* spPlayer;
 
 		void beginInit();
 		void endInit();

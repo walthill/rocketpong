@@ -83,6 +83,14 @@ namespace RKTEngine
 		return createGameObject(transformData, ZERO_SPRITE_DATA, textData);
 	}
 
+	GameObject* GameObjectManager::createPlayer(const std::string& spriteToLoad, glm::vec2 position, glm::vec2 scale, float rotation)
+	{
+		TransformData transformData = TransformData(position, scale, rotation);
+		SpriteComponentData spriteData = SpriteComponentData(spriteToLoad);
+
+		return createGameObject(transformData, spriteData, ZERO_LABEL_DATA, PLAYER_OBJ_ID);
+	}
+
 
 	GameObject* GameObjectManager::findGameObject(const GameObjectId& id) const
 	{
@@ -130,7 +138,8 @@ namespace RKTEngine
 	{
 		for (auto const& it : mGameObjMap)
 		{
-			it.second->onMessage(message);
+			if(it.second->getId() != PLAYER_OBJ_ID)
+				it.second->onMessage(message);
 		}
 	}
 

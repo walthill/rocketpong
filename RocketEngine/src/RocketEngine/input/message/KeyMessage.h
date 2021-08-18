@@ -12,6 +12,8 @@ namespace RKTEngine
 			KeyMessage(const KeyCode keyCode) :
 				mKeyCode(keyCode),
 				Message(MessageType::KEY) {};
+			
+			inline KeyCode getKeyCode() { return mKeyCode; }
 
 			EVENT_CLASS_CATEGORY(MSG_CATEGORY_KEY | MSG_CATEGORY_INPUT)
 

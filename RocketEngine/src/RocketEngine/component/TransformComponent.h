@@ -111,6 +111,8 @@ namespace RKTEngine
 			 *************************************************************************/
 			void setPosition(glm::vec2 pos);
 
+			void setPosition(float x, float y);
+
 			/**********************************************************************//**
 			 * Set position value
 			 *

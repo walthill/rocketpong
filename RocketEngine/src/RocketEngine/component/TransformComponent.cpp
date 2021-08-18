@@ -18,6 +18,12 @@ namespace RKTEngine
 		mDataChanged = true;
 	}
 
+	void TransformComponent::setPosition(float x, float y)
+	{
+		mTransformData.mPosition = glm::vec2(x, y);
+		mDataChanged = true;
+	}
+
 	void TransformComponent::setData(const TransformData& data)
 	{
 		mTransformData.mPosition = data.mPosition;

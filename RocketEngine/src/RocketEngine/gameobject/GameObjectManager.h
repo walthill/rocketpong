@@ -80,7 +80,10 @@ namespace RKTEngine
 			GameObject* createLabel(const std::string& text, const std::string& fontName, int fontSize = Text::sDefaultTextSize, glm::vec2 position = glm::vec2(0, 0),
 				glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
 
-			/**********************************************************************//**
+			GameObject* createPlayer(const std::string& spriteToLoad, glm::vec2 position = glm::vec2(0, 0), 
+				glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
+
+				/**********************************************************************//**
 			* Destroy GameObject and remove from manager based on its id
 			*
 			* @param id The unique identifier for the GameObject to destroy

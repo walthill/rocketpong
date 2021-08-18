@@ -1,5 +1,8 @@
 #include "GameApp.h"
 #include "RocketEngine.h"
+#include "actors/player/Player.h"
+
+Player* GameApp::spPlayer = nullptr;
 
 GameApp::~GameApp()
 {
@@ -9,6 +12,7 @@ GameApp::~GameApp()
 void GameApp::clean()
 {
 	RKTEngine::EngineCore::cleanInstance();
+	spPlayer = nullptr;
 }
 
 bool GameApp::initialize()
@@ -22,6 +26,8 @@ bool GameApp::initialize()
 	RKTEngine::EngineCore::getInstance()->getMessageManager()->setMessageCallback(RKT_BIND_MESSAGE_FN(GameApp::onMessage));
 
 	auto pEntityManager = RKTEngine::EngineCore::getInstance()->getEntityManager();
+
+	spPlayer = new Player("smiles", glm::vec2(800, 300), glm::vec2(0.25f, 0.25f));
 
 	auto sprite = pEntityManager->createSprite("smiles", glm::vec2(400, 300));
 	sprite->getTransform()->setScale(glm::vec2(0.5f, 0.5f));
@@ -116,6 +122,7 @@ void GameApp::onMessage(RKTEngine::Message& message)
 	dispatcher.dispatch<RKTEngine::ExitMessage>(RKT_BIND_MESSAGE_FN(GameApp::quit));
 
 	RKTEngine::EngineCore::getInstance()->onMessage(message);
+	spPlayer->onMessage(message);
 }
 
 double GameApp::getTime()
