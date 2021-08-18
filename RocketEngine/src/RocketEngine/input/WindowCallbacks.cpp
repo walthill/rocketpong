@@ -22,7 +22,15 @@ namespace RKTEngine
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		InputSystem* wind = reinterpret_cast<InputSystem*>(glfwGetWindowUserPointer(window));
-		wind->onKeyEvent(key, scancode, action, mods);
+
+		if (action == GLFW_PRESS)
+		{
+			wind->onKeyDownEvent(key, scancode, mods);
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			wind->onKeyUpEvent(key, scancode, mods);
+		}
 	}
 
 	void mouse_click_callback(GLFWwindow* window, int button, int action, int modifier)

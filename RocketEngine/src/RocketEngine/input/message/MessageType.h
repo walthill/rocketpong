@@ -3,6 +3,9 @@
 enum class MessageType
 {
 	EXIT = 0,
+	KEY,
+	KEY_DOWN,
+	KEY_UP,
 	NUM_MSG_TYPES
 };
 

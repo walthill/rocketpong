@@ -25,6 +25,7 @@
 #include "RocketEngine/component/TransformComponent.h"
 #include "RocketEngine/component/SpriteComponent.h"
 #include "RocketEngine/component/TextComponent.h"
+#include "RocketEngine/input/message/Message.h"
 
 namespace RKTEngine
 {
@@ -87,6 +88,8 @@ namespace RKTEngine
 			void cleanup(const GameObjectId& id);
 
 			void updateAll(float elapsedTime);
+
+			void onMessage(Message& message);
 
 			///Get the number of gameobjects
 			int getNumGameObjects();

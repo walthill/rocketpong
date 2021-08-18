@@ -126,6 +126,14 @@ namespace RKTEngine
 		}
 	}
 
+	void GameObjectManager::onMessage(Message& message)
+	{
+		for (auto const& it : mGameObjMap)
+		{
+			it.second->onMessage(message);
+		}
+	}
+
 	int GameObjectManager::getNumGameObjects()
 	{
 		return mGameObjMap.size();

@@ -57,7 +57,9 @@ namespace RKTEngine
 			***/
 			void onMouseMove(double xpos, double ypos);
 
-			void onKeyEvent(int button, int scancode, int action, int modifier);
+			void onKeyDownEvent(int button, int scancode, int modifier);
+			void onKeyUpEvent(int button, int scancode, int modifier);
+
 			void onWindowClose();
 
 	#pragma endregion

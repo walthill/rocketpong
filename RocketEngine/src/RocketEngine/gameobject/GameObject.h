@@ -22,6 +22,7 @@
 #define GAME_OBJ_H
 
 #include "RocketEngine/Defines.h"
+#include "RocketEngine/input/message/Message.h"
 #include <RKTUtils/Trackable.h>
 
 namespace RKTEngine
@@ -53,6 +54,8 @@ namespace RKTEngine
 			* @param elapsedTime Frame timing
 			*************************************************************************/
 			void update(float elapsedTime);
+
+			virtual void onMessage(Message& message);
 
 			/**********************************************************************//**
 			* Set GameObject's unique id

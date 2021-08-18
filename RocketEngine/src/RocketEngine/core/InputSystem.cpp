@@ -58,8 +58,16 @@ namespace RKTEngine
 	{
 	}
 
-	void InputSystem::onKeyEvent(int button, int scancode, int action, int modifier)
+	void InputSystem::onKeyDownEvent(int button, int scancode, int modifier)
 	{
+		Message* pMessage = new KeyDownMessage(button, 0);
+		EngineCore::getInstance()->getMessageManager()->addMessage(pMessage, 1);
+	}
+	
+	void InputSystem::onKeyUpEvent(int button, int scancode, int modifier)
+	{
+		Message* pMessage = new KeyUpMessage(button);
+		EngineCore::getInstance()->getMessageManager()->addMessage(pMessage, 1);
 	}
 
 #pragma endregion

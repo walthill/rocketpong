@@ -43,6 +43,10 @@ namespace RKTEngine
 		}
 	}
 
+	void GameObject::onMessage(Message& message)
+	{
+	}
+
 	SpriteComponent* GameObject::getSprite()
 	{
 		auto pComponent = EngineCore::getInstance()->getComponentManager()->getSpriteComponent(mSpriteId);
