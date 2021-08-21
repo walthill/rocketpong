@@ -11,11 +11,17 @@ Player::~Player()
 {
 }
 
+bool Player::update(RKTEngine::UpdateMessage& message)
+{
+	return Actor::update(message);
+}
+
 void Player::onMessage(RKTEngine::Message& message)
 {
 	Actor::onMessage(message);
 
 	RKTEngine::MessageDispatcher dispatcher(message);
+	dispatcher.dispatch<RKTEngine::UpdateMessage>(RKT_BIND_MESSAGE_FN(Player::update));
 	dispatcher.dispatch<RKTEngine::KeyDownMessage>(RKT_BIND_MESSAGE_FN(Player::onKeyDown));
 }
 

@@ -11,6 +11,7 @@ class Player : public Actor
 			glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
 		~Player();
 
+		virtual bool update(RKTEngine::UpdateMessage& message) override;
 		virtual void onMessage(RKTEngine::Message& message) override;
 
 	private:

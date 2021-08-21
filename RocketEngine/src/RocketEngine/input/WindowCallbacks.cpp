@@ -25,7 +25,11 @@ namespace RKTEngine
 
 		if (action == GLFW_PRESS)
 		{
-			wind->onKeyDownEvent(key, scancode, mods);
+			wind->onKeyDownEvent(key, scancode, mods, 0);
+		}
+		else if (action == GLFW_REPEAT)
+		{
+			wind->onKeyDownEvent(key, scancode, mods, 1);
 		}
 		else if (action == GLFW_RELEASE)
 		{

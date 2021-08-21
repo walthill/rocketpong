@@ -12,7 +12,7 @@ GameApp::~GameApp()
 void GameApp::clean()
 {
 	RKTEngine::EngineCore::cleanInstance();
-	spPlayer = nullptr;
+	delete spPlayer;
 }
 
 bool GameApp::initialize()

@@ -3,6 +3,7 @@
 enum class MessageType
 {
 	EXIT = 0,
+	UPDATE,
 	KEY,
 	KEY_DOWN,
 	KEY_UP,

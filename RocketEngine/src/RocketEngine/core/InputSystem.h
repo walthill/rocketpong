@@ -28,6 +28,7 @@ namespace RKTEngine
 {
 	class Window;
 	class WindowCallbacks;
+	class MessageManager;
 
 	class InputSystem : public RKTUtil::Trackable
 	{
@@ -57,7 +58,7 @@ namespace RKTEngine
 			***/
 			void onMouseMove(double xpos, double ypos);
 
-			void onKeyDownEvent(int button, int scancode, int modifier);
+			void onKeyDownEvent(int button, int scancode, int modifier, int repeat);
 			void onKeyUpEvent(int button, int scancode, int modifier);
 
 			void onWindowClose();
@@ -78,7 +79,8 @@ namespace RKTEngine
 			void processInput();
 
 		private:
-			static WindowCallbacks* mpsCallbacks;
+			static WindowCallbacks* spCallbacks;
+			static MessageManager* spMessageManagerHandle;
 	};
 }
 

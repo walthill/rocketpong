@@ -66,8 +66,8 @@ namespace RKTEngine
 
 	void EngineCore::initInputSystem()
 	{
-		mpInputSystem = new InputSystem(mpRenderCore->getWindow());
 		mpMessageManager = new MessageManager();
+		mpInputSystem = new InputSystem(mpRenderCore->getWindow());
 	}
 
 	void EngineCore::update()

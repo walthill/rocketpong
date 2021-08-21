@@ -10,6 +10,7 @@
 class Actor : public RKTUtil::Trackable
 {
 	public:
+		virtual bool update(RKTEngine::UpdateMessage& message) { return true; };
 		virtual void onMessage(RKTEngine::Message& message) { mpGameObject->onMessage(message);  };
 
 	protected:

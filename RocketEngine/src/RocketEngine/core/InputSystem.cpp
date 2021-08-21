@@ -24,17 +24,20 @@
 
 namespace RKTEngine
 {
-	WindowCallbacks* InputSystem::mpsCallbacks = nullptr;
-
+	WindowCallbacks* InputSystem::spCallbacks = nullptr;
+	MessageManager* InputSystem::spMessageManagerHandle = nullptr;
+	
 	InputSystem::InputSystem(Window* window)
 	{
-		mpsCallbacks = new WindowCallbacks();
-		mpsCallbacks->initialize(window);
+		spCallbacks = new WindowCallbacks();
+		spCallbacks->initialize(window);
+		spMessageManagerHandle = EngineCore::getInstance()->getMessageManager();
 	}
 
 	InputSystem::~InputSystem()
 	{
-		delete mpsCallbacks;
+		delete spCallbacks;
+		spMessageManagerHandle = nullptr; //InputSystem does NOT own this
 	}
 
 #pragma region Callback Handling
@@ -42,7 +45,7 @@ namespace RKTEngine
 	void InputSystem::onWindowClose()
 	{
 		Message* pMessage = new ExitMessage();
-		EngineCore::getInstance()->getMessageManager()->addMessage(pMessage, 1);
+		spMessageManagerHandle->addMessage(pMessage, 1);
 	}
 
 
@@ -58,16 +61,16 @@ namespace RKTEngine
 	{
 	}
 
-	void InputSystem::onKeyDownEvent(int button, int scancode, int modifier)
+	void InputSystem::onKeyDownEvent(int button, int scancode, int modifier, int repeat)
 	{
-		Message* pMessage = new KeyDownMessage(button, 0);
-		EngineCore::getInstance()->getMessageManager()->addMessage(pMessage, 1);
+		Message* pMessage = new KeyDownMessage(button, repeat);
+		spMessageManagerHandle->addMessage(pMessage, 1);
 	}
 	
 	void InputSystem::onKeyUpEvent(int button, int scancode, int modifier)
 	{
 		Message* pMessage = new KeyUpMessage(button);
-		EngineCore::getInstance()->getMessageManager()->addMessage(pMessage, 1);
+		spMessageManagerHandle->addMessage(pMessage, 1);
 	}
 
 #pragma endregion
@@ -76,11 +79,11 @@ namespace RKTEngine
 
 	bool InputSystem::getKeyDown(const KeyCode& key)
 	{
-		return mpsCallbacks->getKeyDown(key);
+		return spCallbacks->getKeyDown(key);
 	}
 	bool InputSystem::getKeyUp(const KeyCode& key)
 	{
-		return mpsCallbacks->getKeyUp(key);
+		return spCallbacks->getKeyUp(key);
 	}
 
 #pragma endregion
@@ -88,6 +91,9 @@ namespace RKTEngine
 
 	void InputSystem::processInput()
 	{
-		mpsCallbacks->pollEvents();
+		Message* pMessage = new UpdateMessage();
+		spMessageManagerHandle->addMessage(pMessage, 1);
+
+		spCallbacks->pollEvents();
 	}
 }
