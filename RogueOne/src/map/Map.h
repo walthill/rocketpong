@@ -22,7 +22,7 @@ class Map
 
 		void makeWall(int x, int y);
 
-		inline bool Map::isWall(int x, int y) const { return !mMapTiles[x + y * mWidth]->mCanWalk; }
+		bool Map::isWall(int x, int y) const;
 		inline int getHeight() { return mHeight; }
 		inline int getWidth() { return mWidth; }
 

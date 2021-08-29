@@ -14,7 +14,7 @@ Map::Map(int width, int height, int tileSize) :
 	{
 		for (int j = 0; j < height; j++)
 		{
-			mMapTiles.push_back(new Tile(i, j));
+			mMapTiles.push_back(new Tile(j, i));
 		}
 	}
 
@@ -33,18 +33,29 @@ Map::~Map()
 
 void Map::makeWall(int x, int y)
 {
-	auto tile = mMapTiles[x + y * mWidth];
+	auto tile = mMapTiles[x + (y * mWidth)];
 	tile->mpGameObject->getSprite()->setSprite("wall");
 	tile->mCanWalk = false;
 }
 
+bool Map::isWall(int x, int y) const
+{
+	return !mMapTiles[x + (y * mHeight)]->mCanWalk;
+}
+
 bool Map::isValidPosition(glm::vec2 pos)
 {
+	if (pos.x < 0 || pos.y < 0)
+		return false;
+
 	//turn position into grid 
 	int x = (int)(pos.x / sTileSize);
 	int y = (int)(pos.y / sTileSize);
 
-	return !isWall(x,y);
+	if (x > mWidth - 1 || y > mHeight - 1)
+		return false;
+
+	return !isWall(x,y); //TODO: fix dis
 }
 
 //~~~ TILE ~~~~//
