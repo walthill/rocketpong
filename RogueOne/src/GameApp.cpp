@@ -125,6 +125,11 @@ double GameApp::getTime()
 	return RKTEngine::EngineCore::getInstance()->getTime();
 }
 
+Map* GameApp::getMap()
+{
+	return mpMap;
+}
+
 bool GameApp::quit(RKTEngine::ExitMessage& msg)
 {
 	mIsRunning = false;

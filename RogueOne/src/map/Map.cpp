@@ -38,6 +38,15 @@ void Map::makeWall(int x, int y)
 	tile->mCanWalk = false;
 }
 
+bool Map::isValidPosition(glm::vec2 pos)
+{
+	//turn position into grid 
+	int x = (int)(pos.x / sTileSize);
+	int y = (int)(pos.y / sTileSize);
+
+	return !isWall(x,y);
+}
+
 //~~~ TILE ~~~~//
 
 Tile::Tile(int tileX, int tileY, bool canWalk) : 

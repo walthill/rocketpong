@@ -25,6 +25,7 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 		void onMessage(RKTEngine::Message& message);
 
 		double getTime(); 
+		Map* getMap();
 
 		bool quit(RKTEngine::ExitMessage& msg);
 

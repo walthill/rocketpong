@@ -3,6 +3,7 @@
 
 #include "../actors/Actor.h"
 #include <vector>
+#include <glm/vec2.hpp>
 
 class Tile : public Actor
 {
@@ -24,6 +25,8 @@ class Map
 		inline bool Map::isWall(int x, int y) const { return !mMapTiles[x + y * mWidth]->mCanWalk; }
 		inline int getHeight() { return mHeight; }
 		inline int getWidth() { return mWidth; }
+
+		bool isValidPosition(glm::vec2 pos);
 
 		static int sTileSize;
 		static int mStartX, mStartY;

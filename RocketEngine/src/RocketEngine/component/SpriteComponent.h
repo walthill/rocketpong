@@ -60,7 +60,7 @@ namespace RKTEngine
 		///Constructor that takes in values for struct variables
 		SpriteComponentData(std::string name, std::string tileName, int width, int height, Color color = Color::white, int instanceAmount = 1, glm::mat4* matrices = nullptr) :
 			isLoaded(false), sprite(nullptr), mSpriteName(name), mColor(color), instanceCount(instanceAmount), instanceMatrices(matrices), mpShader(nullptr)
-			, mWidth(width), mHeight(height), mTileName("") {};
+			, mWidth(width), mHeight(height), mTileName(tileName) {};
 	};
 
 	const SpriteComponentData ZERO_SPRITE_DATA;
