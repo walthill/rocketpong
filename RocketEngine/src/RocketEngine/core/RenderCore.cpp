@@ -7,8 +7,7 @@
 namespace RKTEngine
 {
 	using BufferType = Renderer::BufferType;
-	std::shared_ptr<VertexArray> RenderCore::mSpriteVA = nullptr;
-
+	
 	RenderCore::RenderCore()
 	{
 		mpWindowHandle = nullptr;
@@ -45,36 +44,14 @@ namespace RKTEngine
 	}
 
 	void RenderCore::init2DVertexData()
-	{
-		const float SPRITE_VERTICES[] = {
-			// pos      // tex
-			0.0f, 1.0f, 0.0f, 1.0f,
-			1.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f, 0.0f,
-
-			0.0f, 1.0f, 0.0f, 1.0f,
-			1.0f, 1.0f, 1.0f, 1.0f,
-			1.0f, 0.0f, 1.0f, 0.0f
-		};
-
-		const BufferLayout spriteLayout = {
-			{ ShaderDataType::Float4, "vertex" }
-		};
-
-		std::shared_ptr<VertexBuffer> mSpriteVB;
-
-		mpShaderManager->useShaderByKey("sprite");
+	{		
 		mSpriteVA.reset(VertexArray::create());
-		mSpriteVB.reset(VertexBuffer::create(SPRITE_VERTICES, sizeof(SPRITE_VERTICES)));
-		mSpriteVB->setLayout(spriteLayout);
-		mSpriteVA->addVertexBuffer(mSpriteVB);
-		mSpriteVA->processVertexBuffers();
 	}
 
 	void RenderCore::init2DShaderData()
 	{
 		glm::mat4 spriteProjection = glm::ortho(0.0f, static_cast<float>(mpWindowHandle->getWidth()),
-			static_cast<float>(mpWindowHandle->getHeight()), 0.0f, -1.0f, 1.0f);
+		static_cast<float>(mpWindowHandle->getHeight()), 0.0f, -1.0f, 1.0f);
 
 		glm::mat4 uiProjection = glm::ortho(0.0f, static_cast<float>(mpWindowHandle->getWidth()), static_cast<float>(mpWindowHandle->getHeight()), 0.0f);
 

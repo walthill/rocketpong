@@ -1,4 +1,5 @@
 #include "AssetManager.h"
+#include <RocketEngine/core/Log.h>
 #include "RocketEngine/render/buffers/Texture.h"
 #include "RocketEngine/render/Font.h"
 #include <fstream>
@@ -7,6 +8,12 @@ namespace RKTEngine
 {
 	AssetManager::AssetManager()
 	{
+		//TODO: make this data driven. somehow
+		mSpriteTileAssetCache = {
+			{	"player",	std::pair<int,int>(0,0)		},
+			{	"floor",	std::pair<int,int>(3, 7)	},
+			{	"wall",		std::pair<int,int>(3,6)		}
+		};
 	}
 
 	AssetManager::~AssetManager()
@@ -16,14 +23,14 @@ namespace RKTEngine
 
 	bool AssetManager::initialize()
 	{
-		mSpriteAssetCache = std::map<std::string, Texture2D*>();
+		mTextureAssetCache = std::map<std::string, Texture2D*>();
 		return true;
 	}
 
 	void AssetManager::clean()
 	{
-		auto iter = mSpriteAssetCache.begin();
-		for (iter; iter != mSpriteAssetCache.end(); ++iter)
+		auto iter = mTextureAssetCache.begin();
+		for (iter; iter != mTextureAssetCache.end(); ++iter)
 		{
 			delete iter->second;
 		}
@@ -38,15 +45,15 @@ namespace RKTEngine
 	Texture2D* AssetManager::loadSpriteAsset(const std::string& spriteName)
 	{
 		Texture2D* newSprite = nullptr;
-		const auto& iter = mSpriteAssetCache.find(spriteName);
-		if (iter != mSpriteAssetCache.end())
+		const auto& iter = mTextureAssetCache.find(spriteName);
+		if (iter != mTextureAssetCache.end())
 		{
 			newSprite = iter->second;
 		}
 		else
 		{
 			newSprite = Texture2D::create(mSPRITE_ASSET_PATH + spriteName + mSPRITE_FILE_ENDING);
-			mSpriteAssetCache[spriteName] = newSprite;
+			mTextureAssetCache[spriteName] = newSprite;
 		}
 
 		return newSprite;
@@ -68,6 +75,23 @@ namespace RKTEngine
 		}
 
 		return newFont;
+	}
+
+	std::pair<int, int> AssetManager::getSpriteAtlasIndex(std::string tileName)
+	{
+		std::pair<int, int> offset;
+
+		const auto& iter = mSpriteTileAssetCache.find(tileName);
+		if (iter != mSpriteTileAssetCache.end())
+		{
+			offset = iter->second;
+		}
+		else
+		{
+			RKT_CORE_ERROR("ERROR::Cannot find tile name: " + tileName);
+		}
+
+		return offset;
 	}
 
 	unsigned char* AssetManager::loadByteData(const std::string& path)

@@ -78,6 +78,14 @@ namespace RKTEngine
 				index++;
 			}
 		}
+
+		//clearVertexBuffers();
+	}
+
+	void OpenGLVertexArray::clearVertexBuffers()
+	{
+		//empty buffer list after sending data to the gpu now
+		mVertexBuffers.clear();
 	}
 
 	void OpenGLVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)

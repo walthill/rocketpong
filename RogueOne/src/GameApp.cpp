@@ -1,6 +1,7 @@
 #include "GameApp.h"
 #include "RocketEngine.h"
 #include "actors/player/Player.h"
+#include "map/Map.h"
 
 Player* GameApp::spPlayer = nullptr;
 
@@ -12,6 +13,7 @@ GameApp::~GameApp()
 void GameApp::clean()
 {
 	RKTEngine::EngineCore::cleanInstance();
+	delete mpMap;
 	delete spPlayer;
 }
 
@@ -25,18 +27,11 @@ bool GameApp::initialize()
 
 	RKTEngine::EngineCore::getInstance()->getMessageManager()->setMessageCallback(RKT_BIND_MESSAGE_FN(GameApp::onMessage));
 
-	auto pEntityManager = RKTEngine::EngineCore::getInstance()->getEntityManager();
+	//auto pEntityManager = RKTEngine::EngineCore::getInstance()->getEntityManager();
 
-	spPlayer = new Player("smiles", glm::vec2(800, 300), glm::vec2(0.25f, 0.25f));
+	mpMap = new Map(10, 10, 16);
 
-	auto sprite = pEntityManager->createSprite("smiles", glm::vec2(400, 300));
-	sprite->getTransform()->setScale(glm::vec2(0.5f, 0.5f));
-
-	auto uiLabel = pEntityManager->createLabel("Hello World", "calibri.ttf");
-	uiLabel->getUILabel()->setColor(RKTEngine::Color::red);
-	uiLabel->getUILabel()->setText("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
-	uiLabel = pEntityManager->createLabel("Hello World", "calibri.ttf", 28, glm::vec2(0, 200));
+	spPlayer = new Player("tileset_0", "player", 16, 16, glm::vec2(16, 16));
 	
 	endInit();
 

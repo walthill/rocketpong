@@ -18,6 +18,7 @@ namespace RKTEngine
 			virtual void setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) OVERRIDE_REQUIRED;
 
 			virtual void processVertexBuffers() OVERRIDE_REQUIRED;
+			virtual void clearVertexBuffers() OVERRIDE_REQUIRED;
 
 			virtual const std::vector<std::shared_ptr<VertexBuffer>>& getVertexBuffers() OVERRIDE_REQUIRED;
 			virtual const std::shared_ptr<IndexBuffer>& getIndexBuffer() OVERRIDE_REQUIRED;

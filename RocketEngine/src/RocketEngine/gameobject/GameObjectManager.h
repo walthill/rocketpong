@@ -74,13 +74,13 @@ namespace RKTEngine
 										 const TextData& labelData = ZERO_LABEL_DATA,
 						 				 const GameObjectId& id = INVALID_GAMEOBJECT_ID);
 
-			GameObject* createSprite(const std::string& spriteToLoad, glm::vec2 position = glm::vec2(0,0),
+			GameObject* createSprite(const std::string& spriteToLoad, const std::string& tileName, int width, int height, glm::vec2 position = glm::vec2(0,0),
 									 glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
 
 			GameObject* createLabel(const std::string& text, const std::string& fontName, int fontSize = Text::sDefaultTextSize, glm::vec2 position = glm::vec2(0, 0),
 				glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
 
-			GameObject* createPlayer(const std::string& spriteToLoad, glm::vec2 position = glm::vec2(0, 0), 
+			GameObject* createPlayer(const std::string& texture, const std::string& tileName, int width, int height, glm::vec2 position = glm::vec2(0, 0),
 				glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
 
 				/**********************************************************************//**

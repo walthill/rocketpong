@@ -45,17 +45,22 @@ namespace RKTEngine
 		int instanceCount;
 		glm::mat4* instanceMatrices;
 
+		std::string mTileName;
+		int mWidth, mHeight;
+
 		Shader* mpShader;
 		Texture2D* sprite;			///< Reference to the model
 		Color mColor;
 
 		///Default constructor sets all values to zero
 		SpriteComponentData() :
-			isLoaded(false), sprite(nullptr), mSpriteName(""), mColor(Color::white), instanceCount(0), instanceMatrices(nullptr), mpShader(nullptr) {};
+			isLoaded(false), sprite(nullptr), mSpriteName(""), mColor(Color::white), instanceCount(0), instanceMatrices(nullptr), mpShader(nullptr)
+			, mWidth(16), mHeight(16), mTileName("") {};
 
 		///Constructor that takes in values for struct variables
-		SpriteComponentData(std::string name, Color color = Color::white, int instanceAmount = 1, glm::mat4* matrices = nullptr) :
-			isLoaded(false), sprite(nullptr), mSpriteName(name), mColor(color), instanceCount(instanceAmount), instanceMatrices(matrices), mpShader(nullptr) {};
+		SpriteComponentData(std::string name, std::string tileName, int width, int height, Color color = Color::white, int instanceAmount = 1, glm::mat4* matrices = nullptr) :
+			isLoaded(false), sprite(nullptr), mSpriteName(name), mColor(color), instanceCount(instanceAmount), instanceMatrices(matrices), mpShader(nullptr)
+			, mWidth(width), mHeight(height), mTileName("") {};
 	};
 
 	const SpriteComponentData ZERO_SPRITE_DATA;
@@ -110,6 +115,8 @@ namespace RKTEngine
 
 		void setColor(Color color) { mSpriteData.mColor = color; }
 
+		void setSprite(const std::string& tileName);
+
 		/**********************************************************************//**
 		 * Set model visibility
 		 *
@@ -141,6 +148,8 @@ namespace RKTEngine
 
 		glm::mat4 mModelMatrix = glm::mat4();
 		SpriteComponentData mSpriteData;
+
+		int mAtlasOffsetX, mAtlasOffsetY;
 
 		void attatchSpriteData();
 	};

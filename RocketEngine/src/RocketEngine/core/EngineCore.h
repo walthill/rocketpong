@@ -33,6 +33,7 @@ namespace RKTEngine
 			double getTime();
 			inline float getDeltaTime() { return mDeltaTime; }
 
+			RenderCore* getRenderer(); 
 			inline ComponentManager* getComponentManager() { return mpComponentManager; }
 			inline AssetManager* getAssetManager() { return mpAssetManager; }
 			inline GameObjectManager* getEntityManager() { return mpEntityManager; }

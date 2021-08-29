@@ -19,6 +19,7 @@ namespace RKTEngine
 			virtual void setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
 			virtual void processVertexBuffers() override;
+			virtual void clearVertexBuffers() override;
 
 			virtual const std::vector<std::shared_ptr<VertexBuffer>>& getVertexBuffers() override { return mVertexBuffers; }
 			virtual const std::shared_ptr<IndexBuffer>& getIndexBuffer() override { return mIndexBuffer; }
@@ -27,6 +28,7 @@ namespace RKTEngine
 			uint32 mRendererId;
 			std::vector<std::shared_ptr<VertexBuffer>> mVertexBuffers;
 			std::shared_ptr<IndexBuffer> mIndexBuffer;
+
 	};
 }
 

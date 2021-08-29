@@ -102,6 +102,7 @@ namespace RKTEngine
 	}
 
 	double EngineCore::getTime() { return mpMasterTimer->getTimeElapsedMs(); }
+	RenderCore* EngineCore::getRenderer() { return mpRenderCore; }
 	InputSystem* EngineCore::getInputSystem() { return mpInputSystem; }
 	MessageManager* EngineCore::getMessageManager() { return mpMessageManager; }
 

@@ -7,6 +7,7 @@
 #include <RocketEngine/input/MessageDefines.h>
 
 class Player;
+class Map;
 
 class GameApp : public RKTUtil::Singleton<GameApp>
 {
@@ -45,6 +46,8 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 		RKTUtil::PerformanceTracker* pinitPerformanceTracker = nullptr;
 		RKTUtil::PerformanceTracker* mpPerformanceTracker = nullptr;
 		RKTUtil::Timer* mpFrameTimer = nullptr;
+
+		Map* mpMap = nullptr;
 
 		static Player* spPlayer;
 
