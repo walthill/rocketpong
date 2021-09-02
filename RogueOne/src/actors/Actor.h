@@ -4,8 +4,7 @@
 #define RocketEngine RKTEngine::EngineCore::getInstance()
 
 #include <RKTUtils/Trackable.h>
-#include "RocketEngine/input/MessageDefines.h"
-#include "RocketEngine/gameobject/GameObject.h"
+#include "RocketEngine.h"
 
 class Actor : public RKTUtil::Trackable
 {
@@ -17,7 +16,7 @@ class Actor : public RKTUtil::Trackable
 
 	protected:
 		Actor() : mpGameObject(nullptr) {};
-		~Actor() { mpGameObject = nullptr; };
+		~Actor() { if(mpGameObject != nullptr) RocketEngine->getEntityManager()->destroy(mpGameObject->getId()); };
 
 };
 

@@ -102,7 +102,7 @@ namespace RKTEngine
 			return nullptr;
 	}
 
-	void GameObjectManager::cleanup(const GameObjectId& id)
+	void GameObjectManager::destroy(const GameObjectId& id)
 	{
 		auto it = mGameObjMap.find(id);
 		if (it != mGameObjMap.end())//found?

@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include <glm/vec2.hpp>
-#include "../Actor.h"
+#include "actors/Actor.h"
 
 class Player : public Actor
 {

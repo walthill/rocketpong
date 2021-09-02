@@ -94,6 +94,7 @@ project "RogueOne"
 
     includedirs
     {
+        "%{prj.name}/src/",
         "RocketEngine/src",
         "RocketEngine/vendor/spdlog/include",
         "RocketEngine/vendor/RocketUtils/RocketUtils/include",

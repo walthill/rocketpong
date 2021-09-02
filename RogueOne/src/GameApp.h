@@ -1,6 +1,7 @@
 #ifndef GAME_APP_H
 #define GAME_APP_H
 
+#include <vector>
 #include <RKTUtils/Singleton.h>
 #include <RKTUtils/PerformanceTracker.h>
 #include <RKTUtils/Timer.h>
@@ -8,7 +9,8 @@
 
 class Player;
 class Map;
-
+class DungeonGenerator;
+	
 class GameApp : public RKTUtil::Singleton<GameApp>
 {
 	friend class RKTUtil::Singleton<GameApp>;
@@ -24,6 +26,8 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 
 		void onMessage(RKTEngine::Message& message);
 
+
+		void generateDungeon();
 		double getTime(); 
 		Map* getMap();
 
@@ -48,7 +52,9 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 		RKTUtil::PerformanceTracker* mpPerformanceTracker = nullptr;
 		RKTUtil::Timer* mpFrameTimer = nullptr;
 
+		std::vector<Map*> maps;
 		Map* mpMap = nullptr;
+		DungeonGenerator* dungeonGen = nullptr;
 
 		static Player* spPlayer;
 

@@ -88,7 +88,7 @@ namespace RKTEngine
 			*
 			* @param id The unique identifier for the GameObject to destroy
 			*************************************************************************/
-			void cleanup(const GameObjectId& id);
+			void destroy(const GameObjectId& id);
 
 			void updateAll(float elapsedTime);
 

@@ -2,6 +2,7 @@
 #include "RocketEngine.h"
 #include "actors/player/Player.h"
 #include "map/Map.h"
+#include "map/DungeonGenerator.h"
 
 Player* GameApp::spPlayer = nullptr;
 
@@ -12,9 +13,21 @@ GameApp::~GameApp()
 
 void GameApp::clean()
 {
-	RKTEngine::EngineCore::cleanInstance();
-	delete mpMap;
+	int amt = RKTEngine::EngineCore::getInstance()->getEntityManager()->getNumGameObjects();
+	RKT_TRACE("GameObjs: " + std::to_string(amt));
+	if (dungeonGen != nullptr)
+		delete dungeonGen;
+
+	//delete mpMap;
+	for (auto map : maps)
+	{
+		delete map;
+	}
+	maps.clear();
+	
 	delete spPlayer;
+
+	RKTEngine::EngineCore::cleanInstance();	
 }
 
 bool GameApp::initialize()
@@ -29,8 +42,16 @@ bool GameApp::initialize()
 
 	//auto pEntityManager = RKTEngine::EngineCore::getInstance()->getEntityManager();
 
-	mpMap = new Map(10, 10, 16);
+	//mpMap = new Map(10, 10, 16);
 
+	maps = std::vector<Map*>();
+	dungeonGen = new DungeonGenerator(1280 * .75f, 720);
+	const auto& rooms = dungeonGen->getRoomDisplayData();
+	for (const auto& room : rooms)
+	{
+		maps.push_back(new Map(room));
+	}
+	
 	spPlayer = new Player("tileset_0", "player", 16, 16, glm::vec2(16, 16));
 	
 	endInit();
@@ -102,7 +123,8 @@ void GameApp::update()
 
 	if (Input::getKeyDown(KeyCode::Escape))
 	{
-		mIsRunning = false;
+		generateDungeon();
+		//mIsRunning = false;
 	}
 }
 
@@ -118,6 +140,29 @@ void GameApp::onMessage(RKTEngine::Message& message)
 
 	RKTEngine::EngineCore::getInstance()->onMessage(message);
 	spPlayer->onMessage(message);
+}
+
+void GameApp::generateDungeon()
+{
+	if (dungeonGen != nullptr)
+		delete dungeonGen;
+
+	for (auto map : maps)
+	{
+		delete map;
+	}
+	maps.clear();
+
+	maps = std::vector<Map*>();
+	dungeonGen = new DungeonGenerator(1280 * .75f, 720);
+	auto& rooms = dungeonGen->getRoomDisplayData();
+	for (const auto& room : rooms)
+	{
+		maps.push_back(new Map(room));
+	}
+
+	int amt = RKTEngine::EngineCore::getInstance()->getEntityManager()->getNumGameObjects();
+	RKT_TRACE("GameObjs: " + std::to_string(amt));
 }
 
 double GameApp::getTime()

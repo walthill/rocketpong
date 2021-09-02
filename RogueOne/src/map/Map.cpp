@@ -1,9 +1,8 @@
 #include "Map.h"
 #include "RocketEngine.h"
+#include "map/DungeonGenerator.h"
 
 int Map::sTileSize = 16;
-int Map::mStartX = 0;
-int Map::mStartY = 0;
 
 Map::Map(int width, int height, int tileSize) :
 	mWidth(width), mHeight(height)
@@ -14,13 +13,27 @@ Map::Map(int width, int height, int tileSize) :
 	{
 		for (int j = 0; j < height; j++)
 		{
-			mMapTiles.push_back(new Tile(j, i));
+			mMapTiles.push_back(new Tile(i, j, *this));
 		}
 	}
 
-	makeWall(1, 0);
-	makeWall(5, 5);
-	makeWall(8, 8);
+	//makeWall(5, 5);
+	//makeWall(8, 8);
+}
+
+Map::Map(const Room* room) :
+	mWidth(room->mRoomWidth), mHeight(room->mRoomHeight)
+{
+	startX = (int)room->position.x;
+	startY = (int)room->position.y;
+	
+	for (int i = 0; i < mWidth; i++)
+	{
+		for (int j = 0; j < mHeight; j++)
+		{
+			mMapTiles.push_back(new Tile(i, j, *this));
+		}
+	}
 }
 
 Map::~Map()
@@ -33,14 +46,22 @@ Map::~Map()
 
 void Map::makeWall(int x, int y)
 {
-	auto tile = mMapTiles[x + (y * mWidth)];
-	tile->mpGameObject->getSprite()->setSprite("wall");
-	tile->mCanWalk = false;
+	size_t index = y + (x * mHeight);
+	if (index < mMapTiles.size())
+	{
+		auto tile = mMapTiles[index];
+		tile->mpGameObject->getSprite()->setSprite("wall");
+		tile->mCanWalk = false;
+	}
+	else
+	{
+		RKT_WARN("Unable to place wall due to an out of bounds index");
+	}
 }
 
 bool Map::isWall(int x, int y) const
 {
-	return !mMapTiles[x + (y * mHeight)]->mCanWalk;
+	return !mMapTiles[y + (x * mHeight)]->mCanWalk;
 }
 
 bool Map::isValidPosition(glm::vec2 pos)
@@ -55,16 +76,16 @@ bool Map::isValidPosition(glm::vec2 pos)
 	if (x > mWidth - 1 || y > mHeight - 1)
 		return false;
 
-	return !isWall(x,y); //TODO: fix dis
+	return !isWall(x,y);
 }
 
 //~~~ TILE ~~~~//
 
-Tile::Tile(int tileX, int tileY, bool canWalk) : 
-	mCanWalk(true), mTileX(tileX), mTileY(tileY)
+Tile::Tile(int tileX, int tileY, const Map& map, bool canWalk) : 
+	mCanWalk(true), mTileX(tileX), mTileY(tileY), mMapHandle(map)
 {
 	std::string spriteName;
 
 	mCanWalk ? spriteName = "floor" : spriteName = "wall";
-	mpGameObject = RocketEngine->getEntityManager()->createSprite("tileset_0", spriteName, 16, 16, glm::vec2(Map::mStartX + (tileX * Map::sTileSize), Map::mStartY+ (tileY * Map::sTileSize)));
+	mpGameObject = RocketEngine->getEntityManager()->createSprite("tileset_0", spriteName, 16, 16, glm::vec2(mMapHandle.startX + (tileX * Map::sTileSize), mMapHandle.startY + (tileY * Map::sTileSize)));
 }

@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "RocketEngine.h"
-#include "../../GameApp.h"
-#include "../../map/Map.h"
+#include "GameApp.h"
+#include "map/Map.h"
 
 Player::Player(const std::string& texture, const std::string& tileName, int width, int height, glm::vec2 position, glm::vec2 scale, float rotation) :
 	Actor()
