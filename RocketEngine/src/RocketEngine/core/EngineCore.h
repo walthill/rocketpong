@@ -3,6 +3,7 @@
 
 #include <RKTUtils/Singleton.h>
 #include <RKTUtils/Timer.h>
+#include <RKTUtils/Profiling.h>
 #include "ComponentManager.h"
 #include "RocketEngine/gameobject/GameObjectManager.h"
 #include "RocketEngine/asset/AssetManager.h"
@@ -40,6 +41,9 @@ namespace RKTEngine
 			InputSystem* getInputSystem();
 			MessageManager* getMessageManager();
 			ShaderManager* getShaderManager();
+
+			int getWindowHeight();
+			int getWindowWidth();
 
 		private:
 			RKTUtil::Timer* mpMasterTimer = nullptr;

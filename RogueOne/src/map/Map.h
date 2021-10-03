@@ -28,9 +28,9 @@ class Map : public RKTUtil::Trackable
 
 		void makeWall(int x, int y);
 
-		bool Map::isWall(int x, int y) const;
-		inline int getHeight() { return mHeight; }
-		inline int getWidth() { return mWidth; }
+		bool isWall(int x, int y) const;
+		int getHeight() const { return mHeight; }
+		int getWidth() const { return mWidth; }
 
 		bool isValidPosition(glm::vec2 pos);
 

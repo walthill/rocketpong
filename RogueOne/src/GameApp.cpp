@@ -43,15 +43,8 @@ bool GameApp::initialize()
 	//auto pEntityManager = RKTEngine::EngineCore::getInstance()->getEntityManager();
 
 	//mpMap = new Map(10, 10, 16);
+	generateDungeon();
 
-	maps = std::vector<Map*>();
-	dungeonGen = new DungeonGenerator(1280 * .75f, 720);
-	const auto& rooms = dungeonGen->getRoomDisplayData();
-	for (const auto& room : rooms)
-	{
-		maps.push_back(new Map(room));
-	}
-	
 	spPlayer = new Player("tileset_0", "player", 16, 16, glm::vec2(16, 16));
 	
 	endInit();
@@ -151,10 +144,14 @@ void GameApp::generateDungeon()
 	{
 		delete map;
 	}
-	maps.clear();
 
+	maps.clear();
 	maps = std::vector<Map*>();
-	dungeonGen = new DungeonGenerator(1280 * .75f, 720);
+	
+	int windowWidth = RKTEngine::EngineCore::getInstance()->getWindowWidth();
+	int windowHeight = RKTEngine::EngineCore::getInstance()->getWindowHeight();
+
+	dungeonGen = new DungeonGenerator(windowWidth * .8f, windowHeight * .95f);
 	auto& rooms = dungeonGen->getRoomDisplayData();
 	for (const auto& room : rooms)
 	{

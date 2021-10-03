@@ -1,5 +1,6 @@
 #include "EngineCore.h"
 #include "RenderCore.h"
+#include "Window.h"
 #include "Log.h"
 #include "InputSystem.h"
 #include "MessageManager.h"
@@ -31,15 +32,15 @@ namespace RKTEngine
 	{
 		mpMasterTimer = new RKTUtil::Timer();
 		mDeltaTime = 0.0f;
-
+		
 		if (!initRenderCore())
 		{
 			return false;
 		}
 		
 
-		mpComponentManager = new ComponentManager(1000);
-		mpEntityManager = new GameObjectManager(1000);
+		mpComponentManager = new ComponentManager(5000);
+		mpEntityManager = new GameObjectManager(5000);
 
 		mpAssetManager = new AssetManager();
 		if (!mpAssetManager->initialize())
@@ -111,4 +112,7 @@ namespace RKTEngine
 		return mpRenderCore->getShaderManager();
 	}
 
+	int EngineCore::getWindowHeight() { return mpRenderCore->getWindow()->getHeight(); }
+	int EngineCore::getWindowWidth() { return mpRenderCore->getWindow()->getWidth(); }
+	
 }

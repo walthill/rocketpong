@@ -22,14 +22,20 @@ Map::Map(int width, int height, int tileSize) :
 }
 
 Map::Map(const Room* room) :
-	mWidth(room->mRoomWidth), mHeight(room->mRoomHeight)
+	mWidth(room->mTileWidth), mHeight(room->mTileHeight)
 {
 	startX = (int)room->position.x;
 	startY = (int)room->position.y;
-	
+
+	int absHeight = mHeight;
+	if (absHeight < 0)
+	{
+		absHeight = std::abs(absHeight);
+	}
+
 	for (int i = 0; i < mWidth; i++)
 	{
-		for (int j = 0; j < mHeight; j++)
+		for (int j = 0; j < absHeight; j++)
 		{
 			mMapTiles.push_back(new Tile(i, j, *this));
 		}
@@ -38,7 +44,11 @@ Map::Map(const Room* room) :
 
 Map::~Map()
 {
-	for (int i = 0; i < mWidth * mHeight; i++)
+	int absHeight = mHeight;
+	if (absHeight < 0)
+		absHeight = std::abs(absHeight);
+
+	for (int i = 0; i < mWidth * absHeight; i++)
 	{
 		delete mMapTiles[i];
 	}
@@ -87,5 +97,8 @@ Tile::Tile(int tileX, int tileY, const Map& map, bool canWalk) :
 	std::string spriteName;
 
 	mCanWalk ? spriteName = "floor" : spriteName = "wall";
-	mpGameObject = RocketEngine->getEntityManager()->createSprite("tileset_0", spriteName, 16, 16, glm::vec2(mMapHandle.startX + (tileX * Map::sTileSize), mMapHandle.startY + (tileY * Map::sTileSize)));
+
+	int yOffset = mMapHandle.getHeight() < 0 ? -(tileY * Map::sTileSize) : (tileY * Map::sTileSize);
+
+	mpGameObject = RocketEngine->getEntityManager()->createSprite("tileset_0", spriteName, 16, 16, glm::vec2(mMapHandle.startX + (tileX * Map::sTileSize), mMapHandle.startY + yOffset));
 }

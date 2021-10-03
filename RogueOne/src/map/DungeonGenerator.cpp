@@ -1,13 +1,12 @@
 #include "DungeonGenerator.h"
 #include <RocketEngine/core/Log.h>
-#include <sstream>
+#include <RocketEngine/math/Random.h>
+
+using Random = RKTEngine::Random;
 
 DungeonGenerator::DungeonGenerator(int width, int height) :
-	mWidth(width), mHeight(height), mMinWidth((int)(width * 0.33f)), mMinHeight((int)(height * 0.33f))
+	mWidth(width), mHeight(height), mMinWidth((int)(width * 0.25f)), mMinHeight((int)(height * 0.25f))
 {
-	std::random_device rd; // obtain a random number from hardware
-	gen = std::mt19937(rd()); // seed the generator
-	gen.seed((unsigned)time(NULL));
 	init(width, height);
 }
 
@@ -19,9 +18,7 @@ DungeonGenerator::~DungeonGenerator()
 void DungeonGenerator::init(int width, int height)
 {
 	mRootNode = new Node(width, height, glm::vec2(0, 0));
-	slice(mRootNode);
-
-//	displayTree(mRootNode, 0);
+	generate(mRootNode);
 }
 
 void DungeonGenerator::cleanup()
@@ -46,104 +43,29 @@ void DungeonGenerator::cleanupBSPTree(Node* node)
 	node = nullptr;
 }
 
-void DungeonGenerator::slice(Node* node)
+void DungeonGenerator::generate(Node* node)
 {
-	std::uniform_int_distribution<> randomAxis(0, 1); // define the range
-	std::uniform_int_distribution<> randomDungeonCoordX(node->mWidth / 6, (int)(node->mWidth * .75f)); // define the range
-	std::uniform_int_distribution<> randomDungeonCoordY(node->mHeight / 6, (int)(node->mHeight*.75f)); // define the range
-
-	int axis = randomAxis(gen);
-
-	std::stringstream ss;
-	auto str = axis == 0 ? "Vertical" : "Horizontal";
-	ss << "split: " << str; //<< ", width: " << node->mWidth << ", height: " << node->mHeight;
-	RKT_TRACE(ss.str());
-
+	int axis = Random::range(0, 1);
 	if (axis == mVERTICAL_SLICE)
 	{
-		int splitXPos = randomDungeonCoordX(gen);
+		int splitXPos = Random::range(node->mWidth / 8, (int)(node->mWidth * .8f));
  		
 		//divide the area along a horizontal or vertical line
 		int leftNodeWidth = node->mWidth - splitXPos;
 		int rightNodeWidth = splitXPos;
 		int nodeHeight = node->mHeight;
 
-		//validate node size
-		//if (leftNodeWidth > mMinWidth)
-		//{
-			//int x = node->mTopLeft.x + (node->mWidth - width);
-			//int y = node->mTopLeft.y;
+		//create node
+		Node* newLeftNode = new Node(leftNodeWidth, nodeHeight, node->mTopLeft);
+		node->mLeftNode = newLeftNode;
 
-			//create node
-			Node* newLeftNode = new Node(leftNodeWidth, nodeHeight, node->mTopLeft);
-			node->mLeftNode = newLeftNode;
+		glm::vec2 topLeft = glm::vec2(node->mTopLeft.x + (node->mWidth - splitXPos), node->mTopLeft.y);
+		Node* newRightNode = new Node(rightNodeWidth, nodeHeight, topLeft);
+		node->mRightNode = newRightNode;
 
-			//slice
-			//slice(newLeftNode);
-		//}
-		//else
-		//{
-			//createRoom(node);
-		//}
-
-
-		//if (rightNodeWidth > mMinWidth)
-		//{
-			//create node
-			glm::vec2 topLeft = glm::vec2(node->mTopLeft.x + (node->mWidth - splitXPos), node->mTopLeft.y);
-			Node* newRightNode = new Node(rightNodeWidth, nodeHeight, topLeft);
-			node->mRightNode = newRightNode;
-
-			//slice
-			//slice(newRightNode);
-		//}
-		//else
-		//{
-			//createRoom(node);
-		//}
-	}
-	else
-	{
-		int splitYPos = randomDungeonCoordY(gen);
-
-		int topNodeHeight = node->mHeight - splitYPos;
-		int bottomNodeHeight = splitYPos;
-		int nodeWidth = node->mWidth;
-
-		//validate node size
-		//if (topNodeHeight > mMinHeight)
-		//{
-			Node* newLeftNode = new Node(nodeWidth, topNodeHeight, node->mTopLeft);
-			node->mLeftNode = newLeftNode;
-
-			//slice
-			//slice(newLeftNode);
-		//}
-		//else
-		//{
-			//createRoom(node);
-		//}
-
-		//if (bottomNodeHeight > mMinHeight)
-		//{
-			glm::vec2 topLeft = glm::vec2(node->mTopLeft.x, node->mTopLeft.y + (node->mHeight - splitYPos));
-			Node* newRightNode = new Node(nodeWidth, bottomNodeHeight, topLeft);
-			node->mRightNode = newRightNode;
-
-			//slice
-			//slice(newRightNode);
-		//}
-		//else
-		//{
-			//createRoom(node);
-		//}
-	}
-
-	if (axis == mVERTICAL_SLICE)
-	{
 		if (node->mLeftNode->mWidth > mMinWidth)
-		{	
-			slice(node->mLeftNode);
+		{
+			generate(node->mLeftNode);
 		}
 		else
 		{
@@ -152,18 +74,37 @@ void DungeonGenerator::slice(Node* node)
 
 		if (node->mRightNode->mWidth > mMinWidth)
 		{
-			slice(node->mRightNode);
+			generate(node->mRightNode);	
 		}
 		else
 		{
 			createRoom(node->mRightNode);
 		}
+
+		if (node->mRightNode != nullptr && node->mLeftNode != nullptr)
+		{
+			createCorridor(node);
+		}
 	}
 	else
 	{
+		int splitYPos = Random::range(node->mHeight / 8, (int)(node->mHeight * .8f));
+
+		int topNodeHeight = node->mHeight - splitYPos;
+		int bottomNodeHeight = splitYPos;
+		int nodeWidth = node->mWidth;
+
+		Node* newLeftNode = new Node(nodeWidth, topNodeHeight, node->mTopLeft);
+		node->mLeftNode = newLeftNode;
+
+		glm::vec2 topLeft = glm::vec2(node->mTopLeft.x, node->mTopLeft.y + (node->mHeight - splitYPos));
+		Node* newRightNode = new Node(nodeWidth, bottomNodeHeight, topLeft);
+		node->mRightNode = newRightNode;
+
+
 		if (node->mLeftNode->mHeight > mMinHeight)
 		{
-			slice(node->mLeftNode);
+			generate(node->mLeftNode);
 		}
 		else
 		{
@@ -172,62 +113,187 @@ void DungeonGenerator::slice(Node* node)
 
 		if (node->mRightNode->mHeight > mMinHeight)
 		{
-			slice(node->mRightNode);
+			generate(node->mRightNode);
 		}
 		else
 		{
 			createRoom(node->mRightNode);
+		}
+
+		if (node->mRightNode != nullptr && node->mLeftNode != nullptr)
+		{
+			createCorridor(node);
 		}
 	}
 }
 
 void DungeonGenerator::createRoom(Node* node)
 {
-	/*
-*	TODO: create rooms
-*	create a room within the cell by randomly
-*	choosing two points (top left and bottom right)
-*	within its boundaries
-*/
-
 	int roomWidth, roomHeight;
+	glm::vec2 topLeft;
 
-	std::uniform_int_distribution<int> w;
-	std::uniform_int_distribution<int> h;
-
-	//Encourage usage of wider/taller node space
+	/*//Encourage usage of wider/taller node space
 	if (node->mWidth > node->mHeight)
 	{
-		w = std::uniform_int_distribution<int>((node->mWidth) / 2, node->mWidth);
-		h = std::uniform_int_distribution<int>((node->mHeight) / 4, node->mHeight);
+		roomWidth = Random::range((node->mWidth) / 4, node->mWidth);
+		roomHeight = Random::range((node->mHeight) / 4, node->mHeight);
 	}
 	else
 	{
-		w = std::uniform_int_distribution<int>((node->mWidth) / 4, node->mWidth);
-		h = std::uniform_int_distribution<int>((node->mHeight) / 2, node->mHeight);
+		roomWidth = Random::range((node->mWidth) / 4, node->mWidth);
+		roomHeight = Random::range((node->mHeight) / 4, node->mHeight);
+	}*/
+
+	roomWidth = Random::range((int)(node->mWidth * 0.25f), node->mWidth);
+	roomHeight = Random::range((int)(node->mHeight * 0.25f), node->mHeight);
+
+	int leftX = Random::range((int)node->mTopLeft.x, (int)(node->mTopLeft.x + (node->mWidth - roomWidth)));
+	int leftY = Random::range((int)node->mTopLeft.y, (int)(node->mTopLeft.y + (node->mHeight - roomHeight)));
+	
+	leftX = snapToTileGrid(leftX, 16);
+	leftY = snapToTileGrid(leftY, 16);
+	
+	topLeft = glm::vec2(leftX, leftY);
+	
+	storeRoomData(node, roomWidth / 16, roomHeight / 16, topLeft);
+}
+
+
+//God bless Mr. Romain Beaudon - http://www.rombdn.com/blog/2018/01/12/random-dungeon-bsp-unity/
+void DungeonGenerator::createCorridor(Node* node)
+{
+	Room* leftRoom = getRoom(node->mLeftNode);
+	Room* rightRoom = getRoom(node->mRightNode);
+
+	// attach the corridor to a random point in each room
+	int leftX = Random::range((int)leftRoom->position.x + 16, (int)leftRoom->position.x + (leftRoom->mTileWidth * 16) - 16);
+	int leftY = Random::range((int)leftRoom->position.y + 16, (int)leftRoom->position.y + (leftRoom->mTileHeight * 16) - 16);
+
+	leftX = snapToTileGrid(leftX, 16);
+	leftY = snapToTileGrid(leftY, 16);
+
+	int rightX = Random::range((int)rightRoom->position.x + 16, (int)rightRoom->position.x + (rightRoom->mTileWidth * 16) - 16);
+	int rightY = Random::range((int)rightRoom->position.y + 16, (int)rightRoom->position.y + (rightRoom->mTileHeight * 16) - 16);
+
+	rightX = snapToTileGrid(rightX, 16);
+	rightY = snapToTileGrid(rightY, 16);
+
+	glm::vec2 leftPoint = glm::vec2(leftX, leftY);
+	glm::vec2 rightPoint = glm::vec2(rightX, rightY);
+
+	// always be sure that left point is on the left to simplify the code
+	if (leftPoint.x > rightPoint.x)
+	{
+		glm::vec2 temp = leftPoint;
+		leftPoint = rightPoint;
+		rightPoint = temp;
 	}
 
-	roomWidth = w(gen);
-	roomHeight = h(gen);
+	//find positional difference, convert to tile space
+	int diffWidth = (int)(leftPoint.x - rightPoint.x)/16;
+	int diffHeight = (int)(leftPoint.y - rightPoint.y)/16;
 
-	RKT_TRACE("pixel width: " + std::to_string(roomWidth) + "\tpixel height: " + std::to_string(roomHeight));
-	//RKT_TRACE("Num tiles: " + std::to_string(roomWidth / 16) );
+	// if the points are not aligned horizontally
+	if (diffWidth != 0)
+	{
+		// choose at random to go horizontal then vertical or the opposite
+		if (Random::range_real(0.0f,1.0f) > 0.5f) 
+		{
+			// add a corridor to the right
+			storeCorridorData(std::abs(diffWidth), 1, leftPoint);
+			// if left point is below right point go up
+			// otherwise go down
+			if (diffHeight < 0) 
+			{
+				storeCorridorData(1, std::abs(diffHeight), glm::vec2(rightPoint.x, leftPoint.y));
+			}
+			else 
+			{
+				RKT_TRACE("neg height: " + std::to_string(-std::abs(diffHeight)));
+				storeCorridorData(1, -std::abs(diffHeight) , glm::vec2(rightPoint.x, leftPoint.y));
+			}
+		}
+		else 
+		{
+			// go up or down
+			if (diffHeight < 0)
+			{
+				storeCorridorData(1, std::abs(diffHeight), leftPoint);
+			}
+			else {
+				storeCorridorData(1, std::abs(diffHeight), glm::vec2(leftPoint.x, rightPoint.y));
+			}
 
-	//generators for choosing two points(top left and bottom right)
-	std::uniform_int_distribution<> randomRoomX((int)node->mTopLeft.x, (int)(node->mTopLeft.x + (node->mWidth - roomWidth)));
-	std::uniform_int_distribution<> randomRoomY((int)node->mTopLeft.y, (int)(node->mTopLeft.y + (node->mHeight - roomHeight)));
+			// then go right
+			storeCorridorData(std::abs(diffWidth), 1, glm::vec2(leftPoint.x, rightPoint.y));
+		}
+	}
+	else 
+	{
+		// if the points are aligned horizontally
+		// go up or down depending on the positions
+		if (diffHeight < 0)
+		{
+			storeCorridorData(1, std::abs(diffHeight), leftPoint);
+		}
+		else 
+		{
+			storeCorridorData(1, std::abs(diffHeight), rightPoint);
+		}
+	}
+}
 
-	glm::vec2 topLeft = glm::vec2(randomRoomX(gen), randomRoomY(gen));
+void DungeonGenerator::storeRoomData(Node* node, int width, int height, glm::vec2 position)
+{
+	const int maxTiles = 15;
+	const int minTiles = 3;
 
-	//Store room data
 	Room* newRoom = new Room;
-	//Flipped height and width storage due to map tiling order
-	newRoom->mRoomHeight = std::clamp(roomHeight / 16, 3, 15);
-	newRoom->mRoomWidth = std::clamp(roomWidth / 16, 3, 15);
-	newRoom->position = topLeft;
+	newRoom->mTileHeight = std::clamp(height, minTiles, maxTiles);
+	newRoom->mTileWidth = std::clamp(width, minTiles, maxTiles);
+	newRoom->position = position;
 
-	RKT_TRACE("tile width: " + std::to_string(newRoom->mRoomWidth) + "\tpixel height: " + std::to_string(newRoom->mRoomHeight));
-
+	node->mRoom = newRoom;
 	mRoomDataList.push_back(newRoom);
 }
 
+void DungeonGenerator::storeCorridorData(int width, int height, glm::vec2 position)
+{
+	Room* newCorridor = new Room; 
+	newCorridor->mTileHeight = height;
+	newCorridor->mTileWidth = width;
+	newCorridor->position = position;
+
+	mRoomDataList.push_back(newCorridor);
+}
+
+Room* DungeonGenerator::getRoom(Node* node)
+{
+	//Node has room
+	if (node->mRoom != nullptr)
+		return node->mRoom;
+
+	//Node does NOT have room, find room in child
+	//NOTE: at this stage, all node leaves should contain rooms
+	if (node->mLeftNode != nullptr)
+		return getRoom(node->mLeftNode);
+
+	if (node->mRightNode != nullptr)
+		return getRoom(node->mRightNode);
+
+	RKT_ASSERT("Tree has no rooms! You may have missed a step in the generation process");
+
+	return nullptr;
+}
+
+
+// Function to calculate the smallest multiple
+int DungeonGenerator::snapToTileGrid(int value, int tileSize)
+{
+	if (tileSize > value)
+		return tileSize;
+
+	value = value + tileSize / 2;
+	value = value - (value % tileSize);
+	return value;
+}
