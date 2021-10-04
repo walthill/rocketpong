@@ -116,8 +116,11 @@ void GameApp::update()
 
 	if (Input::getKeyDown(KeyCode::Escape))
 	{
+		mIsRunning = false;
+	}
+	else if (Input::getKeyDown(KeyCode::R))
+	{
 		generateDungeon();
-		//mIsRunning = false;
 	}
 }
 
