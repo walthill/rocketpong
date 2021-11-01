@@ -4,8 +4,6 @@
 #include "map/Map.h"
 #include "map/DungeonGenerator.h"
 
-Player* GameApp::spPlayer = nullptr;
-
 GameApp::~GameApp()
 {
 	clean();
@@ -13,19 +11,9 @@ GameApp::~GameApp()
 
 void GameApp::clean()
 {
-	int amt = RKTEngine::EngineCore::getInstance()->getEntityManager()->getNumGameObjects();
-	RKT_TRACE("GameObjs: " + std::to_string(amt));
-	if (dungeonGen != nullptr)
-		delete dungeonGen;
-
-	//delete mpMap;
-	for (auto map : maps)
-	{
-		delete map;
-	}
-	maps.clear();
-	
-	delete spPlayer;
+	delete mpDungeonGen;
+	delete mpMap;
+	delete mpPlayer;
 
 	RKTEngine::EngineCore::cleanInstance();	
 }
@@ -40,12 +28,12 @@ bool GameApp::initialize()
 
 	RKTEngine::EngineCore::getInstance()->getMessageManager()->setMessageCallback(RKT_BIND_MESSAGE_FN(GameApp::onMessage));
 
-	//auto pEntityManager = RKTEngine::EngineCore::getInstance()->getEntityManager();
+	int windowWidth = RKTEngine::EngineCore::getInstance()->getWindowWidth();
+	int windowHeight = RKTEngine::EngineCore::getInstance()->getWindowHeight();
 
-	//mpMap = new Map(10, 10, 16);
+	mpMap = new Map((int)(windowWidth * .8f), (int)(windowHeight * .95f), 16);
+	mpDungeonGen = new DungeonGenerator((int)(windowWidth * .8f), (int)(windowHeight * .95f));
 	generateDungeon();
-
-	spPlayer = new Player("tileset_0", "player", 16, 16, glm::vec2(16, 16));
 	
 	endInit();
 
@@ -135,34 +123,33 @@ void GameApp::onMessage(RKTEngine::Message& message)
 	dispatcher.dispatch<RKTEngine::ExitMessage>(RKT_BIND_MESSAGE_FN(GameApp::quit));
 
 	RKTEngine::EngineCore::getInstance()->onMessage(message);
-	spPlayer->onMessage(message);
+	mpPlayer->onMessage(message);
 }
 
 void GameApp::generateDungeon()
 {
-	if (dungeonGen != nullptr)
-		delete dungeonGen;
-
-	for (auto map : maps)
+	mpMap->clearMap();
+	if (mpDungeonGen != nullptr)
+		mpDungeonGen->cleanup();
+	
+	if (mpPlayer != nullptr)
 	{
-		delete map;
+		delete mpPlayer;
+		mpPlayer = nullptr;
 	}
 
-	maps.clear();
-	maps = std::vector<Map*>();
-	
 	int windowWidth = RKTEngine::EngineCore::getInstance()->getWindowWidth();
 	int windowHeight = RKTEngine::EngineCore::getInstance()->getWindowHeight();
 
-	dungeonGen = new DungeonGenerator(windowWidth * .8f, windowHeight * .95f);
-	auto& rooms = dungeonGen->getRoomDisplayData();
-	for (const auto& room : rooms)
+	mpDungeonGen->generate();
+	auto& rooms = mpDungeonGen->getRoomData();
+
+	for (auto& room : rooms)
 	{
-		maps.push_back(new Map(room));
+		mpMap->addRoom(room);
 	}
 
-	int amt = RKTEngine::EngineCore::getInstance()->getEntityManager()->getNumGameObjects();
-	RKT_TRACE("GameObjs: " + std::to_string(amt));
+	mpPlayer = new Player("tileset_0", "player", Map::sTileSize, Map::sTileSize, rooms[0]->position);
 }
 
 double GameApp::getTime()

@@ -54,9 +54,9 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 
 		std::vector<Map*> maps;
 		Map* mpMap = nullptr;
-		DungeonGenerator* dungeonGen = nullptr;
+		DungeonGenerator* mpDungeonGen = nullptr;
 
-		static Player* spPlayer;
+		Player* mpPlayer = nullptr;
 
 		void beginInit();
 		void endInit();

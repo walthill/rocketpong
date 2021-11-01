@@ -31,7 +31,7 @@ class DungeonGenerator : public RKTUtil::Trackable
 		DungeonGenerator(int width, int height);
 		~DungeonGenerator();
 
-		void init(int width, int height);
+		void generate();
 		void cleanup();
 		void cleanupBSPTree(Node* node);
 
@@ -46,7 +46,7 @@ class DungeonGenerator : public RKTUtil::Trackable
 
 		int snapToTileGrid(int n, int x);
 
-		const std::vector<Room*> getRoomDisplayData() { return mRoomDataList; }
+		const std::vector<Room*> getRoomData() { return mRoomDataList; }
 
 	private:
 		const int mVERTICAL_SLICE = 0;

@@ -5,14 +5,10 @@
 #include <vector>
 #include <glm/vec2.hpp>
 
-class Map;
-
 class Tile : public Actor
 {
 	public:
-		Tile(int tileX, int tileY, const Map& map, bool canWalk = true);
-
-		const Map& mMapHandle;
+		Tile(glm::vec2 roomTopLeft, int tileX, int tileY, bool isHeightNegative, bool canWalk = true);
 		bool mCanWalk;
 		int mTileX, mTileY; //Tile location in the map array
 };
@@ -23,9 +19,10 @@ class Map : public RKTUtil::Trackable
 {
 	public:
 		Map(int width, int height, int tileSize);
-		Map(const Room* room);
 		~Map();
 
+		void clearMap();
+		void addRoom(const Room* room);
 		void makeWall(int x, int y);
 
 		bool isWall(int x, int y) const;
@@ -38,6 +35,7 @@ class Map : public RKTUtil::Trackable
 		static int sTileSize;
 	private:
 		std::vector<Tile*> mMapTiles;
+		std::vector<Tile*> mOverflowVisualTiles; //render overlapping tiles w/o affecting traversa
 		int mWidth, mHeight;
 };
 

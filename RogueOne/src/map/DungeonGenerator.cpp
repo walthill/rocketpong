@@ -7,7 +7,6 @@ using Random = RKTEngine::Random;
 DungeonGenerator::DungeonGenerator(int width, int height) :
 	mWidth(width), mHeight(height), mMinWidth((int)(width * 0.25f)), mMinHeight((int)(height * 0.25f))
 {
-	init(width, height);
 }
 
 DungeonGenerator::~DungeonGenerator()
@@ -15,9 +14,9 @@ DungeonGenerator::~DungeonGenerator()
 	cleanup();
 }
 
-void DungeonGenerator::init(int width, int height)
+void DungeonGenerator::generate()
 {
-	mRootNode = new Node(width, height, glm::vec2(0, 0));
+	mRootNode = new Node(mWidth, mHeight, glm::vec2(0, 0));
 	generate(mRootNode);
 }
 
@@ -27,6 +26,7 @@ void DungeonGenerator::cleanup()
 	{
 		delete room;
 	}
+	mRoomDataList.clear();
 
 	cleanupBSPTree(mRootNode);
 }
@@ -209,7 +209,6 @@ void DungeonGenerator::createCorridor(Node* node)
 			}
 			else 
 			{
-				RKT_TRACE("neg height: " + std::to_string(-std::abs(diffHeight)));
 				storeCorridorData(1, -std::abs(diffHeight) , glm::vec2(rightPoint.x, leftPoint.y));
 			}
 		}
@@ -220,7 +219,8 @@ void DungeonGenerator::createCorridor(Node* node)
 			{
 				storeCorridorData(1, std::abs(diffHeight), leftPoint);
 			}
-			else {
+			else 
+			{
 				storeCorridorData(1, std::abs(diffHeight), glm::vec2(leftPoint.x, rightPoint.y));
 			}
 

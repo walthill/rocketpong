@@ -5,52 +5,81 @@
 int Map::sTileSize = 16;
 
 Map::Map(int width, int height, int tileSize) :
-	mWidth(width), mHeight(height)
+	mWidth(width / tileSize), mHeight(height / tileSize)
 {
 	sTileSize = tileSize;
+	mOverflowVisualTiles = std::vector<Tile*>();
 
-	for (int i = 0; i < width; i++)
+	for (int i = 0; i < mWidth * mHeight; i++)
 	{
-		for (int j = 0; j < height; j++)
-		{
-			mMapTiles.push_back(new Tile(i, j, *this));
-		}
+		mMapTiles.push_back(nullptr);
 	}
 
 	//makeWall(5, 5);
 	//makeWall(8, 8);
 }
 
-Map::Map(const Room* room) :
-	mWidth(room->mTileWidth), mHeight(room->mTileHeight)
+
+Map::~Map()
+{
+	clearMap();
+	mMapTiles.clear();
+}
+
+void Map::clearMap()
+{
+	for (int i = 0; i < mWidth * mHeight; i++)
+	{
+		if (mMapTiles[i] != nullptr)
+		{
+			delete mMapTiles[i];
+			mMapTiles[i] = nullptr;
+		}
+	}
+	for (auto& tile : mOverflowVisualTiles)
+	{
+		delete tile;
+	}
+	mOverflowVisualTiles.clear();
+}
+
+
+void Map::addRoom(const Room* room)
 {
 	startX = (int)room->position.x;
 	startY = (int)room->position.y;
 
-	int absHeight = mHeight;
-	if (absHeight < 0)
+	//turn topLeft position into grid 
+	int gridX = startX / sTileSize;
+	int gridY = startY / sTileSize;
+
+	int absHeight = room->mTileHeight;
+	bool isHeightNegative = absHeight < 0;
+	if (isHeightNegative)
 	{
 		absHeight = std::abs(absHeight);
 	}
 
-	for (int i = 0; i < mWidth; i++)
+	for (int i = 0; i < room->mTileWidth; i++)
 	{
 		for (int j = 0; j < absHeight; j++)
 		{
-			mMapTiles.push_back(new Tile(i, j, *this));
+			int x = gridX + i;
+			int y = gridY + j;
+			int index = y + (x * mHeight);
+
+			if (index < mWidth * mHeight)
+			{
+				if (mMapTiles[index] == nullptr)
+				{
+					mMapTiles[index] = new Tile(room->position, i, j, isHeightNegative);
+				}
+				else
+				{
+					mOverflowVisualTiles.push_back(new Tile(room->position, i, j, isHeightNegative));
+				}
+			}
 		}
-	}
-}
-
-Map::~Map()
-{
-	int absHeight = mHeight;
-	if (absHeight < 0)
-		absHeight = std::abs(absHeight);
-
-	for (int i = 0; i < mWidth * absHeight; i++)
-	{
-		delete mMapTiles[i];
 	}
 }
 
@@ -71,7 +100,13 @@ void Map::makeWall(int x, int y)
 
 bool Map::isWall(int x, int y) const
 {
-	return !mMapTiles[y + (x * mHeight)]->mCanWalk;
+	bool isWall = true;
+
+	auto tile = mMapTiles[y + (x * mHeight)];
+	if (tile != nullptr)
+		isWall = !tile->mCanWalk;
+
+	return isWall;
 }
 
 bool Map::isValidPosition(glm::vec2 pos)
@@ -91,14 +126,15 @@ bool Map::isValidPosition(glm::vec2 pos)
 
 //~~~ TILE ~~~~//
 
-Tile::Tile(int tileX, int tileY, const Map& map, bool canWalk) : 
-	mCanWalk(true), mTileX(tileX), mTileY(tileY), mMapHandle(map)
+Tile::Tile(glm::vec2 roomTopLeft, int tileX, int tileY, bool isHeightNegative, bool canWalk) :
+	mCanWalk(true), mTileX(tileX), mTileY(tileY)
 {
 	std::string spriteName;
 
 	mCanWalk ? spriteName = "floor" : spriteName = "wall";
 
-	int yOffset = mMapHandle.getHeight() < 0 ? -(tileY * Map::sTileSize) : (tileY * Map::sTileSize);
+	int xOffset = tileX * Map::sTileSize;
+	int yOffset = isHeightNegative ? -(tileY * Map::sTileSize) : (tileY * Map::sTileSize);
 
-	mpGameObject = RocketEngine->getEntityManager()->createSprite("tileset_0", spriteName, 16, 16, glm::vec2(mMapHandle.startX + (tileX * Map::sTileSize), mMapHandle.startY + yOffset));
+	mpGameObject = RocketEngine->getEntityManager()->createSprite("tileset_0", spriteName, Map::sTileSize, Map::sTileSize, glm::vec2(roomTopLeft.x + xOffset, roomTopLeft.y + yOffset));
 }
