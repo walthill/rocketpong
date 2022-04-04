@@ -9,12 +9,15 @@ namespace RKTEngine
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
+		OpenGLVertexBuffer(uint32 size, DataType usage);	//for initializing empty, dynamic batch buffer
 		OpenGLVertexBuffer(const float* vertices, uint32 size, DataType usage);
 		OpenGLVertexBuffer(const void* vertices, uint32 size, DataType usage);
 		virtual ~OpenGLVertexBuffer();
 
 		virtual void bind() const override;
 		virtual void unbind() const override;
+
+		virtual void setRenderData(const void* data, uint32_t size) override;
 
 		virtual void setLayout(const BufferLayout& layout) override { mLayout = layout; }
 		virtual const BufferLayout& getLayout() const override { return mLayout; }

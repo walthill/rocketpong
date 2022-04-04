@@ -136,6 +136,9 @@ namespace RKTEngine
 				virtual void setLayout(const BufferLayout& layout) OVERRIDE_REQUIRED;
 				virtual const BufferLayout& getLayout() const OVERRIDE_REQUIRED;
 
+				virtual void setRenderData(const void* data, uint32_t size) OVERRIDE_REQUIRED;
+			
+				static VertexBuffer* create(uint32 size, DataType usage = DataType::DYNAMIC);
 				static VertexBuffer* create(const float* vertices, uint32 size, DataType usage = DataType::STATIC);
 				static VertexBuffer* create(const void* data, uint32 size, DataType usage = DataType::STATIC);
 			private:
@@ -151,7 +154,7 @@ namespace RKTEngine
 
 				virtual uint32 getCount() const OVERRIDE_REQUIRED;
 
-				static IndexBuffer* create(uint32* indicies, uint32 size);
+				static IndexBuffer* create(uint32* indicies, uint32 count);
 			private:
 		};
 

@@ -1,8 +1,77 @@
 #include "OpenGLRenderer.h"
 #include <glad/glad.h>
+#include <RKTUtils/Profiling.h>
 
 namespace RKTEngine
 {
+	void OpenGLRenderer::initialize()
+	{
+		RKT_PROFILE_FUNCTION();
+
+		sData.quadVertexArray.reset(VertexArray::create());
+
+		sData.quadVertexBuffer.reset(VertexBuffer::create(sData.MAX_VERTICES * sizeof(QuadVertex)));
+		sData.quadVertexBuffer->setLayout({
+			{ShaderDataType::Float3, "position"},
+			{ShaderDataType::Float4, "a_color"},
+			{ShaderDataType::Float2, "texCoords"}
+		});
+		sData.quadVertexArray->addVertexBuffer(sData.quadVertexBuffer);
+		sData.quadVertexArray->processVertexBuffers();
+
+		sData.quadVertexBufferBase = new QuadVertex[sData.MAX_VERTICES];
+
+		uint32_t* quadIndices = new uint32_t[sData.MAX_INDICES];
+		uint32_t offset = 0;
+		for (uint32_t i = 0; i < sData.MAX_INDICES; i+=6)
+		{
+			quadIndices[i + 0] = offset + 0;
+			quadIndices[i + 1] = offset + 1;
+			quadIndices[i + 2] = offset + 2;
+
+			quadIndices[i + 3] = offset + 2;
+			quadIndices[i + 4] = offset + 3;
+			quadIndices[i + 5] = offset + 0;
+
+			offset += 4;
+		}
+
+		std::shared_ptr<IndexBuffer> quadIB;
+		quadIB.reset(IndexBuffer::create(quadIndices, sData.MAX_INDICES));
+		sData.quadVertexArray->setIndexBuffer(quadIB);
+		delete[] quadIndices;
+	}
+
+	void OpenGLRenderer::cleanup()
+	{
+		RKT_PROFILE_FUNCTION();
+		sData.cleanup();
+	}
+
+	void OpenGLRenderer::beginScene()
+	{
+		RKT_PROFILE_FUNCTION();
+
+		sData.quadIndexCount = 0;
+		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
+	}
+
+	void OpenGLRenderer::endScene()
+	{
+		RKT_PROFILE_FUNCTION();
+
+		uint32_t dataSize = (uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase;
+		sData.quadVertexBuffer->setRenderData(sData.quadVertexBufferBase, dataSize);
+		flush();
+	}
+
+	void OpenGLRenderer::flush()
+	{
+		RKT_PROFILE_FUNCTION();
+
+		drawIndexed(sData.quadVertexArray, sData.quadIndexCount);
+	}
+
 	void OpenGLRenderer::clearColor(Color clearColor)
 	{
 		glClearColor(clearColor.getR01(), clearColor.getG01(), clearColor.getB01(), clearColor.getA01());
@@ -95,7 +164,15 @@ namespace RKTEngine
 
 	void OpenGLRenderer::drawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 	{
+		vertexArray->bind();
 		glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+	}
+
+	void OpenGLRenderer::drawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t indexCount)
+	{
+		vertexArray->bind();
+		uint32_t count = indexCount == 0 ? vertexArray->getIndexBuffer()->getCount() : indexCount;
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 	}
 
 	void OpenGLRenderer::drawTriangles(const std::shared_ptr<VertexArray>& vertexArray)
@@ -111,5 +188,37 @@ namespace RKTEngine
 	void OpenGLRenderer::drawInstanced(const std::shared_ptr<VertexArray>& vertexArray, int instanceCount)
 	{
 		glDrawElementsInstanced(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, 0, instanceCount);
+	}
+
+	void OpenGLRenderer::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	{
+		RKT_PROFILE_FUNCTION();
+
+		sData.quadVertexBufferPtr->position = position;
+		sData.quadVertexBufferPtr->color = color;
+		sData.quadVertexBufferPtr->texCoord = {0.0f,0.0f };
+		sData.quadVertexBufferPtr++;
+
+
+		sData.quadVertexBufferPtr->position = { position.x + size.x, position.y, 0.0f };
+		sData.quadVertexBufferPtr->color = color;
+		sData.quadVertexBufferPtr->texCoord = { 1.0f,0.0f };
+		sData.quadVertexBufferPtr++;
+
+
+		sData.quadVertexBufferPtr->position = { position.x + size.x, position.y + size.y, 0.0f };
+		sData.quadVertexBufferPtr->color = color;
+		sData.quadVertexBufferPtr->texCoord = { 1.0f,1.0f };
+		sData.quadVertexBufferPtr++;
+
+
+
+		sData.quadVertexBufferPtr->position = { position.x, position.y + size.y, 0.0f };
+		sData.quadVertexBufferPtr->color = color;
+		sData.quadVertexBufferPtr->texCoord = { 0.0f,1.0f };
+		sData.quadVertexBufferPtr++;
+
+		sData.quadIndexCount += 6;
+
 	}
 }

@@ -31,8 +31,8 @@ bool GameApp::initialize()
 	int windowWidth = RKTEngine::EngineCore::getInstance()->getWindowWidth();
 	int windowHeight = RKTEngine::EngineCore::getInstance()->getWindowHeight();
 
-	mpMap = new Map((int)(windowWidth * .8f), (int)(windowHeight * .95f), 16);
-	mpDungeonGen = new DungeonGenerator((int)(windowWidth * .8f), (int)(windowHeight * .95f));
+	//mpMap = new Map((int)(windowWidth * .8f), (int)(windowHeight * .95f), 16);
+	//mpDungeonGen = new DungeonGenerator((int)(windowWidth * .8f), (int)(windowHeight * .95f));
 	generateDungeon();
 	
 	endInit();
@@ -128,7 +128,7 @@ void GameApp::onMessage(RKTEngine::Message& message)
 
 void GameApp::generateDungeon()
 {
-	mpMap->clearMap();
+	/*mpMap->clearMap();
 	if (mpDungeonGen != nullptr)
 		mpDungeonGen->cleanup();
 	
@@ -147,9 +147,9 @@ void GameApp::generateDungeon()
 	for (auto& room : rooms)
 	{
 		mpMap->addRoom(room);
-	}
+	}*/
 
-	mpPlayer = new Player("tileset_0", "player", Map::sTileSize, Map::sTileSize, rooms[0]->position);
+	mpPlayer = new Player("tileset_0", "player", Map::sTileSize, Map::sTileSize, /*rooms[0]->position*/glm::vec2(5,5));
 }
 
 double GameApp::getTime()

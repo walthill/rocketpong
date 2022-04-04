@@ -4,6 +4,17 @@
 
 namespace RKTEngine
 {
+
+	VertexBuffer* VertexBuffer::create(uint32 size, DataType usage)
+	{
+		switch (RenderCore::getAPI())
+		{
+			case Renderer::API::NONE:		return nullptr;
+			case Renderer::API::OPENGL:		return new OpenGLVertexBuffer(size, usage);
+		}
+		return nullptr;
+	}
+
 	VertexBuffer* VertexBuffer::create(const float* vertices, uint32 size, DataType usage)
 	{
 		switch (RenderCore::getAPI())

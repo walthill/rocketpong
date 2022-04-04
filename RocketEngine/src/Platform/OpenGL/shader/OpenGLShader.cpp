@@ -35,6 +35,7 @@ namespace RKTEngine
 		{
 			glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 			RKT_CORE_ERROR("ERROR::SHADER::VERTEX::COMPILATION_FAILED");
+			RKT_CORE_ERROR(infoLog);
 		}
 
 		//FRAGMENT SHADER
@@ -48,6 +49,7 @@ namespace RKTEngine
 		{
 			glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 			RKT_CORE_ERROR("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED");
+			RKT_CORE_ERROR(infoLog);
 		}
 
 		//SHADER PROGRAM
@@ -63,6 +65,7 @@ namespace RKTEngine
 		{
 			glGetProgramInfoLog(shaderID, 512, NULL, infoLog);
 			RKT_CORE_ERROR("ERROR::SHADER::PROGRAM::LINKING_FAILED");
+			RKT_CORE_ERROR(infoLog);
 		}
 
 		//Clean up

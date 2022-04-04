@@ -3,6 +3,25 @@
 
 namespace RKTEngine
 {
+	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32 size, DataType usage) //size in bytes
+	{
+		glGenBuffers(1, &mRendererId);
+		glBindBuffer(GL_ARRAY_BUFFER, mRendererId);
+
+		switch (usage)
+		{
+		case VertexBuffer::DataType::STATIC:
+			glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
+			break;
+		case VertexBuffer::DataType::DYNAMIC:
+			glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+			break;
+		case VertexBuffer::DataType::STREAM:
+			glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STREAM_DRAW);
+			break;
+		}
+	}
+
 	OpenGLVertexBuffer::OpenGLVertexBuffer(const float* vertices, uint32 size, DataType usage) //size in bytes
 	{
 		glGenBuffers(1, &mRendererId);
@@ -54,6 +73,12 @@ namespace RKTEngine
 	void OpenGLVertexBuffer::unbind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void OpenGLVertexBuffer::setRenderData(const void* data, uint32_t size)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, mRendererId);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
 
 	void OpenGLVertexBuffer::updateBufferData(float* vertices, uint32 size, int offset)

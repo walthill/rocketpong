@@ -23,6 +23,7 @@ namespace RKTEngine
 	{
 		mSpriteVA.reset();
 		delete mpShaderManager;
+		RenderCommand::cleanupRenderer();
 		delete mpWindowHandle;
 	}
 
@@ -36,9 +37,11 @@ namespace RKTEngine
 		mpShaderManager = new ShaderManager();
 		mpShaderManager->addShader("sprite", new Shader("BaseSprite.vert", "BaseSprite.frag"));
 		mpShaderManager->addShader("text", new Shader("TextRender.vert", "TextRender.frag"));
+		mpShaderManager->addShader("batchtest", new Shader("BatchBaseSprite.vert", "BatchBaseSprite.frag"));
 
 		init2DVertexData();
 		init2DShaderData();
+		RenderCommand::initRenderer();
 
 		return true;
 	}
@@ -60,6 +63,9 @@ namespace RKTEngine
 
 		mpShaderManager->useShaderByKey("text");
 		mpShaderManager->setShaderMat4("projection", uiProjection);
+
+		mpShaderManager->useShaderByKey("batchtest");
+		mpShaderManager->setShaderMat4("projection", spriteProjection);
 	}
 
 	void RenderCore::beginRender()
@@ -70,6 +76,13 @@ namespace RKTEngine
 
 	void RenderCore::render(ComponentManager* componentsToDraw)
 	{
+		mpShaderManager->useShaderByKey("batchtest");
+		
+		RenderCommand::beginScene();
+		RenderCommand::drawQuad({ 250, 250, 0 }, { 64, 64 }, { 1.0f,.2f,.3f, 1.0f });
+		RenderCommand::drawQuad({ 350, 300, 0 }, { 64, 64 }, { 0.2f,.3f,.8f, 1.0f });
+		RenderCommand::endScene();
+
 		componentsToDraw->renderComponents();
 	}
 

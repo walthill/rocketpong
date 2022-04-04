@@ -10,6 +10,31 @@ namespace RKTEngine
 	class RenderCommand
 	{
 		public:
+			inline static void initRenderer()
+			{
+				spRendererAPI->initialize();
+			}
+
+			inline static void cleanupRenderer()
+			{
+				spRendererAPI->cleanup();
+			}
+
+			inline static void beginScene()
+			{
+				spRendererAPI->beginScene();
+			}
+
+			inline static void endScene()
+			{
+				spRendererAPI->endScene();
+			}
+
+			inline static void flush()
+			{
+				spRendererAPI->flush();
+			}
+
 			inline static void clearColor(Color color)
 			{
 				spRendererAPI->clearColor(color);
@@ -48,11 +73,11 @@ namespace RKTEngine
 			inline static void setActiveTexture(int channel, int offset = 0)
 			{
 				spRendererAPI->setActiveTexture(channel, offset);
-			}
-
-			inline static void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
+			}			
+			
+			inline static void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t indexCount = 0)
 			{
-				spRendererAPI->drawIndexed(vertexArray);
+				spRendererAPI->drawIndexed(vertexArray, indexCount);
 			}
 
 			inline static void drawTriangles(const std::shared_ptr<VertexArray>& vertexArray)
@@ -72,6 +97,11 @@ namespace RKTEngine
 			inline static void drawSprite(const std::shared_ptr<VertexArray>& vertexArray, int instanceCount = 1)
 			{
 				drawInstancedTriangles(vertexArray, instanceCount);
+			}
+
+			inline static void drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+			{
+				spRendererAPI->drawQuad(position, size, color);
 			}
 
 		private:
