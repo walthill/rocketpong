@@ -68,6 +68,7 @@ namespace RKTEngine
 		****************************************/
 
 		void setShaderInt(const std::string& intName, int value);
+		void setShaderIntArray(const std::string& intName, int* values, uint32_t count);
 		void setShaderBool(const std::string& boolName, bool value);
 		void setShaderFloat(const std::string& floatName, float value);
 		void setShaderMat4(const std::string& matrixName, const glm::mat4& mat);

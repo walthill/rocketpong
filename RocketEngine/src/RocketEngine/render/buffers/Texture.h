@@ -7,9 +7,11 @@
 
 namespace RKTEngine
 {
+	struct AtlasCoordinateData { float leftX, rightX, topY, bottomY; };
 	class Texture : public RKTUtil::Trackable
 	{
 		public:
+
 			enum WrapType { REPEAT = 0, MIRRORED_REPEAT, CLAMP_EDGE };
 
 			enum MinifyFilter
@@ -31,6 +33,9 @@ namespace RKTEngine
 			virtual uint32 getType()		const OVERRIDE_REQUIRED;
 
 			virtual void bind()				const OVERRIDE_REQUIRED;
+			virtual void bind(int index)				const OVERRIDE_REQUIRED;
+
+			virtual bool operator==(const Texture& other) const OVERRIDE_REQUIRED;
 
 		private:
 	};
@@ -44,12 +49,11 @@ namespace RKTEngine
 		private:
 	};
 
-	class RawTexture : public Texture
+	class RawTexture : public Texture2D
 	{
 	public:
-		static RawTexture* create(unsigned char* data, int width, int height, int sWrapParam = WrapType::REPEAT, int tWrapParam = WrapType::REPEAT,
+		static RawTexture* create(void* data, int width, int height, int sWrapParam = WrapType::REPEAT, int tWrapParam = WrapType::REPEAT,
 			int miniFilter = MinifyFilter::MIN_LINEAR, int magFilter = MagnifyFilter::MAG_LINEAR, int detailReductionLevel = 0);
-
 	private:
 	};
 

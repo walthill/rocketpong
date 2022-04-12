@@ -51,12 +51,17 @@ namespace RKTEngine
 		glBindTexture(GL_TEXTURE_2D, mRendererId);
 	}
 
+	void OpenGLTexture2D::bind(int index) const
+	{
+		glBindTexture(GL_TEXTURE_2D, index);
+	}
+
 	#pragma endregion
 
 	/* ~~~ RAW TEXTURE ~~~ */
 	#pragma region RAW TEXTURE
 
-	OpenGLRawTexture::OpenGLRawTexture(unsigned char* data, int width, int height, int sWrapParam, int tWrapParam ,
+	OpenGLRawTexture::OpenGLRawTexture(void* data, int width, int height, int sWrapParam, int tWrapParam ,
 		int miniFilter, int magFilter, int detailReductionLevel)
 	{
 		RKT_ASSERT(data);
@@ -67,13 +72,11 @@ namespace RKTEngine
 		glGenTextures(1, &mRendererId);
 		bind();
 
-		GLenum format = OpenGLTextureHelper::setColorChannel(ColorChannel::RED, Renderer::TextureType::NONE);
+		GLenum format = OpenGLTextureHelper::setColorChannel(ColorChannel::RGB, Renderer::TextureType::NONE);
 		glTexImage2D(GL_TEXTURE_2D, detailReductionLevel, format, width, height, OpenGLTextureHelper::BORDER_DEFAULT, format, GL_UNSIGNED_BYTE, data);
 
 		OpenGLTextureHelper::setTextureParameters(sWrapParam, tWrapParam, miniFilter, magFilter);
 		glGenerateMipmap(GL_TEXTURE_2D);
-
-		free(data);
 	}
 
 
@@ -87,6 +90,10 @@ namespace RKTEngine
 	void OpenGLRawTexture::bind() const
 	{
 		glBindTexture(GL_TEXTURE_2D, mRendererId);
+	}
+
+	void OpenGLRawTexture::bind(int index) const
+	{
 	}
 
 	#pragma endregion

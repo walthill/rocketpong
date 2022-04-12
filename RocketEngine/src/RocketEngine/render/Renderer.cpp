@@ -3,5 +3,5 @@
 namespace RKTEngine
 {
 	Renderer::API Renderer::msAPI = Renderer::API::OPENGL;
-	Renderer2DData sData;
+	Renderer::Renderer2DData Renderer::sData;
 }

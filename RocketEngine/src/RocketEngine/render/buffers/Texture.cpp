@@ -16,7 +16,7 @@ namespace RKTEngine
 		return nullptr;
 	}
 
-	RawTexture* RawTexture::create(unsigned char* data, int width, int height, int sWrapParam, int tWrapParam, int miniFilter, int magFilter, int detailReductionLevel)
+	RawTexture* RawTexture::create(void* data, int width, int height, int sWrapParam, int tWrapParam, int miniFilter, int magFilter, int detailReductionLevel)
 	{
 		switch (RenderCore::getAPI())
 		{

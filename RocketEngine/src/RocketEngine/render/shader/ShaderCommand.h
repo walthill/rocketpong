@@ -33,6 +33,12 @@ namespace RKTEngine
 			spShaderAPI->setInt(layoutLocation, value);
 		}
 
+		static void setIntArray(int layoutLocation, int* values, uint32_t count)
+		{
+			spShaderAPI->setIntArray(layoutLocation, values, count);
+		}
+
+
 		static void setFloat(int layoutLocation, const float& value)
 		{
 			spShaderAPI->setFloat(layoutLocation, value);

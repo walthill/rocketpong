@@ -14,6 +14,7 @@ namespace RKTEngine
 
 			virtual void setBool(int layoutLocation, const bool& value) const override;
 			virtual void setInt(int layoutLocation, const int& value) const override;
+			virtual void setIntArray(int layoutLocation, int* values, uint32 count) const override;
 			virtual void setFloat(int layoutLocation, const float& value) const override;
 			virtual void setMat4(int layoutLocation, const glm::mat4& mat) const override;
 			virtual void setVec3(int layoutLocation, const glm::vec3& value) const override;

@@ -4,7 +4,7 @@
 
 namespace RKTEngine
 {
-	void OpenGLRenderer::initialize()
+	void OpenGLRenderer::initialize(Shader* renderShader)
 	{
 		RKT_PROFILE_FUNCTION();
 
@@ -13,9 +13,11 @@ namespace RKTEngine
 		sData.quadVertexBuffer.reset(VertexBuffer::create(sData.MAX_VERTICES * sizeof(QuadVertex)));
 		sData.quadVertexBuffer->setLayout({
 			{ShaderDataType::Float3, "position"},
-			{ShaderDataType::Float4, "a_color"},
-			{ShaderDataType::Float2, "texCoords"}
-		});
+			{ShaderDataType::Float4, "color"},
+			{ShaderDataType::Float2, "texCoords"},
+			{ShaderDataType::Float, "texIndex"},
+			{ShaderDataType::Float, "tiling"}
+			});
 		sData.quadVertexArray->addVertexBuffer(sData.quadVertexBuffer);
 		sData.quadVertexArray->processVertexBuffers();
 
@@ -40,6 +42,21 @@ namespace RKTEngine
 		quadIB.reset(IndexBuffer::create(quadIndices, sData.MAX_INDICES));
 		sData.quadVertexArray->setIndexBuffer(quadIB);
 		delete[] quadIndices;
+
+		uint32_t whiteTextureData = 0xffffff;
+		sData.pWhiteTexture = RawTexture::create(&whiteTextureData, 1, 1);
+		sData.textureSlots[0] = sData.pWhiteTexture;
+
+		int32_t samplers[sData.MAX_TEXTURE_SLOTS];
+		for (size_t i = 0; i < sData.MAX_TEXTURE_SLOTS; i++)
+		{
+			samplers[i] = i;
+		}
+
+		sData.pTextureShader = renderShader;
+		sData.pTextureShader->use();
+		sData.pTextureShader->setIntArray("textures", samplers, sData.MAX_TEXTURE_SLOTS);
+		sData.pTextureShader->setFloat("tiling", 1.0f);
 	}
 
 	void OpenGLRenderer::cleanup()
@@ -52,7 +69,10 @@ namespace RKTEngine
 	{
 		RKT_PROFILE_FUNCTION();
 
+		sData.pTextureShader->use();
+
 		sData.quadIndexCount = 0;
+		sData.textureSlotIndex = 1;
 		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
 	}
 
@@ -68,6 +88,13 @@ namespace RKTEngine
 	void OpenGLRenderer::flush()
 	{
 		RKT_PROFILE_FUNCTION();
+
+		//bind textures
+		for (size_t i = 0; i < sData.textureSlotIndex; i++)
+		{
+			setActiveTexture(i);
+			sData.textureSlots[i]->bind();
+		}
 
 		drawIndexed(sData.quadVertexArray, sData.quadIndexCount);
 	}
@@ -151,15 +178,9 @@ namespace RKTEngine
 		glStencilFunc(stencilComparisonType, refValue, mask);
 	}
 
-	void OpenGLRenderer::setActiveTexture(int channel, int offset)
+	void OpenGLRenderer::setActiveTexture(int offset)
 	{
-		GLenum texChannel{};
-		switch (channel)
-		{
-			case TEX_CHANNEL0:		texChannel = GL_TEXTURE0 + offset;	break;
-		}
-
-		glActiveTexture(texChannel);
+		glActiveTexture(GL_TEXTURE0 + offset);
 	}
 
 	void OpenGLRenderer::drawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
@@ -190,32 +211,175 @@ namespace RKTEngine
 		glDrawElementsInstanced(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, 0, instanceCount);
 	}
 
+	//Atlased Quad
+	void OpenGLRenderer::drawQuad(const glm::vec2& position, const glm::vec2& size, Texture2D* texture, AtlasCoordinateData atlasCoords, float tilingFactor, const glm::vec4& color)
+	{
+		drawQuad({ position.x, position.y, 0.0f }, size, texture, atlasCoords, tilingFactor, color);
+	}
+
+	void OpenGLRenderer::drawQuad(const glm::vec3& position, const glm::vec2& size, Texture2D* texture, AtlasCoordinateData atlasCoords, float tilingFactor, const glm::vec4& color)
+	{
+		RKT_PROFILE_FUNCTION();
+
+		glm::vec4 defaultColor = Color::white.getColorAlpha01();
+
+		float textureIndex = 0.0f;
+
+		for (size_t i = 1; i < sData.textureSlotIndex; i++)
+		{
+			if (*sData.textureSlots[i] == *texture)
+			{
+				//has tex already been submitted
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)sData.textureSlotIndex;
+			sData.textureSlots[sData.textureSlotIndex] = texture;
+			sData.textureSlotIndex += 1;
+		}
+		
+		/*
+			leftX, topY,		//top left					
+			 rightX, bottomY,	//bottom right
+			 leftX, bottomY,		//bottom left
+
+					//tri #2
+			 leftX, topY,		//top left
+			 rightX, topY,		//top right
+			 rightX, bottomY		//bottom right
+		*/
+
+		sData.quadVertexBufferPtr->position = position;
+		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->texCoord = { atlasCoords.leftX, atlasCoords.bottomY };	//0,0 bottom left in OpenGL
+		sData.quadVertexBufferPtr->texIndex = textureIndex;
+		sData.quadVertexBufferPtr->tiling = tilingFactor;
+		sData.quadVertexBufferPtr++;
+
+		sData.quadVertexBufferPtr->position = { position.x + size.x, position.y, 0.0f };
+		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->texCoord = { atlasCoords.rightX, atlasCoords.bottomY }; //1,0
+		sData.quadVertexBufferPtr->texIndex = textureIndex;
+		sData.quadVertexBufferPtr->tiling = tilingFactor;
+		sData.quadVertexBufferPtr++;
+
+		sData.quadVertexBufferPtr->position = { position.x + size.x, position.y + size.y, 0.0f };
+		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->texCoord = { atlasCoords.rightX, atlasCoords.topY };	//1,1
+		sData.quadVertexBufferPtr->texIndex = textureIndex;
+		sData.quadVertexBufferPtr->tiling = tilingFactor;
+		sData.quadVertexBufferPtr++;
+
+		sData.quadVertexBufferPtr->position = { position.x, position.y + size.y, 0.0f };
+		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->texCoord = { atlasCoords.leftX, atlasCoords.topY };	//0,1
+		sData.quadVertexBufferPtr->texIndex = textureIndex;
+		sData.quadVertexBufferPtr->tiling = tilingFactor;
+		sData.quadVertexBufferPtr++;
+
+		sData.quadIndexCount += 6;
+	}
+
+	//Texture Quad
+	void OpenGLRenderer::drawQuad(const glm::vec2& position, const glm::vec2& size, Texture2D* texture, float tilingFactor, const glm::vec4& color)
+	{
+		drawQuad({ position.x, position.y, 0.0f }, size, texture, tilingFactor, color);
+	}
+
+	void OpenGLRenderer::drawQuad(const glm::vec3& position, const glm::vec2& size, Texture2D* texture, float tilingFactor, const glm::vec4& color)
+	{
+		RKT_PROFILE_FUNCTION();
+
+		glm::vec4 defaultColor = Color::white.getColorAlpha01();
+
+		float textureIndex = 0.0f;
+
+		for (size_t i = 1; i < sData.textureSlotIndex; i++)
+		{
+			if (*sData.textureSlots[i] == *texture)
+			{
+				//has tex already been submitted
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)sData.textureSlotIndex;
+			sData.textureSlots[sData.textureSlotIndex] = texture;
+			sData.textureSlotIndex += 1;
+		}
+
+		sData.quadVertexBufferPtr->position = position;
+		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->texCoord = { 0.0f,0.0f };
+		sData.quadVertexBufferPtr->texIndex = textureIndex;
+		sData.quadVertexBufferPtr->tiling = tilingFactor;
+		sData.quadVertexBufferPtr++;
+
+		sData.quadVertexBufferPtr->position = { position.x + size.x, position.y, 0.0f };
+		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->texCoord = { 1.0f,0.0f };
+		sData.quadVertexBufferPtr->texIndex = textureIndex;
+		sData.quadVertexBufferPtr->tiling = tilingFactor;
+		sData.quadVertexBufferPtr++;
+
+		sData.quadVertexBufferPtr->position = { position.x + size.x, position.y + size.y, 0.0f };
+		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->texCoord = { 1.0f,1.0f };
+		sData.quadVertexBufferPtr->texIndex = textureIndex;
+		sData.quadVertexBufferPtr->tiling = tilingFactor;
+		sData.quadVertexBufferPtr++;
+
+		sData.quadVertexBufferPtr->position = { position.x, position.y + size.y, 0.0f };
+		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->texCoord = { 0.0f,1.0f };
+		sData.quadVertexBufferPtr->texIndex = textureIndex;
+		sData.quadVertexBufferPtr->tiling = tilingFactor;
+		sData.quadVertexBufferPtr++;
+
+		sData.quadIndexCount += 6;
+	}
+
+	//Color Quad
 	void OpenGLRenderer::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
 		RKT_PROFILE_FUNCTION();
 
+		const float TEX_INDEX = 0.0f;
+		const float TILING_FACTOR = 1.0f;
+
 		sData.quadVertexBufferPtr->position = position;
 		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = {0.0f,0.0f };
+		sData.quadVertexBufferPtr->texIndex = TEX_INDEX;	//no texture param -- white texture is always 0
+		sData.quadVertexBufferPtr->tiling = TILING_FACTOR;
 		sData.quadVertexBufferPtr++;
-
 
 		sData.quadVertexBufferPtr->position = { position.x + size.x, position.y, 0.0f };
 		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = { 1.0f,0.0f };
+		sData.quadVertexBufferPtr->texIndex = TEX_INDEX;
+		sData.quadVertexBufferPtr->tiling = TILING_FACTOR;
 		sData.quadVertexBufferPtr++;
-
 
 		sData.quadVertexBufferPtr->position = { position.x + size.x, position.y + size.y, 0.0f };
 		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = { 1.0f,1.0f };
+		sData.quadVertexBufferPtr->texIndex = TEX_INDEX;
+		sData.quadVertexBufferPtr->tiling = TILING_FACTOR;
 		sData.quadVertexBufferPtr++;
-
-
 
 		sData.quadVertexBufferPtr->position = { position.x, position.y + size.y, 0.0f };
 		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = { 0.0f,1.0f };
+		sData.quadVertexBufferPtr->texIndex = TEX_INDEX;
+		sData.quadVertexBufferPtr->tiling = TILING_FACTOR;
 		sData.quadVertexBufferPtr++;
 
 		sData.quadIndexCount += 6;

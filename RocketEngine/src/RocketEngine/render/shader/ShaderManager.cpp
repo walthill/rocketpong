@@ -75,6 +75,11 @@ namespace RKTEngine
 		mpCurrentShader->setInt(intName, value);
 	}
 
+	void ShaderManager::setShaderIntArray(const std::string& intName, int* values, uint32_t count)
+	{
+		mpCurrentShader->setIntArray(intName, values, count);
+	}
+
 	void ShaderManager::setShaderBool(const std::string& boolName, bool value)
 	{
 		mpCurrentShader->setBool(boolName, value);

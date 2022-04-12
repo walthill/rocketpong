@@ -10,9 +10,9 @@ namespace RKTEngine
 	class RenderCommand
 	{
 		public:
-			inline static void initRenderer()
+			inline static void initRenderer(Shader* shader)
 			{
-				spRendererAPI->initialize();
+				spRendererAPI->initialize(shader);
 			}
 
 			inline static void cleanupRenderer()
@@ -70,9 +70,9 @@ namespace RKTEngine
 				spRendererAPI->setStencilMask(mask);
 			}
 
-			inline static void setActiveTexture(int channel, int offset = 0)
+			inline static void setActiveTexture(int offset)
 			{
-				spRendererAPI->setActiveTexture(channel, offset);
+				spRendererAPI->setActiveTexture(offset);
 			}			
 			
 			inline static void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t indexCount = 0)
@@ -97,6 +97,21 @@ namespace RKTEngine
 			inline static void drawSprite(const std::shared_ptr<VertexArray>& vertexArray, int instanceCount = 1)
 			{
 				drawInstancedTriangles(vertexArray, instanceCount);
+			}
+
+			inline static void drawQuad(const glm::vec2& position, const glm::vec2& size, Texture2D* texture, AtlasCoordinateData atlasCoords, float tilingFactor, Color color = Color::white)
+			{
+				spRendererAPI->drawQuad(position, size, texture, atlasCoords, tilingFactor, color.getColorAlpha());
+			}
+
+			inline static void drawQuad(const glm::vec2& position, const glm::vec2& size, Texture2D* texture, float tilingFactor, Color color = Color::white)
+			{
+				spRendererAPI->drawQuad(position, size, texture, tilingFactor, color.getColorAlpha());
+			}
+
+			inline static void drawQuad(const glm::vec3& position, const glm::vec2& size, Texture2D* texture, float tilingFactor, Color color = Color::white)
+			{
+				spRendererAPI->drawQuad(position, size, texture, tilingFactor, color.getColorAlpha());
 			}
 
 			inline static void drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)

@@ -8,7 +8,7 @@ namespace RKTEngine
 	class OpenGLRenderer : public Renderer
 	{
 		public:
-			virtual void initialize() override;
+			virtual void initialize(Shader* renderShader) override;
 			virtual void cleanup() override;
 
 			virtual void beginScene() override;
@@ -22,7 +22,7 @@ namespace RKTEngine
 			virtual void setDepthBuffer(int depthBufferType) override;
 			virtual void setStencilMask(int mask) override;
 			virtual void setStencilBuffer(int bufferComparison, int refValue, int mask) override;
-			virtual void setActiveTexture(int channel, int offset = 0) override;
+			virtual void setActiveTexture(int offset) override;
 
 			virtual void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray) override;
 			virtual void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t indexCount = 0) override;
@@ -31,6 +31,12 @@ namespace RKTEngine
 			virtual void drawTriangles(const std::shared_ptr<VertexArray>& vertexArray) override;
 			virtual void drawInstancedTriangles(const std::shared_ptr<VertexArray>& vertexArray, int instanceCount) override;
 			virtual void drawInstanced(const std::shared_ptr<VertexArray>& vertexArray, int instanceCount) override;
+
+			virtual void drawQuad(const glm::vec2& position, const glm::vec2& size, Texture2D* texture, AtlasCoordinateData atlasCoords, float tilingFactor, const glm::vec4& color) override;
+			virtual void drawQuad(const glm::vec3& position, const glm::vec2& size, Texture2D* texture, AtlasCoordinateData atlasCoords, float tilingFactor, const glm::vec4& color) override;
+
+			virtual void drawQuad(const glm::vec2& position, const glm::vec2& size, Texture2D* texture, float tilingFactor, const glm::vec4& color) override;
+			virtual void drawQuad(const glm::vec3& position, const glm::vec2& size, Texture2D* texture, float tilingFactor, const glm::vec4& color) override;
 
 			virtual void drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) override;
 

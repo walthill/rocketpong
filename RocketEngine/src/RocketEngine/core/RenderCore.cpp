@@ -1,4 +1,5 @@
 #include "RenderCore.h"
+#include <RocketEngine/render/RenderCommand.h>
 #include "Window.h"
 #include "RocketEngine/render/shader/ShaderManager.h"
 #include "ComponentManager.h"
@@ -21,6 +22,7 @@ namespace RKTEngine
 
 	void RenderCore::clean()
 	{
+		delete tex;
 		mSpriteVA.reset();
 		delete mpShaderManager;
 		RenderCommand::cleanupRenderer();
@@ -37,11 +39,13 @@ namespace RKTEngine
 		mpShaderManager = new ShaderManager();
 		mpShaderManager->addShader("sprite", new Shader("BaseSprite.vert", "BaseSprite.frag"));
 		mpShaderManager->addShader("text", new Shader("TextRender.vert", "TextRender.frag"));
-		mpShaderManager->addShader("batchtest", new Shader("BatchBaseSprite.vert", "BatchBaseSprite.frag"));
+		mpShaderManager->addShader("batchtex", new Shader("BatchTexture.vert", "BatchTexture.frag"));
 
 		init2DVertexData();
 		init2DShaderData();
-		RenderCommand::initRenderer();
+		RenderCommand::initRenderer(mpShaderManager->getShaderByKey("batchtex"));
+
+		tex = Texture2D::create("assets/textures/checkerboard.png");
 
 		return true;
 	}
@@ -64,26 +68,27 @@ namespace RKTEngine
 		mpShaderManager->useShaderByKey("text");
 		mpShaderManager->setShaderMat4("projection", uiProjection);
 
-		mpShaderManager->useShaderByKey("batchtest");
+		mpShaderManager->useShaderByKey("batchtex");
 		mpShaderManager->setShaderMat4("projection", spriteProjection);
 	}
 
 	void RenderCore::beginRender()
 	{
 		RenderCommand::clearColor(Color::grey);
-		RenderCommand::clearBuffer(BufferType::COLOR_BUFFER);
-	}
+		RenderCommand::clearBuffer(BufferType::COLOR_BUFFER | BufferType::DEPTH_BUFFER);
+	}	
 
 	void RenderCore::render(ComponentManager* componentsToDraw)
-	{
-		mpShaderManager->useShaderByKey("batchtest");
-		
+	{		
 		RenderCommand::beginScene();
-		RenderCommand::drawQuad({ 250, 250, 0 }, { 64, 64 }, { 1.0f,.2f,.3f, 1.0f });
+
+		RenderCommand::drawQuad({ 250, 250, 0 }, { 64, 64 }, { 1.0f,.2f,.3f, .05f });
 		RenderCommand::drawQuad({ 350, 300, 0 }, { 64, 64 }, { 0.2f,.3f,.8f, 1.0f });
-		RenderCommand::endScene();
+		RenderCommand::drawQuad({ 450, 300,-1 }, { 64*4, 64*4 }, tex, 1);
+		RenderCommand::drawQuad({ 450, 350 }, { 64, 64 }, tex, 10);
 
 		componentsToDraw->renderComponents();
+		RenderCommand::endScene();
 	}
 
 	void RenderCore::endRender()
@@ -94,7 +99,7 @@ namespace RKTEngine
 	bool RenderCore::createWindow()
 	{
 		mpWindowHandle = new Window();
-		if (!mpWindowHandle->initialize(1280, 720, "RogueOne", BLEND))
+		if (!mpWindowHandle->initialize(1280, 720, "RogueOne", BLEND | DEPTH_TEST))
 		{
 			return false;
 		}

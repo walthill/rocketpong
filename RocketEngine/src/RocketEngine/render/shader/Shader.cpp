@@ -97,6 +97,12 @@ namespace RKTEngine
 		ShaderCommand::setInt(location, value);
 	}
 
+	void Shader::setIntArray(const std::string& name, int* values, uint32_t count) const
+	{
+		UniformLocation location = getUniformLocation(name);
+		ShaderCommand::setIntArray(location, values, count);
+	}
+
 	void Shader::setFloat(const std::string& name, const float& value) const
 	{
 		UniformLocation location = getUniformLocation(name);

@@ -1,14 +1,13 @@
 #include "SpriteComponent.h"
 #include "RocketEngine/render/shader/Shader.h"
 #include "RocketEngine/core/EngineCore.h"
-#include "RocketEngine/core/RenderCore.h"
+#include "RocketEngine/render/RenderCommand.h"
 #include "RocketEngine/render/shader/ShaderManager.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/vec2.hpp>
 
 namespace RKTEngine
 {
-
 	SpriteComponent::SpriteComponent(const ComponentId& id) :
 		Component(id), mAtlasOffsetX(0), mAtlasOffsetY(0)
 	{
@@ -23,7 +22,7 @@ namespace RKTEngine
 	{
 		if (!mSpriteData.mSpriteName.empty())
 		{
-			mSpriteData.sprite = EngineCore::getInstance()->getAssetManager()->loadSpriteAsset(mSpriteData.mSpriteName);
+			mSpriteData.pSprite = EngineCore::getInstance()->getAssetManager()->loadSpriteAsset(mSpriteData.mSpriteName);
 
 			if (!mSpriteData.mTileName.empty())
 			{
@@ -45,7 +44,7 @@ namespace RKTEngine
 
 	Texture2D* SpriteComponent::getSprite()
 	{
-		return mSpriteData.sprite;
+		return mSpriteData.pSprite;
 	}
 
 	void SpriteComponent::setData(const SpriteComponentData& data)
@@ -72,81 +71,23 @@ namespace RKTEngine
 
 	void SpriteComponent::render()
 	{
-		if (mSpriteData.mpShader != nullptr)
+		if (mIsEnabled && mSpriteData.pSprite != nullptr)
 		{
-			mSpriteData.mpShader->use();
-			auto va = EngineCore::getInstance()->getRenderer()->getSpriteVertexData();
-			auto vb = EngineCore::getInstance()->getRenderer()->getSpriteBufferData();
-
-			if (mSpriteData.instanceCount == 1)
-			{	
-				//Set atlas coordinates
-				float leftX = (mAtlasOffsetX * mSpriteData.mWidth) / (float)mSpriteData.sprite->getWidth();
-				float rightX = ((mAtlasOffsetX + 1) * mSpriteData.mWidth) / (float)mSpriteData.sprite->getWidth();
-				float topY = ((mAtlasOffsetY + 1) * mSpriteData.mHeight) / (float)mSpriteData.sprite->getHeight();
-				float bottomY = (mAtlasOffsetY * mSpriteData.mHeight) / (float)mSpriteData.sprite->getHeight();
-				
-				/* **** SPRITE ATLAS NOTES ****
-					bottom left coord
-						x = (x offset in atlas * width of sprite) / atlaswidth
-						y = (y offset in atlas * heigh of sprite) / atlas height
-
-					bottom right coord
-						x = ((x offset in atlas + 1) * width of sprite) / atlas width
-						y = (y offset in atlas * heigh of sprite) / atlas height
-
-					top right coord
-						x = (x offset in atlas + 1) * width of sprite	
-						y = ((y offset in atlas + 1) * heigh of sprite) / atlas height
-
-					top left coord
-						x = x offset in atlas * width of sprite
-						y = ((y offset in atlas + 1) * heigh of sprite) / atlas height
-				*/
-
-				float SPRITE_VERTICES[] = {
-					// pos			// tex coords
-							//tri #1
-					0.0f, 1.0f,		leftX, topY,		//top left					
-					1.0f, 0.0f,		rightX, bottomY,	//bottom right
-					0.0f, 0.0f,		leftX, bottomY,		//bottom left
-
-							//tri #2
-					0.0f, 1.0f,		leftX, topY,		//top left
-					1.0f, 1.0f,		rightX, topY,		//top right
-					1.0f, 0.0f,		rightX, bottomY		//bottom right
-				};
-
-				const BufferLayout spriteLayout = {
-					{ ShaderDataType::Float4, "vertex" }
-				};
-
-				vb.reset(VertexBuffer::create(SPRITE_VERTICES, sizeof(SPRITE_VERTICES)));
-				vb->setLayout(spriteLayout);
-
-				va->clearVertexBuffers();
-				va->addVertexBuffer(vb);
-				va->processVertexBuffers();
-
-				//Set matrix data
-				mSpriteData.mpShader->setMat4(mMODEL_MATRIX_ID, mModelMatrix);
-				mSpriteData.mpShader->setVec3(mSPRITE_COLOR_ID, mSpriteData.mColor.getColor01());
-			}
-
-			if (mIsEnabled && mSpriteData.sprite != nullptr)
-			{
-				RenderCommand::setActiveTexture(Renderer::TextureChannel::TEX_CHANNEL0);
-				attatchSpriteData();
-				RenderCore::submit(va);
-			}
+			//auto scale = glm::vec2(scale.x * mSpriteData.mWidth, scale.y * mSpriteData.mHeight);
+			//RenderCommand::drawQuad(position, scale, mSpriteData.pSprite, calculateAtlasCoords(), 1.0f);
 		}
 	}
 
-	//map sprite data to the gpu
-	void SpriteComponent::attatchSpriteData()
+	AtlasCoordinateData SpriteComponent::calculateAtlasCoords()
 	{
-		mSpriteData.sprite->bind();
+		return {
+			(mAtlasOffsetX * mSpriteData.mWidth) / (float)mSpriteData.pSprite->getWidth(),
+			((mAtlasOffsetX + 1) * mSpriteData.mWidth) / (float)mSpriteData.pSprite->getWidth(),
+			((mAtlasOffsetY + 1) * mSpriteData.mHeight) / (float)mSpriteData.pSprite->getHeight(),
+			(mAtlasOffsetY * mSpriteData.mHeight) / (float)mSpriteData.pSprite->getHeight()
+		};
 	}
+
 
 	void SpriteComponent::setSprite(const std::string& tileName)
 	{

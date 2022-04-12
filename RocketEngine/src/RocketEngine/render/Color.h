@@ -24,6 +24,7 @@ namespace RKTEngine
 			inline glm::vec3 getColor() { return glm::vec3(mColorValue.x, mColorValue.y, mColorValue.z); }
 			inline glm::vec3 getColor01() { return glm::vec3(getR01(), getG01(), getB01()); }
 			inline glm::vec4 getColorAlpha() { return mColorValue; }
+			inline glm::vec4 getColorAlpha01() { return glm::vec4(getR01(), getG01(), getB01(), getA01()); }
 
 			//Get individual rgb values
 			inline float getR() { return mColorValue.x; }

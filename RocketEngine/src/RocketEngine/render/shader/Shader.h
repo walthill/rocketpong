@@ -86,6 +86,8 @@ namespace RKTEngine
 		 *************************************************************************/
 		void setInt(const std::string& name, const int& value) const;
 
+		void setIntArray(const std::string& name, int* values, uint32_t count) const;
+
 		/**********************************************************************//**
 		 * Set float uniform in the shader
 		 *

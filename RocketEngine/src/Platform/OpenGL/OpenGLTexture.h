@@ -30,6 +30,9 @@ namespace RKTEngine
 			virtual std::string getPath()	const override { return mPath; }
 
 			virtual void bind()			const override;
+			virtual void bind(int index) const override;
+
+			virtual bool operator==(const Texture& other) const override { return mRendererId == ((OpenGLTexture2D&)other).mRendererId; }
 
 		private:
 			uint32 mWidth, mHeight;
@@ -41,7 +44,7 @@ namespace RKTEngine
 	class OpenGLRawTexture : public RawTexture
 	{
 	public:
-		OpenGLRawTexture(unsigned char* data, int width, int height, int sWrapParam = WrapType::REPEAT, int tWrapParam = WrapType::REPEAT,
+		OpenGLRawTexture(void* data, int width, int height, int sWrapParam = WrapType::REPEAT, int tWrapParam = WrapType::REPEAT,
 			int miniFilter = MinifyFilter::MIN_LINEAR, int magFilter = MagnifyFilter::MAG_LINEAR, int detailReductionLevel = 0);
 
 		~OpenGLRawTexture();
@@ -53,6 +56,9 @@ namespace RKTEngine
 		virtual std::string getPath()	const override { return ""; }
 
 		virtual void bind()			const override;
+		virtual void bind(int index) const override;
+
+		virtual bool operator==(const Texture& other) const override { return mRendererId == ((OpenGLRawTexture&)other).mRendererId; }
 
 	private:
 		uint32 mWidth, mHeight;

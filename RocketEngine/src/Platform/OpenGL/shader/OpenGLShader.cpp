@@ -84,6 +84,10 @@ namespace RKTEngine
 	{
 		glUniform1i(layoutLocation, (int)value);
 	}
+	void OpenGLShader::setIntArray(int layoutLocation, int* values, uint32 count) const
+	{
+		glUniform1iv(layoutLocation, count, values);
+	}
 	void OpenGLShader::setFloat(int layoutLocation, const float& value) const
 	{
 		glUniform1f(layoutLocation, value);

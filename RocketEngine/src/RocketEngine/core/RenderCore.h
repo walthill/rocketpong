@@ -1,7 +1,7 @@
 #ifndef RENDER_CORE_H
 #define RENDER_CORE_H
 
-#include "RocketEngine/render/RenderCommand.h"
+#include <RocketEngine/render/Renderer.h>
 
 namespace RKTEngine
 {
@@ -35,6 +35,7 @@ namespace RKTEngine
 
 			Window* mpWindowHandle;
 			ShaderManager* mpShaderManager;
+			Texture2D* tex;
 
 			bool createWindow();
 			void init2DVertexData();

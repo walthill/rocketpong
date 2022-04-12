@@ -28,7 +28,6 @@
 
 namespace RKTEngine
 {
-
 	const std::string modelFileLocation = "../RogueOne/assets/sprites/";
 
 	/***************************************************************************//**
@@ -49,17 +48,17 @@ namespace RKTEngine
 		int mWidth, mHeight;
 
 		Shader* mpShader;
-		Texture2D* sprite;			///< Reference to the model
+		Texture2D* pSprite;			///< Reference to the model
 		Color mColor;
 
 		///Default constructor sets all values to zero
 		SpriteComponentData() :
-			isLoaded(false), sprite(nullptr), mSpriteName(""), mColor(Color::white), instanceCount(0), instanceMatrices(nullptr), mpShader(nullptr)
+			isLoaded(false), pSprite(nullptr), mSpriteName(""), mColor(Color::white), instanceCount(0), instanceMatrices(nullptr), mpShader(nullptr)
 			, mWidth(16), mHeight(16), mTileName("") {};
 
 		///Constructor that takes in values for struct variables
 		SpriteComponentData(std::string name, std::string tileName, int width, int height, Color color = Color::white, int instanceAmount = 1, glm::mat4* matrices = nullptr) :
-			isLoaded(false), sprite(nullptr), mSpriteName(name), mColor(color), instanceCount(instanceAmount), instanceMatrices(matrices), mpShader(nullptr)
+			isLoaded(false), pSprite(nullptr), mSpriteName(name), mColor(color), instanceCount(instanceAmount), instanceMatrices(matrices), mpShader(nullptr)
 			, mWidth(width), mHeight(height), mTileName(tileName) {};
 	};
 
@@ -111,7 +110,7 @@ namespace RKTEngine
 		 *
 		 * @param mesh A reference to a Model to be assigned to the component's mesh data
 		 *************************************************************************/
-		void setMesh(Texture2D* sprite) { mSpriteData.sprite = sprite; }
+		void setMesh(Texture2D* sprite) { mSpriteData.pSprite = sprite; }
 
 		void setColor(Color color) { mSpriteData.mColor = color; }
 
@@ -152,6 +151,7 @@ namespace RKTEngine
 		int mAtlasOffsetX, mAtlasOffsetY;
 
 		void attatchSpriteData();
+		AtlasCoordinateData calculateAtlasCoords();
 	};
 }
 #endif // !MESH_COMP_H
