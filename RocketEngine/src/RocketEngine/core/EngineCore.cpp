@@ -85,7 +85,7 @@ namespace RKTEngine
 	void EngineCore::render()
 	{
 		mpRenderCore->beginRender();
-		mpRenderCore->render(mpComponentManager);
+		mpRenderCore->render(mpComponentManager, mDeltaTime);
 		mpRenderCore->endRender();
 	}
 
@@ -98,7 +98,7 @@ namespace RKTEngine
 	void EngineCore::calculateDeltaTime()
 	{
 		float currentFrame = (float)getTime();
-		mDeltaTime = currentFrame - mLastFrame;
+		mDeltaTime = (currentFrame - mLastFrame) / 1000;
 		mLastFrame = currentFrame;
 	}
 

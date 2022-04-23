@@ -19,7 +19,7 @@ namespace RKTEngine
 			void clean();
 
 			void beginRender();
-			void render(ComponentManager* componentsToDraw);
+			void render(ComponentManager* componentsToDraw, float deltaTime);
 			void endRender();
 
 			inline Window* getWindow() { return mpWindowHandle; }

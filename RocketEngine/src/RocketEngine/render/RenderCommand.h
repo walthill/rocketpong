@@ -119,6 +119,11 @@ namespace RKTEngine
 				spRendererAPI->drawQuad(position, size, color);
 			}
 
+			inline static void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, float tilingFactor, Color color = Color::white)
+			{
+				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, tilingFactor, color.getColorAlpha());
+			}
+
 		private:
 			static Renderer* spRendererAPI;
 	};
