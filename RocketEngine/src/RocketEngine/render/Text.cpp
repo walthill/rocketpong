@@ -1,5 +1,5 @@
 #include "Text.h"
-#include "RocketEngine/core/RenderCore.h"
+#include "RocketEngine/render/Renderer.h"
 #include "RocketEngine/render/Font.h"
 #include "platform/OpenGL/OpenGLText.h"
 
@@ -9,7 +9,7 @@ namespace RKTEngine
 
 	Text* Text::create(Font* fontData, std::string& text, int fontSize)
 	{
-		switch (RenderCore::getAPI())
+		switch (Renderer::getAPI())
 		{
 			case Renderer::API::NONE:		return nullptr;
 			case Renderer::API::OPENGL:		return new OpenGLText(fontData, text, fontSize);

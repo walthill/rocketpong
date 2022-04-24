@@ -1,5 +1,5 @@
 #include "OpenGLText.h"
-#include "RocketEngine/core/RenderCore.h"
+#include "RocketEngine/render/RenderCommand.h"
 #include "Platform/OpenGL/OpenGLFont.h"
 
 //TODO: word wrapping
@@ -62,6 +62,6 @@ namespace RKTEngine
 	void OpenGLText::renderText()
 	{
 		mFontData->attachFontData();
-		RenderCore::submit(glyphVA);
+		RenderCommand::drawIndexed(glyphVA);
 	}
 }

@@ -1,5 +1,5 @@
 #include "Buffer.h"
-#include "RocketEngine/core/RenderCore.h"
+#include "RocketEngine/render/renderer.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace RKTEngine
@@ -7,7 +7,7 @@ namespace RKTEngine
 
 	VertexBuffer* VertexBuffer::create(uint32 size, DataType usage)
 	{
-		switch (RenderCore::getAPI())
+		switch (Renderer::getAPI())
 		{
 			case Renderer::API::NONE:		return nullptr;
 			case Renderer::API::OPENGL:		return new OpenGLVertexBuffer(size, usage);
@@ -17,7 +17,7 @@ namespace RKTEngine
 
 	VertexBuffer* VertexBuffer::create(const float* vertices, uint32 size, DataType usage)
 	{
-		switch (RenderCore::getAPI())
+		switch (Renderer::getAPI())
 		{
 		case Renderer::API::NONE:		return nullptr;
 		case Renderer::API::OPENGL:		return new OpenGLVertexBuffer(vertices, size, usage);
@@ -27,7 +27,7 @@ namespace RKTEngine
 
 	VertexBuffer* VertexBuffer::create(const void* data, uint32 size, DataType usage)
 	{
-		switch (RenderCore::getAPI())
+		switch (Renderer::getAPI())
 		{
 		case Renderer::API::NONE:		return nullptr;
 		case Renderer::API::OPENGL:		return new OpenGLVertexBuffer(data, size, usage);
@@ -38,7 +38,7 @@ namespace RKTEngine
 
 	IndexBuffer* IndexBuffer::create(uint32* indicies, uint32 count)
 	{
-		switch (RenderCore::getAPI())
+		switch (Renderer::getAPI())
 		{
 		case Renderer::API::NONE:		return nullptr;
 		case Renderer::API::OPENGL:		return new OpenGLIndexBuffer(indicies, count);
@@ -48,7 +48,7 @@ namespace RKTEngine
 
 	FrameBuffer* FrameBuffer::create(int width, int height, int aaSamples)
 	{
-		switch (RenderCore::getAPI())
+		switch (Renderer::getAPI())
 		{
 		case Renderer::API::NONE:		return nullptr;
 		case Renderer::API::OPENGL:		return new OpenGLFrameBuffer(width, height, aaSamples);

@@ -1,12 +1,13 @@
 #include "OpenGLVertexArray.h"
 #include "RocketEngine/core/RenderCore.h"
 #include <glad/glad.h>
+#include <RocketEngine/render/Renderer.h>
 
 namespace RKTEngine
 {
 	static uint32 ShaderDataTypeToGLType(ShaderDataType type)
 	{
-		if (RenderCore::getAPI() == Renderer::API::OPENGL)
+		if (Renderer::getAPI() == Renderer::API::OPENGL)
 		{
 			switch (type)
 			{

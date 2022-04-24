@@ -2,9 +2,11 @@
 #include <glad/glad.h>
 #include <RKTUtils/Profiling.h>
 #include <glm\ext\matrix_transform.hpp>
+#include <RocketEngine/render/shader/Shader.h>
 
 namespace RKTEngine
 {
+	#pragma region Renderer2DData
 	//Order matters here for uploading and parsing bytes on the shader
 	struct QuadVertex
 	{
@@ -17,9 +19,9 @@ namespace RKTEngine
 
 	struct Renderer2DData
 	{
-		const uint32_t MAX_QUADS = 10000;
-		const uint32_t MAX_VERTICES = MAX_QUADS * 4;
-		const uint32_t MAX_INDICES = MAX_QUADS * 6;
+		static const uint32_t MAX_QUADS = 20000;
+		static const uint32_t MAX_VERTICES = MAX_QUADS * 4;
+		static const uint32_t MAX_INDICES = MAX_QUADS * 6;
 		static const uint32_t MAX_TEXTURE_SLOTS = 32;
 
 		uint32_t quadIndexCount = 0;
@@ -36,6 +38,7 @@ namespace RKTEngine
 		uint32_t textureSlotIndex = 1; //0 = white textures in tutorial
 
 		glm::vec4 quadVertexPositions[4];
+		Renderer::Statistics stats;
 
 		void cleanup()
 		{
@@ -48,6 +51,7 @@ namespace RKTEngine
 		}
 	};
 	static Renderer2DData sData;
+#pragma endregion
 
 	void OpenGLRenderer::initialize(Shader* renderShader)
 	{
@@ -147,6 +151,17 @@ namespace RKTEngine
 		}
 
 		drawIndexed(sData.quadVertexArray, sData.quadIndexCount);
+#if RKT_RENDER_STATS
+		renderStats.drawCalls += 1;
+#endif
+	}
+
+	void OpenGLRenderer::FlushAndReset()
+	{
+		endScene();
+		sData.quadIndexCount = 0;
+		sData.textureSlotIndex = 1;
+		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
 	}
 
 	void OpenGLRenderer::clearColor(Color clearColor)
@@ -273,6 +288,10 @@ namespace RKTEngine
 	{
 		RKT_PROFILE_FUNCTION();
 
+		//handle batch overflow
+		if (sData.quadIndexCount >= Renderer2DData::MAX_INDICES)
+			FlushAndReset();
+
 		glm::vec4 defaultColor = Color::white.getColorAlpha01();
 
 		float textureIndex = 0.0f;
@@ -339,6 +358,10 @@ namespace RKTEngine
 		sData.quadVertexBufferPtr++;
 
 		sData.quadIndexCount += 6;
+
+#if RKT_RENDER_STATS
+		renderStats.quadCount += 1;
+#endif
 	}
 
 	//Texture Quad
@@ -350,6 +373,10 @@ namespace RKTEngine
 	void OpenGLRenderer::drawQuad(const glm::vec3& position, const glm::vec2& size, Texture2D* texture, float tilingFactor, const glm::vec4& color)
 	{
 		RKT_PROFILE_FUNCTION();
+
+		//handle batch overflow
+		if (sData.quadIndexCount >= Renderer2DData::MAX_INDICES)
+			FlushAndReset();
 
 		glm::vec4 defaultColor = Color::white.getColorAlpha01();
 
@@ -404,12 +431,20 @@ namespace RKTEngine
 		sData.quadVertexBufferPtr++;
 
 		sData.quadIndexCount += 6;
+
+#if RKT_RENDER_STATS
+		renderStats.quadCount += 1;
+#endif	
 	}
 
 	//Color Quad
 	void OpenGLRenderer::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
 		RKT_PROFILE_FUNCTION();
+
+		//handle batch overflow
+		if (sData.quadIndexCount >= Renderer2DData::MAX_INDICES)
+			FlushAndReset();
 
 		const float TEX_INDEX = 0.0f;
 		const float TILING_FACTOR = 1.0f;
@@ -447,12 +482,19 @@ namespace RKTEngine
 
 		sData.quadIndexCount += 6;
 
+#if RKT_RENDER_STATS
+		renderStats.quadCount += 1;
+#endif
 	}
 
 	//rotated color
 	void OpenGLRenderer::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
 	{
 		RKT_PROFILE_FUNCTION();
+
+		//handle batch overflow
+		if (sData.quadIndexCount >= Renderer2DData::MAX_INDICES)
+			FlushAndReset();
 
 		const float TEX_INDEX = 0.0f;
 		const float TILING_FACTOR = 1.0f;
@@ -490,12 +532,20 @@ namespace RKTEngine
 		sData.quadVertexBufferPtr++;
 
 		sData.quadIndexCount += 6;
+
+#if RKT_RENDER_STATS
+		renderStats.quadCount += 1;
+#endif
 	}
 
 	//rotated texture
 	void OpenGLRenderer::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, float tilingFactor, const glm::vec4& color)
 	{
 		RKT_PROFILE_FUNCTION();
+
+		//handle batch overflow
+		if (sData.quadIndexCount >= Renderer2DData::MAX_INDICES)
+			FlushAndReset();
 
 		glm::vec4 defaultColor = Color::white.getColorAlpha01();
 
@@ -551,12 +601,20 @@ namespace RKTEngine
 		sData.quadVertexBufferPtr++;
 
 		sData.quadIndexCount += 6;
+			
+#if RKT_RENDER_STATS
+		renderStats.quadCount += 1;
+#endif
 	}
 
 	//rotated atlased
 	void OpenGLRenderer::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, AtlasCoordinateData atlasCoords, float tilingFactor, const glm::vec4& color)
 	{
 		RKT_PROFILE_FUNCTION();
+
+		//handle batch overflow
+		if (sData.quadIndexCount >= Renderer2DData::MAX_INDICES)
+			FlushAndReset();
 
 		glm::vec4 defaultColor = Color::white.getColorAlpha01();
 
@@ -625,6 +683,23 @@ namespace RKTEngine
 		sData.quadVertexBufferPtr++;
 
 		sData.quadIndexCount += 6;
+#if RKT_RENDER_STATS
+		renderStats.quadCount += 1;
+#endif
+	}
+	
+	#pragma endregion
+
+	#pragma region Render Stats
+
+	Renderer::Statistics OpenGLRenderer::getStats()
+	{
+		return renderStats;
+	}
+
+	void OpenGLRenderer::resetStats()
+	{
+		memset(&renderStats, 0, sizeof(Renderer::Statistics));
 	}
 	#pragma endregion
 

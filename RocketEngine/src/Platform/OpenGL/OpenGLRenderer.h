@@ -44,8 +44,12 @@ namespace RKTEngine
 			virtual void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, float tilingFactor, const glm::vec4& color) override;
 			//rotated atlased texture
 			virtual void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, AtlasCoordinateData atlasData, float tilingFactor, const glm::vec4& color) override;
+			
+			virtual Statistics getStats() override;
+			virtual void resetStats() override;
 
 		private:
+			void FlushAndReset();
 	};
 }
 #endif // !OPENGL_RENDERER_API_H

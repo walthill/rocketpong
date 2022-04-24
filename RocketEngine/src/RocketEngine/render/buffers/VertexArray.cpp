@@ -1,12 +1,12 @@
 #include "VertexArray.h"
-#include "RocketEngine/core/RenderCore.h"
+#include "RocketEngine/render/Renderer.h"
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace RKTEngine
 {
 	VertexArray* VertexArray::create()
 	{
-		switch (RenderCore::getAPI())
+		switch (Renderer::getAPI())
 		{
 			case Renderer::API::NONE:		break;
 			case Renderer::API::OPENGL:		return new OpenGLVertexArray();

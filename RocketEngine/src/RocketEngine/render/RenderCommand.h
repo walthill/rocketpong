@@ -35,6 +35,16 @@ namespace RKTEngine
 				spRendererAPI->flush();
 			}
 
+			inline static void resetStats()
+			{
+				spRendererAPI->resetStats();
+			}
+
+			inline static Renderer::Statistics getStats()
+			{
+				return spRendererAPI->getStats();
+			}
+
 			inline static void clearColor(Color color)
 			{
 				spRendererAPI->clearColor(color);

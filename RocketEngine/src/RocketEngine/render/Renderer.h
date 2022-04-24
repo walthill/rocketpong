@@ -5,11 +5,10 @@
 #include <RocketEngine/render/buffers/Texture.h>
 #include "Color.h"
 #include <glm/vec2.hpp>
-#include <RocketEngine\render\shader\Shader.h>
 
 namespace RKTEngine
 {
-
+	class Shader;
 
 	class Renderer
 	{
@@ -20,7 +19,16 @@ namespace RKTEngine
 			enum BufferTestType { NEVER = 0, LESS, EQUAL, LESS_OR_EQUAL, GREATER, NOT_EQUAL, GREAT_OR_EQUAL, ALWAYS };
 			enum TextureChannel { TEX_CHANNEL0 = 0 };
 			enum TextureType { NONE = 0, DIFFUSE, SPECULAR, NORMAL, SPRITE };
-			
+
+			struct Statistics
+			{
+				uint32_t drawCalls;
+				uint32_t quadCount;
+
+				uint32_t getVertexCount() { return quadCount * 4; }
+				uint32_t getIndexCount() { return quadCount * 6; }
+			} renderStats;
+
 			virtual void initialize(Shader* renderShader) OVERRIDE_REQUIRED;
 			virtual void cleanup() OVERRIDE_REQUIRED;
 
@@ -75,8 +83,10 @@ namespace RKTEngine
 			//rotated atlased texture
 			virtual void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, AtlasCoordinateData atlasData, float tilingFactor, const glm::vec4& color) OVERRIDE_REQUIRED;
 
-			inline static Renderer::API getAPI() { return msAPI; };
+			virtual Statistics getStats() OVERRIDE_REQUIRED;
+			virtual void resetStats() OVERRIDE_REQUIRED;
 
+			inline static Renderer::API getAPI() { return msAPI; };
 		private:
 			static Renderer::API msAPI;
 	};
