@@ -20,15 +20,21 @@
 #ifndef MESH_COMP_H
 #define MESH_COMP_H
 
-#include <glm/mat4x4.hpp>
 #include "Component.h"
 #include "RocketEngine/render/buffers/Texture.h"
-#include <RocketEngine\render\shader\Shader.h>
 #include <RocketEngine\render\Color.h>
+#include <glm/vec2.hpp>
 
 namespace RKTEngine
 {
 	const std::string modelFileLocation = "../RogueOne/assets/sprites/";
+
+	struct SpriteRenderData
+	{
+		glm::vec3 position;
+		glm::vec2 scale;
+		float rotation;
+	};
 
 	/***************************************************************************//**
 	 * @brief 	Data used in every mesh component.
@@ -41,25 +47,20 @@ namespace RKTEngine
 		bool isLoaded;			///< Flag to set when model is loaded
 		std::string mSpriteName;  ///< Name of model to load
 
-		int instanceCount;
-		glm::mat4* instanceMatrices;
-
 		std::string mTileName;
 		int mWidth, mHeight;
 
-		Shader* mpShader;
 		Texture2D* pSprite;			///< Reference to the model
 		Color mColor;
 
 		///Default constructor sets all values to zero
 		SpriteComponentData() :
-			isLoaded(false), pSprite(nullptr), mSpriteName(""), mColor(Color::white), instanceCount(0), instanceMatrices(nullptr), mpShader(nullptr)
-			, mWidth(16), mHeight(16), mTileName("") {};
+			isLoaded(false), pSprite(nullptr), mSpriteName(""), mColor(Color::white), mWidth(16), mHeight(16), mTileName("") {};
 
 		///Constructor that takes in values for struct variables
-		SpriteComponentData(std::string name, std::string tileName, int width, int height, Color color = Color::white, int instanceAmount = 1, glm::mat4* matrices = nullptr) :
-			isLoaded(false), pSprite(nullptr), mSpriteName(name), mColor(color), instanceCount(instanceAmount), instanceMatrices(matrices), mpShader(nullptr)
-			, mWidth(width), mHeight(height), mTileName(tileName) {};
+		SpriteComponentData(std::string name, std::string tileName, int width, int height, Color color = Color::white) :
+			isLoaded(false), pSprite(nullptr), mSpriteName(name), mColor(color),
+			mWidth(width), mHeight(height), mTileName(tileName) {};
 	};
 
 	const SpriteComponentData ZERO_SPRITE_DATA;
@@ -91,9 +92,6 @@ namespace RKTEngine
 
 		///Access the mesh component data
 		SpriteComponentData* getData() { return &mSpriteData; }
-
-		/// Access sprite shader reference
-		const Shader& getShader() { return *mSpriteData.mpShader; }
 
 		///Access the mesh model reference
 		Texture2D* getSprite();
@@ -131,7 +129,7 @@ namespace RKTEngine
 		 * @param rotationAxis		The rotational axis of the model
 		 * @param rotationAngle		The rotation angle of the model
 		 *************************************************************************/
-		void process(glm::vec2 position = glm::vec2(0,0), glm::vec2 scale = glm::vec2(1,1), float rotationAngle = 0);
+		void process(const glm::vec2& position, const glm::vec2& scale, float rotationAngle = 0);
 
 		/**********************************************************************//**
 		 * Render model
@@ -141,17 +139,11 @@ namespace RKTEngine
 		void render();
 
 	private:
-		const std::string mMODEL_MATRIX_ID = "model";
-		const std::string mSPRITE_COLOR_ID = "spriteColor";
-		const std::string mSPRITE_IMAGE_ID = "image";
-
-		glm::mat4 mModelMatrix = glm::mat4();
+		SpriteRenderData mRenderInfo;
 		SpriteComponentData mSpriteData;
+		AtlasCoordinateData mAtlasCoords;
 
-		int mAtlasOffsetX, mAtlasOffsetY;
-
-		void attatchSpriteData();
-		AtlasCoordinateData calculateAtlasCoords();
+		AtlasCoordinateData calculateAtlasCoords(int x, int y);
 	};
 }
 #endif // !MESH_COMP_H

@@ -37,12 +37,18 @@ namespace RKTEngine
 
 			inline static void resetStats()
 			{
+#if RKT_RENDER_STATS
 				spRendererAPI->resetStats();
+#endif //!RKT_RENDER_STATS
 			}
 
 			inline static Renderer::Statistics getStats()
 			{
+#if RKT_RENDER_STATS
 				return spRendererAPI->getStats();
+#else
+				return Renderer::Statistics();
+#endif //!RKT_RENDER_STATS
 			}
 
 			inline static void clearColor(Color color)
@@ -128,10 +134,21 @@ namespace RKTEngine
 			{
 				spRendererAPI->drawQuad(position, size, color);
 			}
-
+			inline static void drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, Texture2D* texture, float tilingFactor, Color color = Color::white)
+			{
+				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, tilingFactor, color.getColorAlpha());
+			}
 			inline static void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, float tilingFactor, Color color = Color::white)
 			{
 				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, tilingFactor, color.getColorAlpha());
+			}
+			inline static void drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, Texture2D* texture, AtlasCoordinateData atlasCoords, float tilingFactor, Color color = Color::white)
+			{
+				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, atlasCoords, tilingFactor, color.getColorAlpha());
+			}
+			inline static void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, AtlasCoordinateData atlasCoords, float tilingFactor, Color color = Color::white)
+			{
+				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, atlasCoords, tilingFactor, color.getColorAlpha());
 			}
 
 		private:

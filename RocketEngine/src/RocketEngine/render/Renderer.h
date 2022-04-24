@@ -77,10 +77,13 @@ namespace RKTEngine
 			virtual void drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) OVERRIDE_REQUIRED;
 
 			//rotated color
+			virtual void drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color) OVERRIDE_REQUIRED;
 			virtual void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color) OVERRIDE_REQUIRED;
 			//rotated texture
+			virtual void drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, Texture2D* texture, float tilingFactor, const glm::vec4& color) OVERRIDE_REQUIRED;
 			virtual void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, float tilingFactor, const glm::vec4& color) OVERRIDE_REQUIRED;
 			//rotated atlased texture
+			virtual void drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, Texture2D* texture, AtlasCoordinateData atlasData, float tilingFactor, const glm::vec4& color) OVERRIDE_REQUIRED;
 			virtual void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, AtlasCoordinateData atlasData, float tilingFactor, const glm::vec4& color) OVERRIDE_REQUIRED;
 
 			virtual Statistics getStats() OVERRIDE_REQUIRED;

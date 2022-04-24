@@ -1,6 +1,7 @@
 #include "RenderCore.h"
 #include <RocketEngine/render/RenderCommand.h>
 #include "Window.h"
+#include "RocketEngine/render/shader/Shader.h"
 #include "RocketEngine/render/shader/ShaderManager.h"
 #include "ComponentManager.h"
 #include <glm\ext\matrix_clip_space.hpp>
@@ -74,7 +75,7 @@ namespace RKTEngine
 		RKT_PROFILE_FUNCTION();
 
 		RenderCommand::clearColor(Color::grey);
-		RenderCommand::clearBuffer(BufferType::COLOR_BUFFER | BufferType::DEPTH_BUFFER);
+		RenderCommand::clearBuffer(BufferType::COLOR_BUFFER);	//depth buffer not enable for now. so render order determines layering
 	}	
 
 	void RenderCore::render(ComponentManager* componentsToDraw, float deltaTime)
@@ -83,17 +84,18 @@ namespace RKTEngine
 
 		RenderCommand::resetStats();
 
-		static float rot = 0;
-		rot += deltaTime * 50;
+		
 		RenderCommand::beginScene();
-
-		RenderCommand::drawQuad({ 220, 250, 0 }, { 64, 64 }, { 1.0f,.2f,.3f, 0.25f }); //TODO: alpha blending against other objs
-		RenderCommand::drawQuad({ 350, 300, 0 }, { 64, 64 }, { 0.2f,.3f,.8f, 1.0f });
-		RenderCommand::drawQuad({ 500, 290, -1 }, { 64, 64 }, tex, 1.0f);
-		RenderCommand::drawQuad({ 355, 400 }, { 64, 64 }, tex, 1.0f);
-		RenderCommand::drawRotatedQuad({ 500, 200, 0 }, { 512 / 4, 512 / 4}, rot, tex, 7.0f);
-
 		componentsToDraw->renderComponents();
+
+		//static float rot = 0;
+		//rot += deltaTime * 50;
+		//RenderCommand::drawQuad({ 220, 250, 0 }, { 64, 64 }, { 1.0f,.2f,.3f, 0.25f }); //TODO: alpha blending against other objs
+		//RenderCommand::drawQuad({ 350, 300, 0 }, { 64, 64 }, { 0.2f,.3f,.8f, 1.0f });
+		//RenderCommand::drawQuad({ 500, 290, -1 }, { 64, 64 }, tex, 1.0f);
+		//RenderCommand::drawQuad({ 355, 400 }, { 64, 64 }, tex, 1.0f);
+		//RenderCommand::drawRotatedQuad({ 500, 200, 0 }, { 512 / 4, 512 / 4}, rot, tex, 7.0f);
+		
 		RenderCommand::endScene();
 
 #if RKT_RENDER_STATS
@@ -122,7 +124,7 @@ namespace RKTEngine
 		RKT_PROFILE_FUNCTION();
 
 		mpWindowHandle = new Window();
-		if (!mpWindowHandle->initialize(1280, 720, "RogueOne", BLEND | DEPTH_TEST))
+		if (!mpWindowHandle->initialize(1280, 720, "RogueOne", BLEND))
 		{
 			return false;
 		}

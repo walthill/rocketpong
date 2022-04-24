@@ -217,24 +217,8 @@ namespace RKTEngine
 
 	void ComponentManager::renderSprites()
 	{
-		SpriteComponent* tempComponent = nullptr;
 		for (auto& it : mSpriteComponentMap)
 		{
-			if (tempComponent != nullptr)
-			{
-				//Check if the mesh is instanced
-				glm::mat4* pMatrices = tempComponent->getData()->instanceMatrices;
-				if (pMatrices != nullptr)
-				{
-					//If the previous instanced mesh matches the current one, don't call render on the current mesh
-					if (pMatrices == it.second->getData()->instanceMatrices)
-					{
-						continue;
-					}
-				}
-			}
-
-			tempComponent = it.second;
 			it.second->render();
 		}
 	}
