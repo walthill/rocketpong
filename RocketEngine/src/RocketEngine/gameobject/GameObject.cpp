@@ -2,6 +2,7 @@
 #include "RocketEngine/core/EngineCore.h"
 #include "RocketEngine/component/TransformComponent.h"
 #include "RocketEngine/core/ComponentManager.h"
+#include "RocketEngine/core/Actor.h"
 
 namespace RKTEngine
 {
@@ -45,6 +46,8 @@ namespace RKTEngine
 
 	void GameObject::onMessage(Message& message)
 	{
+		if (mpActorOwner != nullptr)
+			mpActorOwner->onMessage(message);
 	}
 
 	SpriteComponent* GameObject::getSprite()

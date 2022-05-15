@@ -7,6 +7,8 @@
 
 namespace RKTEngine
 {
+	float EngineCore::sDeltaTime = 0;
+	
 	EngineCore::EngineCore()
 	{
 
@@ -31,7 +33,7 @@ namespace RKTEngine
 	bool EngineCore::initialize()
 	{
 		mpMasterTimer = new RKTUtil::Timer();
-		mDeltaTime = 0.0f;
+		sDeltaTime = 0.0f;
 		
 		if (!initRenderCore())
 		{
@@ -73,10 +75,10 @@ namespace RKTEngine
 
 	void EngineCore::update()
 	{
-		mpMessageManager->processMessagesForThisFrame(mDeltaTime);
+		mpMessageManager->processMessagesForThisFrame(sDeltaTime);
 
-		mpComponentManager->update(mDeltaTime);
-		mpEntityManager->updateAll(mDeltaTime);
+		mpComponentManager->update(sDeltaTime);
+		mpEntityManager->updateAll(sDeltaTime);
 
 		mpInputSystem->processInput();
 		calculateDeltaTime();
@@ -85,7 +87,7 @@ namespace RKTEngine
 	void EngineCore::render()
 	{
 		mpRenderCore->beginRender();
-		mpRenderCore->render(mpComponentManager, mDeltaTime);
+		mpRenderCore->render(mpComponentManager, sDeltaTime);
 		mpRenderCore->endRender();
 	}
 
@@ -98,7 +100,7 @@ namespace RKTEngine
 	void EngineCore::calculateDeltaTime()
 	{
 		float currentFrame = (float)getTime();
-		mDeltaTime = (currentFrame - mLastFrame) / 1000;
+		sDeltaTime = (currentFrame - mLastFrame) / 1000;
 		mLastFrame = currentFrame;
 	}
 

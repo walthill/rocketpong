@@ -66,10 +66,11 @@ namespace RKTEngine
 		return newObj;
 	}
 
-	GameObject* GameObjectManager::createSprite(const std::string& spriteToLoad, const std::string& tileName, int width, int height, glm::vec2 position, glm::vec2 scale, float rotation)
+	//TODO: create atlased version that takes in w/h & tile names 
+	GameObject* GameObjectManager::createSprite(const std::string& spriteToLoad, glm::vec2 position, glm::vec2 scale, float rotation)
 	{
 		TransformData transformData = TransformData(position,scale, rotation);
-		SpriteComponentData spriteData = SpriteComponentData(spriteToLoad, tileName, width, height);
+		SpriteComponentData spriteData = SpriteComponentData(spriteToLoad);
 
 		return createGameObject(transformData, spriteData);
 	}
@@ -83,10 +84,10 @@ namespace RKTEngine
 		return createGameObject(transformData, ZERO_SPRITE_DATA, textData);
 	}
 
-	GameObject* GameObjectManager::createPlayer(const std::string& texture, const std::string& tileName, int width, int height, glm::vec2 position, glm::vec2 scale, float rotation)
+	GameObject* GameObjectManager::createPlayer(const std::string& texture, glm::vec2 position, glm::vec2 scale, float rotation)
 	{
 		TransformData transformData = TransformData(position, scale, rotation);
-		SpriteComponentData spriteData = SpriteComponentData(texture, tileName, width, height);
+		SpriteComponentData spriteData = SpriteComponentData(texture);
 
 		return createGameObject(transformData, spriteData, ZERO_LABEL_DATA, PLAYER_OBJ_ID);
 	}

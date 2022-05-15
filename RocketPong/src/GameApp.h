@@ -7,9 +7,7 @@
 #include <RKTUtils/Timer.h>
 #include <RocketEngine/input/MessageDefines.h>
 
-class Player;
-class Map;
-class DungeonGenerator;
+class Paddle;
 	
 class GameApp : public RKTUtil::Singleton<GameApp>
 {
@@ -26,10 +24,7 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 
 		void onMessage(RKTEngine::Message& message);
 
-
-		void generateDungeon();
 		double getTime(); 
-		Map* getMap();
 
 		bool quit(RKTEngine::ExitMessage& msg);
 
@@ -52,11 +47,8 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 		RKTUtil::PerformanceTracker* mpPerformanceTracker = nullptr;
 		RKTUtil::Timer* mpFrameTimer = nullptr;
 
-		std::vector<Map*> maps;
-		Map* mpMap = nullptr;
-		DungeonGenerator* mpDungeonGen = nullptr;
-
-		Player* mpPlayer = nullptr;
+		Paddle* mpPlayer1 = nullptr;
+		Paddle* mpPlayer2 = nullptr;
 
 		void beginInit();
 		void endInit();

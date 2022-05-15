@@ -55,12 +55,14 @@ namespace RKTEngine
 
 		///Default constructor sets all values to zero
 		SpriteComponentData() :
-			isLoaded(false), pSprite(nullptr), mSpriteName(""), mColor(Color::white), mWidth(16), mHeight(16), mTileName("") {};
+			isLoaded(false), pSprite(nullptr), mSpriteName(""), mColor(Color::white), mWidth(0), mHeight(0), mTileName("") {};
 
-		///Constructor that takes in values for struct variables
-		SpriteComponentData(std::string name, std::string tileName, int width, int height, Color color = Color::white) :
+		///Constructor that takes in values for struct variables 
+		//width/height set when reading in sprite
+		//tileName used for id'ing atlased sprite cells
+		SpriteComponentData(std::string name, std::string tileName = "", int w = 0, int h = 0, Color color = Color::white) :
 			isLoaded(false), pSprite(nullptr), mSpriteName(name), mColor(color),
-			mWidth(width), mHeight(height), mTileName(tileName) {};
+			mWidth(w), mHeight(h), mTileName(tileName) {};
 	};
 
 	const SpriteComponentData ZERO_SPRITE_DATA;

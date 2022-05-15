@@ -1,8 +1,6 @@
 #include "GameApp.h"
 #include "RocketEngine.h"
-#include "actors/player/Player.h"
-#include "map/Map.h"
-#include "map/DungeonGenerator.h"
+#include "actors/Paddle.h"
 
 GameApp::~GameApp()
 {
@@ -11,15 +9,15 @@ GameApp::~GameApp()
 
 void GameApp::clean()
 {
-	delete mpDungeonGen;
-	delete mpMap;
-	delete mpPlayer;
-
-	RKTEngine::EngineCore::cleanInstance();	
+	delete mpPlayer1;
+	delete mpPlayer2;
+	RKTEngine::EngineCore::cleanInstance();
 }
 
 bool GameApp::initialize()
 {
+	RKT_PROFILE_FUNCTION();
+
 	beginInit();
 
 	RKTEngine::EngineCore::initInstance();
@@ -28,13 +26,14 @@ bool GameApp::initialize()
 
 	RKTEngine::EngineCore::getInstance()->getMessageManager()->setMessageCallback(RKT_BIND_MESSAGE_FN(GameApp::onMessage));
 
-	int windowWidth = RKTEngine::EngineCore::getInstance()->getWindowWidth();
-	int windowHeight = RKTEngine::EngineCore::getInstance()->getWindowHeight();
+	auto w = RKTEngine::EngineCore::getInstance()->getWindowWidth();
+	auto h = RKTEngine::EngineCore::getInstance()->getWindowHeight();
 
-	mpMap = new Map((int)(windowWidth * .8f), (int)(windowHeight * .95f), 16);
-	mpDungeonGen = new DungeonGenerator((int)(windowWidth * .8f), (int)(windowHeight * .95f));
-	generateDungeon();
-	
+	mpPlayer1 = new Paddle(150);
+	mpPlayer1->mpGameObject->getTransform()->setPosition({ 100, h / 2 });
+	mpPlayer2 = new Paddle(150, false);
+	mpPlayer2->mpGameObject->getTransform()->setPosition({ w-100, h / 2 });
+
 	endInit();
 
 	return mIsRunning;
@@ -74,7 +73,7 @@ bool GameApp::runGame()
 		mpFrameTimer->sleepUntilElapsed(RKTEngine::FRAME_TIME_60FPS);
 		mpPerformanceTracker->stopTracking(mLOOP_TRACKER_NAME);
 
-#ifdef RG_DEBUG  
+#ifdef RKP_DEBUG  
 		if (mDisplayFrameTime)
 		{
 			if (!mShowFPS)
@@ -102,14 +101,12 @@ void GameApp::update()
 {
 	RKTEngine::EngineCore::getInstance()->update();
 
+#ifdef RKP_DEBUG  
 	if (Input::getKeyDown(KeyCode::Escape))
 	{
 		mIsRunning = false;
 	}
-	else if (Input::getKeyDown(KeyCode::R))
-	{
-		generateDungeon();
-	}
+#endif
 }
 
 void GameApp::render()
@@ -123,43 +120,12 @@ void GameApp::onMessage(RKTEngine::Message& message)
 	dispatcher.dispatch<RKTEngine::ExitMessage>(RKT_BIND_MESSAGE_FN(GameApp::quit));
 
 	RKTEngine::EngineCore::getInstance()->onMessage(message);
-	mpPlayer->onMessage(message);
 }
 
-void GameApp::generateDungeon()
-{
-	mpMap->clearMap();
-	if (mpDungeonGen != nullptr)
-		mpDungeonGen->cleanup();
-	
-	if (mpPlayer != nullptr)
-	{
-		delete mpPlayer;
-		mpPlayer = nullptr;
-	}
-
-	int windowWidth = RKTEngine::EngineCore::getInstance()->getWindowWidth();
-	int windowHeight = RKTEngine::EngineCore::getInstance()->getWindowHeight();
-
-	mpDungeonGen->generate();
-	auto& rooms = mpDungeonGen->getRoomData();
-
-	for (auto& room : rooms)
-	{
-		mpMap->addRoom(room);
-	}
-
-	mpPlayer = new Player("tileset_0", "player", Map::sTileSize, Map::sTileSize, rooms[0]->position);
-}
 
 double GameApp::getTime()
 {
 	return RKTEngine::EngineCore::getInstance()->getTime();
-}
-
-Map* GameApp::getMap()
-{
-	return mpMap;
 }
 
 bool GameApp::quit(RKTEngine::ExitMessage& msg)

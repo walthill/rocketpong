@@ -1,9 +1,9 @@
 -- premake5.lua
-workspace "RogueOne"
+workspace "RocketPong"
     architecture "x86"
 
     configurations { "Debug", "Release", "Dist" }
-    startproject "RogueOne"
+    startproject "RocketPong"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -76,8 +76,8 @@ project "RocketEngine"
     
 --------------------------------------------------------------------------
 
-project "RogueOne"
-    location "RogueOne"
+project "RocketPong"
+    location "RocketPong"
     kind "ConsoleApp"
     language "C++"
 
@@ -129,15 +129,15 @@ project "RogueOne"
     }
 
     filter "configurations:Debug"
-        defines "RG_DEBUG"
+        defines "RKP_DEBUG"
         symbols "On"
 
     filter "configurations:Release"
-        defines "RG_RELEASE"
+        defines "RKP_RELEASE"
         optimize "On"
     
     filter "configurations:Dist"
-        defines "RG_DIST"
+        defines "RKP_DIST"
         optimize  "On"
 
     ----------------------------------------------------------

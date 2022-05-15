@@ -39,6 +39,8 @@ namespace RKTEngine
 	 ******************************************************************************/
 	class GameObject : public RKTUtil::Trackable
 	{
+		friend class Actor;
+
 		public:
 			///Default constructor
 			GameObject();
@@ -92,7 +94,6 @@ namespace RKTEngine
 			*************************************************************************/
 			void connectLabel(ComponentId labelId) { mLabelId = labelId; }
 
-
 			///Access the GameObject's id
 			inline uint32 getId() { return mId; }
 			///Access the GameObject's transform component id
@@ -118,6 +119,10 @@ namespace RKTEngine
 			ComponentId mLabelId;
 
 			TransformComponent* mpTransform;
+			Actor* mpActorOwner = nullptr;
+
+			//Register this gameobj as an Actor
+			inline void setOwner(Actor* actor) { mpActorOwner = actor; }
 	};
 }
 #endif // !GAME_OBJ_H

@@ -25,6 +25,12 @@ namespace RKTEngine
 				std::pair<int, int> offsets = EngineCore::getInstance()->getAssetManager()->getSpriteAtlasIndex(mSpriteData.mTileName);
 				mAtlasCoords = calculateAtlasCoords(offsets.first, offsets.second);
 			}
+			else
+			{
+				//sprite size matches stored texture size
+				mSpriteData.mWidth = mSpriteData.pSprite->getWidth();
+				mSpriteData.mHeight = mSpriteData.pSprite->getHeight();
+			}
 		}
 		else
 		{
@@ -45,7 +51,6 @@ namespace RKTEngine
 	void SpriteComponent::setData(const SpriteComponentData& data)
 	{
 		mSpriteData = data; 
-		const std::string& spriteShaderID = EngineCore::getInstance()->getAssetManager()->getSpriteShaderID();
 	}
 
 	void SpriteComponent::process(const glm::vec2& position, const glm::vec2& scale, float rotationAngle)

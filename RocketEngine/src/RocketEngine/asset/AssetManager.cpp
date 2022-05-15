@@ -8,12 +8,6 @@ namespace RKTEngine
 {
 	AssetManager::AssetManager()
 	{
-		//TODO: make this data driven. somehow
-		mSpriteTileAssetCache = {
-			{	"player",	std::pair<int,int>(0,0)		},
-			{	"floor",	std::pair<int,int>(3, 7)	},
-			{	"wall",		std::pair<int,int>(3,6)		}
-		};
 	}
 
 	AssetManager::~AssetManager()

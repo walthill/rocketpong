@@ -32,7 +32,6 @@ namespace RKTEngine
 			void calculateDeltaTime();
 
 			double getTime();
-			inline float getDeltaTime() { return mDeltaTime; }
 
 			RenderCore* getRenderer(); 
 			inline ComponentManager* getComponentManager() { return mpComponentManager; }
@@ -45,6 +44,8 @@ namespace RKTEngine
 			int getWindowHeight();
 			int getWindowWidth();
 
+			static float sDeltaTime;
+
 		private:
 			RKTUtil::Timer* mpMasterTimer = nullptr;
 
@@ -55,7 +56,7 @@ namespace RKTEngine
 			GameObjectManager* mpEntityManager = nullptr;
 			ComponentManager* mpComponentManager = nullptr;
 
-			float mDeltaTime = 0 , mLastFrame =0 ;
+			float mLastFrame = 0;
 
 			bool initRenderCore();
 			void initInputSystem();
