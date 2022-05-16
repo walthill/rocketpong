@@ -29,6 +29,7 @@ namespace RKTEngine
 			
 			void cleanup();
 
+			void renderOverlay();
 			bool checkCollision(BoxColliderComponent* collider);
 
 			void setData(const BoxColliderData& data);

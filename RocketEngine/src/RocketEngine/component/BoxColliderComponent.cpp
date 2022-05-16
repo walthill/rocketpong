@@ -1,5 +1,6 @@
 #include "BoxColliderComponent.h"
 #include "TransformComponent.h"
+#include "RocketEngine/render/RenderCommand.h"
 
 namespace RKTEngine
 {
@@ -17,6 +18,21 @@ namespace RKTEngine
 	void BoxColliderComponent::cleanup()
 	{
 		mpParentTransform = nullptr;
+	}
+
+	void BoxColliderComponent::renderOverlay()
+	{
+		auto scale = mpParentTransform->getScale();
+		scale = glm::vec2(scale.x * getWidth(), scale.y * getHeight());
+
+		if (mpParentTransform->getRotation().angle != 0)
+		{
+			RenderCommand::drawRotatedQuad(mpParentTransform->getPosition(), scale, mpParentTransform->getRotation().angle, Color::green);
+		}
+		else
+		{
+			RenderCommand::drawQuad({mpParentTransform->getPosition(), 0.0f}, scale, Color::green.getColorAlpha01());
+		}
 	}
 
 	bool BoxColliderComponent::checkCollision(BoxColliderComponent* collider)

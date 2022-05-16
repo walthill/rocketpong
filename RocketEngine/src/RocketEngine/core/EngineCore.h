@@ -39,6 +39,8 @@ namespace RKTEngine
 			MessageManager* getMessageManager();
 			ShaderManager* getShaderManager();
 
+			void showDebugWireframes(bool show);
+
 			int getWindowHeight();
 			int getWindowWidth();
 

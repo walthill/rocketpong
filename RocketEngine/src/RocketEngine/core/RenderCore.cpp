@@ -10,10 +10,10 @@
 namespace RKTEngine
 {
 	using BufferType = Renderer::BufferType;
+	bool RenderCore::sRenderDebugWireframes = false;
 	
 	RenderCore::RenderCore()
 	{
-		tex = nullptr;
 		mpWindowHandle = nullptr;
 		mpShaderManager = nullptr;
 	}
@@ -25,7 +25,6 @@ namespace RKTEngine
 
 	void RenderCore::clean()
 	{
-		delete tex;
 		delete mpShaderManager;
 		RenderCommand::cleanupRenderer();
 		delete mpWindowHandle;
@@ -47,8 +46,6 @@ namespace RKTEngine
 
 		init2DShaderData();
 		RenderCommand::initRenderer(mpShaderManager->getShaderByKey("batchtex"));
-
-		tex = Texture2D::create("assets/sprites/smiles.png");
 
 		return true;
 	}
@@ -79,24 +76,24 @@ namespace RKTEngine
 	}	
 
 	void RenderCore::render(ComponentManager* componentsToDraw, float deltaTime)
-	{		
+	{
 		RKT_PROFILE_FUNCTION();
 
 		RenderCommand::resetStats();
 
-		
 		RenderCommand::beginScene();
 		componentsToDraw->renderComponents();
-
-		//static float rot = 0;
-		//rot += deltaTime * 50;
-		//RenderCommand::drawQuad({ 220, 250, 0 }, { 64, 64 }, { 1.0f,.2f,.3f, 0.25f }); //TODO: alpha blending against other objs
-		//RenderCommand::drawQuad({ 350, 300, 0 }, { 64, 64 }, { 0.2f,.3f,.8f, 1.0f });
-		//RenderCommand::drawQuad({ 500, 290, -1 }, { 64, 64 }, tex, 1.0f);
-		//RenderCommand::drawQuad({ 355, 400 }, { 64, 64 }, tex, 1.0f);
-		//RenderCommand::drawRotatedQuad({ 500, 200, 0 }, { 512 / 4, 512 / 4}, rot, tex, 7.0f);
-		
 		RenderCommand::endScene();
+
+		if(sRenderDebugWireframes)
+		{
+			RKT_PROFILE_SCOPE("Wireframe Overlays");
+			RenderCommand::beginScene();
+			mpWindowHandle->setWindowDrawMode(FRONT_AND_BACK, WIREFRAME);
+			componentsToDraw->renderWireframes();
+			RenderCommand::endScene();
+			mpWindowHandle->setWindowDrawMode(FRONT_AND_BACK, FILL);
+		}
 
 #if RKT_RENDER_STATS
 		logRenderStats();

@@ -6,7 +6,6 @@ namespace RKTEngine
 	class Window;
 	class ShaderManager;
 	class ComponentManager;
-	class Texture2D;
 	
 	class RenderCore
 	{
@@ -25,11 +24,11 @@ namespace RKTEngine
 			inline Window* getWindow() { return mpWindowHandle; }
 			inline ShaderManager* getShaderManager() { return mpShaderManager; }
 			
+			static bool sRenderDebugWireframes;
 		private:
 			Window* mpWindowHandle;
 			ShaderManager* mpShaderManager;
-			Texture2D* tex;
-
+			
 			bool createWindow();
 			void init2DShaderData();
 	};

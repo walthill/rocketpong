@@ -312,4 +312,11 @@ namespace RKTEngine
 			it.second->render();
 		}
 	}
+	void ComponentManager::renderWireframes()
+	{
+		for (auto& it : mColliderComponentMap)
+		{
+			it.second->renderOverlay();
+		}
+	}
 }

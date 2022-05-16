@@ -26,10 +26,11 @@ bool GameApp::initialize()
 	if (!RKTEngine::EngineCore::getInstance()->initialize())
 		return false;
 
-	RKTEngine::EngineCore::getInstance()->getMessageManager()->setMessageCallback(RKT_BIND_MESSAGE_FN(GameApp::onMessage));
+	RocketEngine->getMessageManager()->setMessageCallback(RKT_BIND_MESSAGE_FN(GameApp::onMessage));
+	RocketEngine->showDebugWireframes(false);
 
-	auto w = RKTEngine::EngineCore::getInstance()->getWindowWidth();
-	auto h = RKTEngine::EngineCore::getInstance()->getWindowHeight();
+	auto w = RocketEngine->getWindowWidth();
+	auto h = RocketEngine->getWindowHeight();
 
 	mpPlayer1 = new Paddle(150);
 	mpPlayer1->mpGameObject->getTransform()->setPosition({ 100, h / 2 });
@@ -103,7 +104,7 @@ bool GameApp::runGame()
 
 void GameApp::update()
 {
-	RKTEngine::EngineCore::getInstance()->update();
+	RocketEngine->update();
 
 #ifdef RKP_DEBUG  
 	if (Input::getKeyDown(KeyCode::Escape))
@@ -115,7 +116,7 @@ void GameApp::update()
 
 void GameApp::render()
 {
-	RKTEngine::EngineCore::getInstance()->render();
+	RocketEngine->render();
 }
 
 void GameApp::onMessage(RKTEngine::Message& message)

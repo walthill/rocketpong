@@ -170,6 +170,8 @@ namespace RKTEngine
 		///Draw text to screen
 		void renderText();
 
+		void renderWireframes();
+		
 		///Get number of Sprite Components
 		int getNumberOfLabels() { return mTextComponentMap.size(); }
 		///Get number of Sprite Components

@@ -114,6 +114,11 @@ namespace RKTEngine
 		return mpRenderCore->getShaderManager();
 	}
 
+	void EngineCore::showDebugWireframes(bool show)
+	{
+		mpRenderCore->sRenderDebugWireframes = show;
+	}
+
 	int EngineCore::getWindowHeight() { return mpRenderCore->getWindow()->getHeight(); }
 	int EngineCore::getWindowWidth() { return mpRenderCore->getWindow()->getWidth(); }
 	
