@@ -1,18 +1,22 @@
 #include "ComponentManager.h"
 #include "RocketEngine/render/shader/ShaderManager.h"
+#include "RocketEngine/input/message/CollisionEnterMessage.h"
+#include <RocketEngine\core\MessageManager.h>
+#include <RocketEngine\core\EngineCore.h>
 
 namespace RKTEngine
 {
-
 	ComponentId ComponentManager::msNextMaterialComponentId = 0;
 	ComponentId ComponentManager::msNextSpriteComponentId = 0;
 	ComponentId ComponentManager::msNextTextComponentId = 0;
 	ComponentId ComponentManager::msNextTransformComponentId = 0;
+	ComponentId ComponentManager::msNextColliderComponentId = 0;
 
 	ComponentManager::ComponentManager(uint32 maxSize)
 		: mTransformPool(maxSize, sizeof(TransformComponent))
 		, mLabelPool(maxSize, sizeof(TextComponent))
 		, mSpritePool(maxSize, sizeof(SpriteComponent))
+		, mColliderPool(maxSize, sizeof(BoxColliderComponent))
 	{
 	}
 
@@ -39,16 +43,23 @@ namespace RKTEngine
 			TextComponent* pComponent = it.second;
 			pComponent->~TextComponent();
 		}
+		for (auto& it : mColliderComponentMap)
+		{
+			BoxColliderComponent* pComponent = it.second;
+			pComponent->~BoxColliderComponent();
+		}
 
 		//clear maps
 		mTransformComponentMap.clear();
 		mSpriteComponentMap.clear();
 		mTextComponentMap.clear();
-		
+		mColliderComponentMap.clear();
+
 		//reset memory pools
 		mTransformPool.reset();
 		mSpritePool.reset();
 		mLabelPool.reset();
+		mColliderPool.reset();
 	}
 
 
@@ -205,8 +216,80 @@ namespace RKTEngine
 		}
 	}
 
+
+	/******************************************************************************
+	******************************************************************************
+
+	BOX COLLIDER COMPONENT
+
+	******************************************************************************
+	*****************************************************************************/
+
+
+	BoxColliderComponent* ComponentManager::getBoxColliderComponent(const ComponentId& id)
+	{
+		auto& it = mColliderComponentMap.find(id);
+
+		if (it != mColliderComponentMap.end())
+			return it->second;
+		else
+			return nullptr;
+	}
+
+	ComponentId ComponentManager::allocateBoxColliderComponent(const BoxColliderData& data)
+	{
+		ComponentId newID = INVALID_COMPONENT_ID;
+		RKTUtil::Byte* ptr = mColliderPool.allocateObject();
+
+		if (ptr != nullptr)
+		{
+			newID = msNextColliderComponentId;
+			BoxColliderComponent* pComponent = ::new (ptr)BoxColliderComponent(newID);
+			pComponent->setData(data);
+			mColliderComponentMap[newID] = pComponent;
+			msNextColliderComponentId++;
+		}
+
+		return newID;
+	}
+
+	void ComponentManager::deallocateBoxColliderComponent(const ComponentId& id)
+	{
+		auto it = mColliderComponentMap.find(id);
+
+		if (it != mColliderComponentMap.end())
+		{
+			BoxColliderComponent* ptr = it->second;
+			mColliderComponentMap.erase(it);
+
+			ptr->~BoxColliderComponent();
+			mColliderPool.freeObject((RKTUtil::Byte*)ptr);
+		}
+	}
+
 	void ComponentManager::update(float elapsedTime)
 	{
+		//AABB testing
+		for (auto& it : mColliderComponentMap)
+		{
+			auto collider = it.second;
+			for (auto& compareIter : mColliderComponentMap)
+			{
+				auto otherCollider= compareIter.second;
+				//prevent self-collisions
+				if (collider->getId() == otherCollider->getId())
+					continue;
+
+				if (collider->checkCollision(otherCollider))
+				{
+					auto messageMan = EngineCore::getInstance()->getMessageManager();
+					Message* pMessage = new CollisionEnterMessage(collider->getId());
+					messageMan->addMessage(pMessage, 1);
+					Message* pMessage2 = new CollisionEnterMessage(otherCollider->getId());
+					messageMan->addMessage(pMessage2, 1);
+				}
+			}
+		}
 	}
 
 	void ComponentManager::renderComponents()

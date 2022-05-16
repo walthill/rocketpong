@@ -30,6 +30,7 @@ namespace RKTEngine
 	class SpriteComponent;
 	class TransformComponent;
 	class TextComponent;
+	class BoxColliderComponent;
 
 	/***************************************************************************//**
 	 * @brief 	GameObject class with identifiers for components.
@@ -40,6 +41,7 @@ namespace RKTEngine
 	class GameObject : public RKTUtil::Trackable
 	{
 		friend class Actor;
+		friend class GameObjectManager;
 
 		public:
 			///Default constructor
@@ -58,6 +60,40 @@ namespace RKTEngine
 			void update(float elapsedTime);
 
 			virtual void onMessage(Message& message);
+
+			///Access the GameObject's id
+			inline uint32 getId() { return mId; }
+			///Access the GameObject's transform component id
+			inline ComponentId getTransformId() { return mTransformId; };
+			///Access the GameObject's mesh component id
+			inline ComponentId getSpriteId() { return mSpriteId; };
+			///Access the GameObject's text component id
+			inline ComponentId getLabelId() { return mLabelId; };
+			inline ComponentId getColliderId() { return mColliderId; };
+
+			///Acesss the GameObject's transform 
+			TransformComponent* getTransform() { return mpTransform; }
+			///Acesss the GameObject's mesh 
+			SpriteComponent* getSprite();
+			///Acesss the GameObject's mesh 
+			BoxColliderComponent* getBoxCollider();
+			///Acesss the GameObject's material
+			TextComponent* getUILabel();
+
+			std::string name = "New Gameobject";
+
+		private:
+			uint32 mId;
+			ComponentId mSpriteId;
+			ComponentId mTransformId;
+			ComponentId mLabelId;
+			ComponentId mColliderId;
+
+			TransformComponent* mpTransform;
+			Actor* mpActorOwner = nullptr;
+
+			//Register this gameobj as an Actor
+			inline void setOwner(Actor* actor) { mpActorOwner = actor; }
 
 			/**********************************************************************//**
 			* Set GameObject's unique id
@@ -94,35 +130,12 @@ namespace RKTEngine
 			*************************************************************************/
 			void connectLabel(ComponentId labelId) { mLabelId = labelId; }
 
-			///Access the GameObject's id
-			inline uint32 getId() { return mId; }
-			///Access the GameObject's transform component id
-			inline ComponentId getTransformId() { return mTransformId; };
-			///Access the GameObject's mesh component id
-			inline ComponentId getSpriteId() { return mSpriteId; };
-			///Access the GameObject's text component id
-			inline ComponentId getLabelId() { return mLabelId; };
-
-			///Acesss the GameObject's transform 
-			TransformComponent* getTransform() { return mpTransform; }
-			///Acesss the GameObject's mesh 
-			SpriteComponent* getSprite();
-			///Acesss the GameObject's material
-			TextComponent* getUILabel();
-
-			std::string name = "New Gameobject";
-
-		private:
-			uint32 mId;
-			ComponentId mSpriteId;
-			ComponentId mTransformId;
-			ComponentId mLabelId;
-
-			TransformComponent* mpTransform;
-			Actor* mpActorOwner = nullptr;
-
-			//Register this gameobj as an Actor
-			inline void setOwner(Actor* actor) { mpActorOwner = actor; }
+			/**********************************************************************//**
+			* Set GameObject's collider id
+			*
+			* @param labelId TextComponent identifier
+			*************************************************************************/
+			void connectCollider(ComponentId colliderId) { mColliderId = colliderId; }
 	};
 }
 #endif // !GAME_OBJ_H

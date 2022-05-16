@@ -84,6 +84,19 @@ namespace RKTEngine
 		return createGameObject(transformData, ZERO_SPRITE_DATA, textData);
 	}
 
+	void GameObjectManager::addBoxCollider(int objId, int w, int h, const std::string& t)
+	{
+		auto it = mGameObjMap.find(objId);
+		if (it != mGameObjMap.end())
+		{
+			BoxColliderData data = { w,h,t };
+			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
+			ComponentId newBoxColliderId = pComponentManager->allocateBoxColliderComponent(data);
+			it->second->connectCollider(newBoxColliderId);
+			it->second->getBoxCollider()->setTransformParent(it->second->getTransform());
+		}
+	}
+
 	GameObject* GameObjectManager::createPlayer(const std::string& texture, glm::vec2 position, glm::vec2 scale, float rotation)
 	{
 		TransformData transformData = TransformData(position, scale, rotation);
@@ -118,6 +131,7 @@ namespace RKTEngine
 			pComponentManager->deallocateTransformComponent(obj->getTransformId());
 			pComponentManager->deallocateSpriteComponent(obj->getSpriteId());
 			pComponentManager->deallocateTextComponent(obj->getLabelId());
+			pComponentManager->deallocateBoxColliderComponent(obj->getColliderId());
 
 			//call destructor on gameObj
 			obj->~GameObject();
@@ -138,10 +152,7 @@ namespace RKTEngine
 	void GameObjectManager::onMessage(Message& message)
 	{
 		for (auto const& it : mGameObjMap)
-		{
-			if(it.second->getId() != PLAYER_OBJ_ID)
-				it.second->onMessage(message);
-		}
+			it.second->onMessage(message);
 	}
 
 	int GameObjectManager::getNumGameObjects()

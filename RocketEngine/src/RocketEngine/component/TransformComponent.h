@@ -109,7 +109,7 @@ namespace RKTEngine
 			 *
 			 * @param pos New position vector
 			 *************************************************************************/
-			void setPosition(glm::vec2 pos);
+			void setPosition(const glm::vec2& pos);
 
 			void setPosition(float x, float y);
 
@@ -125,7 +125,7 @@ namespace RKTEngine
 			 *
 			 * @param pos New position vector
 			 *************************************************************************/
-			void setScale(glm::vec2 mScale);
+			void setScale(const glm::vec2& mScale);
 
 			/**********************************************************************//**
 			 * Set rotation value
@@ -133,7 +133,7 @@ namespace RKTEngine
 			 * @param pos New rotation axis vector
 			 * @param angle New rotation angle
 			 *************************************************************************/
-			void setRotation(glm::vec3 rotationAxis, float angle);	
+			void setRotation(const glm::vec3& rotationAxis, float angle);	
 
 			/**********************************************************************//**
 			 * Set mDataChanged flag

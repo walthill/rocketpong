@@ -2,6 +2,7 @@
 #define ACTOR_H
 
 #define RocketEngine RKTEngine::EngineCore::getInstance()
+#define GameObjManager RocketEngine->getEntityManager()
 #define MSG_COMPLETE return true
 
 #include <RKTUtils/Trackable.h>
@@ -15,6 +16,8 @@ namespace RKTEngine
 	{
 	public:
 		void init() { setGameObjOwner(); };
+		
+		virtual bool onCollisionEnter(RKTEngine::CollisionEnterMessage& message) { return mpGameObject->getColliderId() == message.colliderID; };
 		virtual bool update(UpdateMessage& message) { return true; };
 		virtual void onMessage(Message& message) OVERRIDE_REQUIRED;
 

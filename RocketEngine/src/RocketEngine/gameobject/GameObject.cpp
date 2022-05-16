@@ -39,7 +39,6 @@ namespace RKTEngine
 				textComponent->process(data.mPosition, data.mScale, data.mRotation.angle);
 			}
 
-
 			mpTransform->setHasChanged(false);
 		}
 	}
@@ -53,6 +52,12 @@ namespace RKTEngine
 	SpriteComponent* GameObject::getSprite()
 	{
 		auto pComponent = EngineCore::getInstance()->getComponentManager()->getSpriteComponent(mSpriteId);
+		return pComponent;
+	}
+
+	BoxColliderComponent* GameObject::getBoxCollider()
+	{
+		auto pComponent = EngineCore::getInstance()->getComponentManager()->getBoxColliderComponent(mColliderId);
 		return pComponent;
 	}
 

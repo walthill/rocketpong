@@ -4,7 +4,9 @@
 Paddle::Paddle(float startSpeed, bool isP1) :
 	mIsP1(isP1), mSpeed(startSpeed)
 {
-	mpGameObject = RocketEngine->getEntityManager()->createSprite("paddle");	
+	mpGameObject = RocketEngine->getEntityManager()->createSprite("paddle");
+	auto spr = mpGameObject->getSprite();
+	GameObjManager->addBoxCollider(mpGameObject->getId(), spr->getData()->mWidth, spr->getData()->mHeight);
 	Actor::init();
 }
 

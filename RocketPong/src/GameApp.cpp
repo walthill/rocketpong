@@ -1,6 +1,7 @@
 #include "GameApp.h"
 #include "RocketEngine.h"
 #include "actors/Paddle.h"
+#include "actors/Ball.h"
 
 GameApp::~GameApp()
 {
@@ -11,6 +12,7 @@ void GameApp::clean()
 {
 	delete mpPlayer1;
 	delete mpPlayer2;
+	delete mpBall;
 	RKTEngine::EngineCore::cleanInstance();
 }
 
@@ -33,6 +35,8 @@ bool GameApp::initialize()
 	mpPlayer1->mpGameObject->getTransform()->setPosition({ 100, h / 2 });
 	mpPlayer2 = new Paddle(150, false);
 	mpPlayer2->mpGameObject->getTransform()->setPosition({ w-100, h / 2 });
+
+	mpBall = new Ball({ w / 2,h / 2 }, 200);
 
 	endInit();
 

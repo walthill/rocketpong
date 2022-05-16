@@ -7,6 +7,7 @@ enum class MessageType
 	KEY,
 	KEY_DOWN,
 	KEY_UP,
+	COLLISION,
 	NUM_MSG_TYPES
 };
 

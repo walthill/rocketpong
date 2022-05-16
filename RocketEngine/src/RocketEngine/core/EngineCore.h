@@ -29,8 +29,6 @@ namespace RKTEngine
 
 			void onMessage(Message& message);
 
-			void calculateDeltaTime();
-
 			double getTime();
 
 			RenderCore* getRenderer(); 
@@ -60,6 +58,7 @@ namespace RKTEngine
 
 			bool initRenderCore();
 			void initInputSystem();
+			void calculateDeltaTime();
 	};
 }
 

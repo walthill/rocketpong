@@ -8,6 +8,7 @@
 #include <RocketEngine/input/MessageDefines.h>
 
 class Paddle;
+class Ball;
 	
 class GameApp : public RKTUtil::Singleton<GameApp>
 {
@@ -49,6 +50,7 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 
 		Paddle* mpPlayer1 = nullptr;
 		Paddle* mpPlayer2 = nullptr;
+		Ball* mpBall;
 
 		void beginInit();
 		void endInit();

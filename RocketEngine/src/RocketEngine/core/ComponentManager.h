@@ -26,6 +26,7 @@
 #include "RocketEngine/component/SpriteComponent.h"
 #include "RocketEngine/component/TransformComponent.h"
 #include "RocketEngine/component/TextComponent.h"
+#include "RocketEngine/component/BoxColliderComponent.h"
 
 namespace RKTEngine
 {
@@ -129,6 +130,30 @@ namespace RKTEngine
 		*************************************************************************/
 		void deallocateTextComponent(const ComponentId& id);
 
+
+//------	BOX COLLIDER	------ //
+
+		/**********************************************************************//**
+		* Access the transform component based on the component identifier.
+		*
+		* @param id Component identifier
+		*************************************************************************/
+		BoxColliderComponent* getBoxColliderComponent(const ComponentId& id);
+
+		/**********************************************************************//**
+		* Create transform component based on data passed in and return the component identifier.
+		*
+		* @param data data Transform component data
+		*************************************************************************/
+		ComponentId allocateBoxColliderComponent(const BoxColliderData& data = ZERO_BOX_COLLIDER_DATA);
+
+		/**********************************************************************//**
+		* Remove and destroy transform component from the collection based on the component identifier.
+		*
+		* @param id Component identifier
+		*************************************************************************/
+		void deallocateBoxColliderComponent(const ComponentId& id);
+
 		
 		/**********************************************************************//**
 		* Process components and perform calulations.
@@ -155,15 +180,18 @@ namespace RKTEngine
 		RKTUtil::MemoryPool mTransformPool;
 		RKTUtil::MemoryPool mLabelPool;
 		RKTUtil::MemoryPool mSpritePool;
-		
+		RKTUtil::MemoryPool mColliderPool;
+
 		std::map<ComponentId, TransformComponent*> mTransformComponentMap;
 		std::map<ComponentId, TextComponent*> mTextComponentMap;
 		std::map<ComponentId, SpriteComponent*> mSpriteComponentMap;
+		std::map<ComponentId, BoxColliderComponent*> mColliderComponentMap;
 
 		static ComponentId msNextTransformComponentId;
 		static ComponentId msNextTextComponentId;
 		static ComponentId msNextSpriteComponentId;
 		static ComponentId msNextMaterialComponentId;
+		static ComponentId msNextColliderComponentId;
 	};
 }
 #endif // !COMPONENT_MAN_H
