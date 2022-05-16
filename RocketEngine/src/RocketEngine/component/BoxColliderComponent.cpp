@@ -37,37 +37,23 @@ namespace RKTEngine
 
 	bool BoxColliderComponent::checkCollision(BoxColliderComponent* collider)
 	{
-		//calculate sides of a
-		float mLeftA = mpParentTransform->getPosition().x;
-		float mRightA = mLeftA + getWidth();
-		float mTopA = mpParentTransform->getPosition().y;
-		float mBottomA = mTopA + getHeight();
+		auto posA = mpParentTransform->getPosition();
+		auto posB = collider->mpParentTransform->getPosition();
+		bool collided = false;
 
-		//calculate sides of collider
-		float mLeftB = collider->mpParentTransform->getPosition().x;
-		float mRightB = mLeftB + collider->getWidth();
-		float mTopB = collider->mpParentTransform->getPosition().y;
-		float mBottomB = mTopB + collider->getHeight();
-
-		bool collided = true;
-		if (mBottomA <= mTopB)
+		//AABB testing
+		if (posA.x < posB.x + collider->getWidth() &&
+			posA.x + getWidth() > posB.x &&
+			posA.y < posB.y + collider->getHeight() &&
+			posA.y + getHeight() > posB.y)
 		{
-			collided = false;
-		}
-		else if (mTopA >= mBottomB)
-		{
-			collided = false;
-		}
-		else if (mRightA <= mLeftB)
-		{
-			collided = false;
-		}
-		else if (mLeftA >= mRightB)
-		{
-			collided = false;
+			collided = true;
 		}
 
-		return collided;
+		mLastFrameCollided = mIsColliding;
+		mIsColliding = collided;
+		
+		return mIsColliding;
 	}
 
 	void BoxColliderComponent::setData(const BoxColliderData& data)

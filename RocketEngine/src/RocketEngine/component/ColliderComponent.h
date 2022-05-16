@@ -17,7 +17,7 @@ namespace RKTEngine
 		public:
 			ColliderComponent(const ComponentId& id);
 			virtual ~ColliderComponent();
-			inline const std::string getTag() { return mData.tag; }
+			virtual inline const std::string& getTag() OVERRIDE_REQUIRED;
 		private:
 			ColliderData mData;
 	};

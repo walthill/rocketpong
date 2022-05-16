@@ -21,6 +21,8 @@ namespace RKTEngine
 	class BoxColliderComponent : public ColliderComponent
 	{
 		friend class GameObjectManager;
+		friend class ComponentManager;
+
 		public:
 			BoxColliderComponent(const ComponentId& id);
 
@@ -37,13 +39,17 @@ namespace RKTEngine
 			///Access the component data
 			inline BoxColliderData getData() { return mBoxColliderData; }
 
+			virtual inline const std::string& getTag() override { return mBoxColliderData.tag; };
+
 			inline int getWidth() { return mBoxColliderData.width; }
 			inline int getHeight() { return mBoxColliderData.height; }
 
 		private:
 			TransformComponent* mpParentTransform = nullptr;
 			BoxColliderData mBoxColliderData;
-			bool mCollided = false;
+			
+			bool mLastFrameCollided = false;
+			bool mIsColliding = false;
 
 			void setTransformParent(TransformComponent* tr);
 	};

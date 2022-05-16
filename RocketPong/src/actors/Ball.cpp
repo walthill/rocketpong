@@ -6,7 +6,7 @@ Ball::Ball(glm::vec2 startPos, float speed) :
 	mpGameObject = GameObjManager->createSprite("ball");
 	
 	auto spr = mpGameObject->getSprite();
-	GameObjManager->addBoxCollider(mpGameObject->getId(), spr->getData()->mWidth, spr->getData()->mHeight);
+	GameObjManager->addBoxCollider(mpGameObject->getId(), spr->getData()->mWidth/2, spr->getData()->mHeight/2);
 
 	getTransform()->setPosition(mStartPos);
 	Actor::init();
@@ -20,7 +20,7 @@ bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
 {
 	if (Actor::onCollisionEnter(message))
 	{
-		std::cout << "COLLISION BAYBEE" << std::endl;
+		RKT_TRACE("COLLISION BAYBEE");
 	}
 
 	return true;
@@ -29,6 +29,8 @@ bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
 
 bool Ball::update(RKTEngine::UpdateMessage& message)
 {
+	//TODO: check x position to register goals
+
 	auto tr = getTransform();
 	auto pos = tr->getPosition();
 	pos += glm::vec2(-1, 0) * mSpeed * RocketEngine->sDeltaTime;

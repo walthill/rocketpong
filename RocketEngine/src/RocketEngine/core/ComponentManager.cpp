@@ -3,6 +3,7 @@
 #include "RocketEngine/input/message/CollisionEnterMessage.h"
 #include <RocketEngine\core\MessageManager.h>
 #include <RocketEngine\core\EngineCore.h>
+#include <RocketEngine/core/Log.h>
 
 namespace RKTEngine
 {
@@ -269,24 +270,39 @@ namespace RKTEngine
 
 	void ComponentManager::update(float elapsedTime)
 	{
-		//AABB testing
 		for (auto& it : mColliderComponentMap)
 		{
 			auto collider = it.second;
 			for (auto& compareIter : mColliderComponentMap)
 			{
-				auto otherCollider= compareIter.second;
-				//prevent self-collisions
+				auto otherCollider = compareIter.second;
 				if (collider->getId() == otherCollider->getId())
 					continue;
 
 				if (collider->checkCollision(otherCollider))
 				{
-					auto messageMan = EngineCore::getInstance()->getMessageManager();
-					Message* pMessage = new CollisionEnterMessage(collider->getId());
-					messageMan->addMessage(pMessage, 1);
-					Message* pMessage2 = new CollisionEnterMessage(otherCollider->getId());
-					messageMan->addMessage(pMessage2, 1);
+					//collision enter
+					if (collider->mIsColliding && !collider->mLastFrameCollided)
+					{
+						if(collider->getTag().compare("ball") == 0)
+							RKT_TRACE("ENTER");
+						auto messageMan = EngineCore::getInstance()->getMessageManager();
+						Message* pMessage = new CollisionEnterMessage(collider->getId());
+						messageMan->addMessage(pMessage, 1);
+						break;
+					}
+					//collision stay
+					else if (collider->mIsColliding && collider->mLastFrameCollided)
+					{
+						//TODO: stay message
+						break;
+					}
+				}
+				//collision exit
+				else if (!collider->mIsColliding && collider->mLastFrameCollided)
+				{
+					//TODO: exit message
+					break;
 				}
 			}
 		}
