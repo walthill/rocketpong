@@ -41,11 +41,10 @@ namespace RKTEngine
 		auto posB = collider->mpParentTransform->getPosition();
 		bool collided = false;
 
-		//AABB testing
-		if (posA.x < posB.x + collider->getWidth() &&
-			posA.x + getWidth() > posB.x &&
-			posA.y < posB.y + collider->getHeight() &&
-			posA.y + getHeight() > posB.y)
+		//AABB check that uses center bounding box coordinates by ZorbaTHut
+		//https://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection 
+		if((abs(posA.x - posB.x) * 2 < (getWidth() + collider->getWidth())) &&
+			(abs(posA.y - posB.y) * 2 < (getHeight() + collider->getHeight())))
 		{
 			collided = true;
 		}
