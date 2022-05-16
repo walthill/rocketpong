@@ -121,7 +121,7 @@ namespace RKTEngine
 		RKT_PROFILE_FUNCTION();
 
 		mpWindowHandle = new Window();
-		if (!mpWindowHandle->initialize(1280, 720, "RogueOne", BLEND))
+		if (!mpWindowHandle->initialize(1280, 720, "RocketPong", BLEND))
 		{
 			return false;
 		}

@@ -161,6 +161,7 @@ namespace RKTEngine
 		* @param elapsedTime Frame timing
 		*************************************************************************/
 		void update(float elapsedTime);
+		void updateCollisions();
 
 		void renderComponents();
 

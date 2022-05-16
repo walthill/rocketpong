@@ -270,6 +270,11 @@ namespace RKTEngine
 
 	void ComponentManager::update(float elapsedTime)
 	{
+		updateCollisions();
+	}
+
+	void ComponentManager::updateCollisions()
+	{
 		for (auto& it : mColliderComponentMap)
 		{
 			auto collider = it.second;
@@ -279,30 +284,18 @@ namespace RKTEngine
 				if (collider->getId() == otherCollider->getId())
 					continue;
 
-				if (collider->checkCollision(otherCollider))
+				Message* pMessage = nullptr;
+				switch (collider->checkCollision(otherCollider))
 				{
-					//collision enter
-					if (collider->mIsColliding && !collider->mLastFrameCollided)
-					{
-						if(collider->getTag().compare("ball") == 0)
-							RKT_TRACE("ENTER");
-						auto messageMan = EngineCore::getInstance()->getMessageManager();
-						Message* pMessage = new CollisionEnterMessage(collider->getId());
-						messageMan->addMessage(pMessage, 1);
-						break;
-					}
-					//collision stay
-					else if (collider->mIsColliding && collider->mLastFrameCollided)
-					{
-						//TODO: stay message
-						break;
-					}
-				}
-				//collision exit
-				else if (!collider->mIsColliding && collider->mLastFrameCollided)
+					case CollisionType::ENTER:	{ pMessage = new CollisionEnterMessage(collider->getId()); }	break;
+					case CollisionType::STAY:	/*{ pMessage = new CollisionStayMessage(collider->getId()); }*/	break;
+					case CollisionType::EXIT:	/*{ pMessage = new CollisionExitMessage(collider->getId()); }*/	break;
+				};
+
+				if (pMessage != nullptr)
 				{
-					//TODO: exit message
-					break;
+					auto messageMan = EngineCore::getInstance()->getMessageManager();
+					messageMan->addMessage(pMessage, 1);
 				}
 			}
 		}

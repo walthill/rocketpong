@@ -2,6 +2,7 @@
 #define BOX_COLLIDER_H
 
 #include "ColliderComponent.h"
+#include <map>
 
 namespace RKTEngine
 {
@@ -15,6 +16,14 @@ namespace RKTEngine
 		BoxColliderData() : ColliderData(""), width(0), height(0) {};
 		BoxColliderData(int w, int h, const std::string& t = "") : ColliderData(t), width(w), height(h) {};
 	};
+
+	struct CollisionData
+	{
+		bool lastFrameCollided = false;
+		bool isColliding = false;
+	};
+
+	enum class CollisionType { NONE = -1, ENTER = 0, EXIT, STAY};
 
 	const BoxColliderData ZERO_BOX_COLLIDER_DATA;
 
@@ -32,8 +41,7 @@ namespace RKTEngine
 			void cleanup();
 
 			void renderOverlay();
-			bool checkCollision(BoxColliderComponent* collider);
-
+			
 			void setData(const BoxColliderData& data);
 
 			///Access the component data
@@ -48,9 +56,14 @@ namespace RKTEngine
 			TransformComponent* mpParentTransform = nullptr;
 			BoxColliderData mBoxColliderData;
 			
+			//Collection of collision events used to allow multiple collisions per-obj
+			std::map<ComponentId, CollisionData> mCollisionMap;
+
 			bool mLastFrameCollided = false;
 			bool mIsColliding = false;
 
+			CollisionType checkCollision(BoxColliderComponent* collider);
+			CollisionType getCollisionType(const CollisionData& otherCollider);
 			void setTransformParent(TransformComponent* tr);
 	};
 }

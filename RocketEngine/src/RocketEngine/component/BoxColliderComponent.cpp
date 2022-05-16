@@ -8,6 +8,7 @@ namespace RKTEngine
 	BoxColliderComponent::BoxColliderComponent(const ComponentId& id) :
 		ColliderComponent(id)
 	{
+		mCollisionMap = std::map<ComponentId, CollisionData>();
 	}
 
 	BoxColliderComponent::~BoxColliderComponent()
@@ -35,7 +36,7 @@ namespace RKTEngine
 		}
 	}
 
-	bool BoxColliderComponent::checkCollision(BoxColliderComponent* collider)
+	CollisionType BoxColliderComponent::checkCollision(BoxColliderComponent* collider)
 	{
 		auto posA = mpParentTransform->getPosition();
 		auto posB = collider->mpParentTransform->getPosition();
@@ -49,10 +50,18 @@ namespace RKTEngine
 			collided = true;
 		}
 
-		mLastFrameCollided = mIsColliding;
-		mIsColliding = collided;
-		
-		return mIsColliding;
+		auto otherColliderId = collider->getId();
+		auto& collisionData = mCollisionMap.find(otherColliderId);
+		if (collisionData == mCollisionMap.end() && collided)
+		{
+			mCollisionMap[otherColliderId] = { false, collided }; //lastFrameCollided, isColliding
+		}
+		else if (collisionData != mCollisionMap.end())
+		{
+			mCollisionMap[otherColliderId] = { mCollisionMap[otherColliderId].isColliding, collided };
+		}
+
+		return getCollisionType(mCollisionMap[otherColliderId]);
 	}
 
 	void BoxColliderComponent::setData(const BoxColliderData& data)
@@ -60,6 +69,25 @@ namespace RKTEngine
 		mBoxColliderData.width = data.width;
 		mBoxColliderData.height = data.height;
 		mBoxColliderData.tag = data.tag;
+	}
+
+	CollisionType BoxColliderComponent::getCollisionType(const CollisionData& data)
+	{
+		CollisionType type = CollisionType::NONE;
+		if (data.isColliding && !data.lastFrameCollided)
+		{
+			type = CollisionType::ENTER;
+		}
+		else if (data.isColliding && data.lastFrameCollided)
+		{
+			type = CollisionType::STAY;
+		}
+		else if (!data.isColliding && data.lastFrameCollided)
+		{
+			type = CollisionType::EXIT;
+		}
+
+		return type;
 	}
 
 	void BoxColliderComponent::setTransformParent(TransformComponent* tr)
