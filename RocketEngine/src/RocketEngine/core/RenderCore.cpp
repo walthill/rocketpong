@@ -77,11 +77,11 @@ namespace RKTEngine
 		RKT_PROFILE_FUNCTION();
 
 		RenderCommand::resetStats();
-
 		RenderCommand::beginScene();
-		componentsToDraw->renderComponents();
+		componentsToDraw->renderSprites();
 		RenderCommand::endScene();
-		
+		componentsToDraw->renderText();
+
 		if(sRenderDebugWireframes)
 		{
 			RKT_PROFILE_SCOPE("Wireframe Overlays");

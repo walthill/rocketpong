@@ -304,7 +304,7 @@ namespace RKTEngine
 	void ComponentManager::renderComponents()
 	{
 		renderSprites();
-		renderText();
+		//renderText();
 	}
 
 	void ComponentManager::renderSprites()
@@ -316,6 +316,7 @@ namespace RKTEngine
 	}
 	void ComponentManager::renderText()
 	{
+		//TODO: make compatible with batch renderer?? 
 		for (auto& it : mTextComponentMap)
 		{
 			it.second->render();
