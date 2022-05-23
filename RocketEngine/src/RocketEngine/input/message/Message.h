@@ -24,9 +24,9 @@
 #ifndef MSG_H
 #define MSG_H
 
-#include "MessageType.h"
 #include <string>
 #include <ostream>
+#include "MessageType.h"
 
 namespace RKTEngine
 {

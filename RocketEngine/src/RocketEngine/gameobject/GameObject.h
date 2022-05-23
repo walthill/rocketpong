@@ -21,9 +21,9 @@
 #ifndef GAME_OBJ_H
 #define GAME_OBJ_H
 
+#include <RKTUtils/Trackable.h>
 #include "RocketEngine/Defines.h"
 #include "RocketEngine/input/message/Message.h"
-#include <RKTUtils/Trackable.h>
 
 namespace RKTEngine
 {

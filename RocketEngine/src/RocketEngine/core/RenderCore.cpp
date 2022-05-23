@@ -6,6 +6,7 @@
 #include "ComponentManager.h"
 #include <glm\ext\matrix_clip_space.hpp>
 #include <RKTUtils\Profiling.h>
+#include <RocketEngine/asset/AssetManager.h>
 
 namespace RKTEngine
 {
@@ -40,12 +41,11 @@ namespace RKTEngine
 		}
 
 		mpShaderManager = new ShaderManager();
-		mpShaderManager->addShader("sprite", new Shader("BaseSprite.vert", "BaseSprite.frag"));
-		mpShaderManager->addShader("text", new Shader("TextRender.vert", "TextRender.frag"));
-		mpShaderManager->addShader("batchtex", new Shader("BatchTexture.vert", "BatchTexture.frag"));
+		mpShaderManager->addShader(AssetManager::sTEXT_SHADER_ID, new Shader(AssetManager::sTEXT_SHADER_FILENAME));
+		mpShaderManager->addShader(AssetManager::sSPRITE_SHADER_ID, new Shader(AssetManager::sSPRITE_SHADER_FILENAME));
 
 		init2DShaderData();
-		RenderCommand::initRenderer(mpShaderManager->getShaderByKey("batchtex"));
+		RenderCommand::initRenderer(mpShaderManager->getShaderByKey(AssetManager::sSPRITE_SHADER_ID));
 
 		return true;
 	}
@@ -57,13 +57,10 @@ namespace RKTEngine
 
 		glm::mat4 uiProjection = glm::ortho(0.0f, static_cast<float>(mpWindowHandle->getWidth()), static_cast<float>(mpWindowHandle->getHeight()), 0.0f);
 
-		mpShaderManager->useShaderByKey("sprite");
-		mpShaderManager->setShaderMat4("projection", spriteProjection);
-
-		mpShaderManager->useShaderByKey("text");
+		mpShaderManager->useShaderByKey(AssetManager::sTEXT_SHADER_ID);
 		mpShaderManager->setShaderMat4("projection", uiProjection);
 
-		mpShaderManager->useShaderByKey("batchtex");
+		mpShaderManager->useShaderByKey(AssetManager::sSPRITE_SHADER_ID);
 		mpShaderManager->setShaderMat4("projection", spriteProjection);
 	}
 
@@ -84,7 +81,7 @@ namespace RKTEngine
 		RenderCommand::beginScene();
 		componentsToDraw->renderComponents();
 		RenderCommand::endScene();
-
+		
 		if(sRenderDebugWireframes)
 		{
 			RKT_PROFILE_SCOPE("Wireframe Overlays");

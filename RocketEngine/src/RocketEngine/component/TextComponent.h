@@ -37,7 +37,7 @@ namespace RKTEngine
 			~TextComponent();
 
 			void load();
-			void process(glm::vec2 position, glm::vec2 scale, float rotationAngle);
+			void process(const glm::vec2& position, const glm::vec2& scale, float rotationAngle);
 			void render();
 
 			///Access text component data

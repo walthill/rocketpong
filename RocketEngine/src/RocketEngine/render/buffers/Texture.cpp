@@ -16,12 +16,12 @@ namespace RKTEngine
 		return nullptr;
 	}
 
-	RawTexture* RawTexture::create(void* data, int width, int height, int sWrapParam, int tWrapParam, int miniFilter, int magFilter, int detailReductionLevel)
+	RawTexture* RawTexture::create(void* data, int width, int height, int channel, int sWrapParam, int tWrapParam, int miniFilter, int magFilter, int detailReductionLevel)
 	{
 		switch (Renderer::getAPI())
 		{
 			case Renderer::API::NONE:		return nullptr;
-			case Renderer::API::OPENGL:		return new OpenGLRawTexture(data, width, height, sWrapParam, tWrapParam, miniFilter, magFilter, detailReductionLevel);
+			case Renderer::API::OPENGL:		return new OpenGLRawTexture(data, width, height, sWrapParam, tWrapParam, miniFilter, magFilter, detailReductionLevel, channel);
 		}
 
 		return nullptr;

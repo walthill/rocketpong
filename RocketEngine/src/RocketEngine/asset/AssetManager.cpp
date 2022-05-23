@@ -6,6 +6,15 @@
 
 namespace RKTEngine
 {
+	const std::string AssetManager::sDEFAULT_FONT = "calibri";
+	const std::string AssetManager::sSPRITE_SHADER_ID = "sprite";
+	const std::string AssetManager::sSPRITE_SHADER_FILENAME = "BatchTexture";
+	const std::string AssetManager::sTEXT_SHADER_ID = "text";
+	const std::string AssetManager::sTEXT_SHADER_FILENAME = "TextRender";
+	const std::string AssetManager::sFRAG_SHADER_FILE_ENDING = ".frag";
+	const std::string AssetManager::sVERT_SHADER_FILE_ENDING = ".vert";
+
+
 	AssetManager::AssetManager()
 	{
 	}
@@ -63,7 +72,7 @@ namespace RKTEngine
 		}
 		else
 		{
-			auto path = mFONT_ASSET_PATH + fontName;
+			auto path = mFONT_ASSET_PATH + fontName + mFONT_FILE_ENDING;
 			newFont = Font::create(loadByteData(path));
 			mFontAssetCache[fontName] = newFont;
 		}

@@ -27,6 +27,7 @@
 #include "RocketEngine/component/TextComponent.h"
 #include "RocketEngine/component/BoxColliderComponent.h"
 #include "RocketEngine/input/message/Message.h"
+#include "RocketEngine/asset/AssetManager.h"
 
 namespace RKTEngine
 {
@@ -87,8 +88,8 @@ namespace RKTEngine
 			GameObject* createPlayer(const std::string& texture, glm::vec2 position = glm::vec2(0, 0),
 									 glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
 			
-			GameObject* createLabel(const std::string& text, const std::string& fontName, int fontSize = Text::sDefaultTextSize, glm::vec2 position = glm::vec2(0, 0),
-									glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
+			GameObject* createLabel(const std::string& text, glm::vec2 position = glm::vec2(0, 0), glm::vec2 scale = glm::vec2(1, 1), 
+									float rotation = 0, const std::string& fontName = AssetManager::sDEFAULT_FONT, int fontSize = Text::sDefaultTextSize);
 
 			void addBoxCollider(int objId, int w, int h, const std::string& t = "");
 			

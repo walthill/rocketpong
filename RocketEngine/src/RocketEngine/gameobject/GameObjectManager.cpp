@@ -75,8 +75,8 @@ namespace RKTEngine
 		return createGameObject(transformData, spriteData);
 	}
 
-	GameObject* GameObjectManager::createLabel(const std::string& text, const std::string& fontName, int fontSize, glm::vec2 position,	
-												glm::vec2 scale, float rotation)
+	GameObject* GameObjectManager::createLabel(const std::string& text, glm::vec2 position, glm::vec2 scale, float rotation, 
+											   const std::string& fontName, int fontSize)
 	{
 		TransformData transformData = TransformData(position, scale, rotation);
 		TextData textData = TextData(fontName, text, fontSize);

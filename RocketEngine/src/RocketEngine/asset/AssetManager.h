@@ -25,16 +25,20 @@ namespace RKTEngine
 			Font* loadFontAsset(const std::string& fontName);
 
 			std::pair<int, int> getSpriteAtlasIndex(std::string tileName);
-
-			inline const std::string& getSpriteShaderID() { return mSPRITE_SHADER_ID; }
-			inline const std::string& getTextShaderID() { return mTEXT_SHADER_ID; }
+			
+			static const std::string sDEFAULT_FONT;
+			static const std::string sSPRITE_SHADER_ID;
+			static const std::string sSPRITE_SHADER_FILENAME;
+			static const std::string sTEXT_SHADER_ID;
+			static const std::string sTEXT_SHADER_FILENAME;
+			static const std::string sFRAG_SHADER_FILE_ENDING;
+			static const std::string sVERT_SHADER_FILE_ENDING;
 
 		private:
 			const std::string mSPRITE_ASSET_PATH = "assets/sprites/";
 			const std::string mSPRITE_FILE_ENDING = ".png";
 			const std::string mFONT_ASSET_PATH = "assets/fonts/";
-			const std::string mSPRITE_SHADER_ID = "sprite";
-			const std::string mTEXT_SHADER_ID = "text";
+			const std::string mFONT_FILE_ENDING = ".ttf";
 
 			std::map<std::string, std::pair<int,int>> mSpriteTileAssetCache;
 			std::map<std::string, Texture2D*> mTextureAssetCache;

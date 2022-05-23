@@ -57,6 +57,22 @@ namespace RKTEngine
 	{
 		RKT_PROFILE_FUNCTION();
 
+		std::string oglv = std::string("OpenGL Version: ") + (const char*)glGetString(GL_VERSION);
+		std::string sv = std::string("GLSL Version: ") + (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+
+		int tex_units;
+		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &tex_units);
+		std::string tu = std::string("Supported Texture Slots: " + std::to_string(tex_units));
+
+		RKT_INFO("=======OPENGL INFO=======");
+		RKT_INFO(glGetString(GL_VENDOR));
+		RKT_INFO(oglv);
+		RKT_INFO(sv);
+		RKT_INFO("=======GPU INFO=======");
+		RKT_INFO(glGetString(GL_RENDERER));
+		RKT_INFO(tu);
+		RKT_INFO("==============");
+
 		sData.quadVertexArray.reset(VertexArray::create());
 
 		sData.quadVertexBuffer.reset(VertexBuffer::create(sData.MAX_VERTICES * sizeof(QuadVertex)));
@@ -147,7 +163,8 @@ namespace RKTEngine
 		for (size_t i = 0; i < sData.textureSlotIndex; i++)
 		{
 			setActiveTexture(i);
-			sData.textureSlots[i]->bind();
+			if(sData.textureSlots[i] != nullptr)
+				sData.textureSlots[i]->bind();
 		}
 
 		drawIndexed(sData.quadVertexArray, sData.quadIndexCount);

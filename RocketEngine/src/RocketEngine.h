@@ -5,10 +5,11 @@
 #include "RocketEngine/core/EngineCore.h"
 #include "RocketEngine/core/InputSystem.h"
 #include "RocketEngine/core/MessageManager.h"
-#include "RocketEngine/core/Actor.h"
+#include "RocketEngine/actor/UILabel.h"
 #include "RocketEngine/input/MessageDefines.h"
 
 using Input = RKTEngine::InputSystem;
+using UILabel = RKTEngine::UILabel;
 namespace KeyCode = RKTEngine::Key;
 namespace MouseCode = RKTEngine::Mouse;
 
