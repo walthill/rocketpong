@@ -30,7 +30,7 @@ namespace RKTEngine
 		}
 	}
 
-	void TextComponent::process(glm::vec2 position, glm::vec2 scale, float rotationAngle)
+	void TextComponent::process(const glm::vec2& position, const glm::vec2& scale, float rotationAngle)
 	{
 		mModelMatrix = glm::mat4(1.0f);
 		mModelMatrix = glm::translate(mModelMatrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)

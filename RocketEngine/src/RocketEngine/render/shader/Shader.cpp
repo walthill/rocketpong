@@ -1,16 +1,24 @@
 #include "Shader.h"
 #include "ShaderCommand.h"
 #include "RocketEngine/core/Log.h"
+#include <RocketEngine/asset/AssetManager.h>
 #include <fstream>
 #include <sstream>
+#include <string>
 
 namespace RKTEngine
 {
-
-	Shader::Shader(std::string vertexPath, std::string fragmentPath)
+	Shader::Shader(std::string shaderName)
 	{
-		mVertShaderPath = vertexPath;
-		mFragShaderPath = fragmentPath;
+		mVertShaderPath = shaderName + AssetManager::sVERT_SHADER_FILE_ENDING;
+		mFragShaderPath = shaderName + AssetManager::sFRAG_SHADER_FILE_ENDING;
+		init();
+	}
+
+	Shader::Shader(std::string vertexFile, std::string fragmentFile)
+	{
+		mVertShaderPath = vertexFile.append(AssetManager::sVERT_SHADER_FILE_ENDING);
+		mFragShaderPath = fragmentFile.append(AssetManager::sFRAG_SHADER_FILE_ENDING);
 		init();
 	}
 

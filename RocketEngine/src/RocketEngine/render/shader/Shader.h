@@ -35,6 +35,9 @@ namespace RKTEngine
 	class Shader
 	{
 	public:
+
+		Shader::Shader(std::string shaderName);
+
 		/**********************************************************************//**
 		 * Constructor that takes in shader filenames
 		 *
@@ -42,7 +45,7 @@ namespace RKTEngine
 		 * @param vertexPath Fragment shader filename
 		 * Takes in vertex and fragment shader filenames and initializes the shaders
 		 *************************************************************************/
-		Shader(std::string vertexPath, std::string fragmentPath);
+		Shader(std::string vertexFile, std::string fragmentFile);
 
 		/// Initialize shader by reading GLSL code from file, compiling, and linking shaders 
 		void init();

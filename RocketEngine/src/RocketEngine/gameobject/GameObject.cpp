@@ -2,7 +2,7 @@
 #include "RocketEngine/core/EngineCore.h"
 #include "RocketEngine/component/TransformComponent.h"
 #include "RocketEngine/core/ComponentManager.h"
-#include "RocketEngine/core/Actor.h"
+#include "RocketEngine/actor/Actor.h"
 
 namespace RKTEngine
 {

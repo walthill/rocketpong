@@ -62,7 +62,7 @@ namespace RKTEngine
 	#pragma region RAW TEXTURE
 
 	OpenGLRawTexture::OpenGLRawTexture(void* data, int width, int height, int sWrapParam, int tWrapParam ,
-		int miniFilter, int magFilter, int detailReductionLevel)
+		int miniFilter, int magFilter, int detailReductionLevel, int channel)
 	{
 		RKT_ASSERT(data);
 
@@ -72,7 +72,7 @@ namespace RKTEngine
 		glGenTextures(1, &mRendererId);
 		bind();
 
-		GLenum format = OpenGLTextureHelper::setColorChannel(ColorChannel::RGB_ALPHA, Renderer::TextureType::NONE);
+		GLenum format = OpenGLTextureHelper::setColorChannel(channel, Renderer::TextureType::NONE);
 		//GL_RGB8 - 8 bits per color value
 		glTexImage2D(GL_TEXTURE_2D, detailReductionLevel, GL_RGB8, width, height, OpenGLTextureHelper::BORDER_DEFAULT, format, GL_UNSIGNED_BYTE, data);
 

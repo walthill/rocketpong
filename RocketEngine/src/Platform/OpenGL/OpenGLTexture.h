@@ -45,7 +45,7 @@ namespace RKTEngine
 	{
 	public:
 		OpenGLRawTexture(void* data, int width, int height, int sWrapParam = WrapType::REPEAT, int tWrapParam = WrapType::REPEAT,
-			int miniFilter = MinifyFilter::MIN_LINEAR, int magFilter = MagnifyFilter::MAG_LINEAR, int detailReductionLevel = 0);
+			int miniFilter = MinifyFilter::MIN_LINEAR, int magFilter = MagnifyFilter::MAG_LINEAR, int detailReductionLevel = 0, int channel = ColorChannel::RGB_ALPHA);
 
 		~OpenGLRawTexture();
 

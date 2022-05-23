@@ -32,12 +32,14 @@ bool GameApp::initialize()
 	auto w = RocketEngine->getWindowWidth();
 	auto h = RocketEngine->getWindowHeight();
 
-	mpPlayer1 = new Paddle(150);
-	mpPlayer1->mpGameObject->getTransform()->setPosition({ 100, h / 2 });
-	mpPlayer2 = new Paddle(150, false);
-	mpPlayer2->mpGameObject->getTransform()->setPosition({ w-100, h / 2 });
+	//mpPlayer1 = new Paddle(150);
+	//mpPlayer1->mpGameObject->getTransform()->setPosition({ 100, h / 2 });
+	//mpPlayer2 = new Paddle(150, false);
+	//mpPlayer2->mpGameObject->getTransform()->setPosition({ w - 100, h / 2 });
 
 	mpBall = new Ball({ w / 2,h / 2 }, 200);
+
+	UILabel* label = new UILabel({100,100}, "FOO");
 
 	endInit();
 

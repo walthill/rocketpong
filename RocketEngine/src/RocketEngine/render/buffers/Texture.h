@@ -52,7 +52,7 @@ namespace RKTEngine
 	class RawTexture : public Texture2D
 	{
 	public:
-		static RawTexture* create(void* data, int width, int height, int sWrapParam = WrapType::REPEAT, int tWrapParam = WrapType::REPEAT,
+		static RawTexture* create(void* data, int width, int height, int channel = ColorChannel::RGB_ALPHA, int sWrapParam = WrapType::REPEAT, int tWrapParam = WrapType::REPEAT,
 			int miniFilter = MinifyFilter::MIN_LINEAR, int magFilter = MagnifyFilter::MAG_LINEAR, int detailReductionLevel = 0);
 	private:
 	};

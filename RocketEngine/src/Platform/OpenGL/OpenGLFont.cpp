@@ -20,7 +20,7 @@ namespace RKTEngine
 
 		// Creating the font atlas in GPU memory
 		auto fontAtlasData = mFontHandle.font_atlas;
-		rawTexture.reset(RawTexture::create(fontAtlasData.pixels, fontAtlasData.width, fontAtlasData.height));
+		rawTexture.reset(RawTexture::create(fontAtlasData.pixels, fontAtlasData.width, fontAtlasData.height, Texture::ColorChannel::RED));
 		RenderCommand::setActiveTexture(Renderer::TEX_CHANNEL0);
 	}
 

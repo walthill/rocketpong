@@ -147,7 +147,8 @@ namespace RKTEngine
 		for (size_t i = 0; i < sData.textureSlotIndex; i++)
 		{
 			setActiveTexture(i);
-			sData.textureSlots[i]->bind();
+			if(sData.textureSlots[i] != nullptr)
+				sData.textureSlots[i]->bind();
 		}
 
 		drawIndexed(sData.quadVertexArray, sData.quadIndexCount);
