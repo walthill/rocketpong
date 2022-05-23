@@ -43,6 +43,7 @@ namespace RKTEngine
 	 ******************************************************************************/
 	class GameObjectManager : public RKTUtil::Trackable
 	{
+		friend class EngineCore;
 		public:
 
 			/**********************************************************************//**
@@ -51,9 +52,6 @@ namespace RKTEngine
 			* @param maxSize Sets the max number of GameObjects
 			*************************************************************************/
 			GameObjectManager(uint32 maxSize);
-
-			///Default deconstructor
-			~GameObjectManager();
 
 			/**********************************************************************//**
 			* Find and return a reference to a GameObject based on its id
@@ -101,10 +99,6 @@ namespace RKTEngine
 			*************************************************************************/
 			void destroy(const GameObjectId& id);
 
-			void updateAll(float elapsedTime);
-
-			void onMessage(Message& message);
-
 			///Get the number of gameobjects
 			int getNumGameObjects();
 			///Access the player gameobject
@@ -115,6 +109,12 @@ namespace RKTEngine
 
 			RKTUtil::MemoryPool mGameObjectPool;
 			std::map<GameObjectId, GameObject*> mGameObjMap;
+
+			///Default deconstructor
+			~GameObjectManager();
+
+			void updateAll(float elapsedTime);
+			void onMessage(Message& message);
 	};
 }
 #endif // !GAME_OBJ_MAN_H

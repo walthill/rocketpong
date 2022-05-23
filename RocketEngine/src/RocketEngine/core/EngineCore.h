@@ -17,21 +17,14 @@ namespace RKTEngine
 	
 	class EngineCore : public RKTUtil::Singleton<EngineCore>
 	{
+		friend class GameApp;
+
 		public:
 			EngineCore();
 			~EngineCore();
 
-			void clean();
-			bool initialize();
-			
-			void update();
-			void render();
-
-			void onMessage(Message& message);
-
 			double getTime();
 
-			RenderCore* getRenderer(); 
 			inline ComponentManager* getComponentManager() { return mpComponentManager; }
 			inline AssetManager* getAssetManager() { return mpAssetManager; }
 			inline GameObjectManager* getEntityManager() { return mpEntityManager; }
@@ -61,6 +54,12 @@ namespace RKTEngine
 			bool initRenderCore();
 			void initInputSystem();
 			void calculateDeltaTime();
+			void clean();
+			bool initialize();
+			void update();
+			void render();
+			void onMessage(Message& message);
+			RenderCore* getRenderer();
 	};
 }
 

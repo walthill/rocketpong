@@ -23,7 +23,7 @@ bool GameApp::initialize()
 	beginInit();
 
 	RKTEngine::EngineCore::initInstance();
-	if (!RKTEngine::EngineCore::getInstance()->initialize())
+	if (!RocketEngine->initialize())
 		return false;
 
 	RocketEngine->getMessageManager()->setMessageCallback(RKT_BIND_MESSAGE_FN(GameApp::onMessage));
@@ -124,7 +124,7 @@ void GameApp::onMessage(RKTEngine::Message& message)
 	RKTEngine::MessageDispatcher dispatcher(message);
 	dispatcher.dispatch<RKTEngine::ExitMessage>(RKT_BIND_MESSAGE_FN(GameApp::quit));
 
-	RKTEngine::EngineCore::getInstance()->onMessage(message);
+	RocketEngine->onMessage(message);
 }
 
 
