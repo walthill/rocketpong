@@ -287,7 +287,7 @@ namespace RKTEngine
 				Message* pMessage = nullptr;
 				switch (collider->checkCollision(otherCollider))
 				{
-					case CollisionType::ENTER:	{ pMessage = new CollisionEnterMessage(collider->getId()); }	break;
+					case CollisionType::ENTER:	{ pMessage = new CollisionEnterMessage(collider->getId(), otherCollider); }	break;
 					case CollisionType::STAY:	/*{ pMessage = new CollisionStayMessage(collider->getId()); }*/	break;
 					case CollisionType::EXIT:	/*{ pMessage = new CollisionExitMessage(collider->getId()); }*/	break;
 				};

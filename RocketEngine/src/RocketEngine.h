@@ -7,9 +7,11 @@
 #include "RocketEngine/core/MessageManager.h"
 #include "RocketEngine/actor/UILabel.h"
 #include "RocketEngine/input/MessageDefines.h"
+#include "RocketEngine/math/Random.h"
 
 using Input = RKTEngine::InputSystem;
 using UILabel = RKTEngine::UILabel;
+using Random = RKTEngine::Random;
 namespace KeyCode = RKTEngine::Key;
 namespace MouseCode = RKTEngine::Mouse;
 

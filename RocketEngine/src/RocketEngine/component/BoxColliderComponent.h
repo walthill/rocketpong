@@ -48,9 +48,11 @@ namespace RKTEngine
 			inline BoxColliderData getData() { return mBoxColliderData; }
 
 			virtual inline const std::string& getTag() override { return mBoxColliderData.tag; };
+			virtual inline void setTag(const std::string& tag) override { mBoxColliderData.tag = tag; };
 
 			inline int getWidth() { return mBoxColliderData.width; }
 			inline int getHeight() { return mBoxColliderData.height; }
+			inline TransformComponent* getTransform() { return mpParentTransform; }
 
 		private:
 			TransformComponent* mpParentTransform = nullptr;

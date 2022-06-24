@@ -6,13 +6,15 @@
 
 namespace RKTEngine
 {
+	class BoxColliderComponent;
+
 	class CollisionEnterMessage : public Message
 	{
 	public:
-		CollisionEnterMessage(ComponentId colliderId)
-			: colliderID(colliderId), Message(MessageType::COLLISION) {};
+		CollisionEnterMessage(ComponentId colliderId, BoxColliderComponent* other)
+			: colliderID(colliderId), otherCollider(other), Message(MessageType::COLLISION) {};
 
-		~CollisionEnterMessage() {};
+		~CollisionEnterMessage() { otherCollider = nullptr; };
 
 		std::string toString() const override
 		{
@@ -22,6 +24,7 @@ namespace RKTEngine
 		};
 
 		ComponentId colliderID;
+		BoxColliderComponent* otherCollider;
 
 		EVENT_CLASS_TYPE(COLLISION)
 			EVENT_CLASS_CATEGORY(MSG_CATEGORY_APP)

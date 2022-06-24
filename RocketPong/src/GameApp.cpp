@@ -34,8 +34,10 @@ bool GameApp::initialize()
 
 	mpPlayer1 = new Paddle(150);
 	mpPlayer1->mpGameObject->getTransform()->setPosition({ 100, h / 2 });
+	mpPlayer1->mpGameObject->getBoxCollider()->setTag("lp");
 	mpPlayer2 = new Paddle(150, false);
 	mpPlayer2->mpGameObject->getTransform()->setPosition({ w - 100, h / 2 });
+	mpPlayer2->mpGameObject->getBoxCollider()->setTag("rp");
 
 	mpBall = new Ball({ w / 2,h / 2 }, 200);
 
@@ -112,6 +114,10 @@ void GameApp::update()
 	if (Input::getKeyDown(KeyCode::Escape))
 	{
 		mIsRunning = false;
+	}
+	if (Input::getKeyDown(KeyCode::R))
+	{
+		mpBall->reset();
 	}
 #endif
 }
