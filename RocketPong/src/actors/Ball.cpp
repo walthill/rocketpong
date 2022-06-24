@@ -29,9 +29,7 @@ void Ball::reset()
 bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
 {
 	if (Actor::onCollisionEnter(message))
-	{
-		RKT_TRACE("COLLISION BAYBEE");
-		
+	{	
 		auto other = message.otherCollider;
 		if (other != nullptr)
 		{
