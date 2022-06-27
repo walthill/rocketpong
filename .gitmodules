@@ -10,3 +10,6 @@
 [submodule "RocketEngine/vendor/glm"]
 	path = RocketEngine/vendor/glm
 	url = https://github.com/walthill/glm.git
+[submodule "RocketEngine/vendor/yamlcpp"]
+	path = RocketEngine/vendor/yamlcpp
+	url = https://github.com/walthill/yaml-cpp
