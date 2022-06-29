@@ -1,4 +1,6 @@
 #include "Ball.h"
+#include "GameApp.h"
+#include "managers/GameManager.h"
 
 Ball::Ball(glm::vec2 startPos, float speed) :
 	mStartPos(startPos), mSpeed(speed)
@@ -66,8 +68,6 @@ bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
 
 bool Ball::update(RKTEngine::UpdateMessage& message)
 {
-	//TODO: check x position to register goals
-
 	if (!mStartMoving && startTimer.getTimeElapsedInSeconds() > mSTART_DELAY)
 	{
 		mStartMoving = true;
@@ -84,10 +84,22 @@ bool Ball::update(RKTEngine::UpdateMessage& message)
 		// wall hits
 		if (pos.y > RocketEngine->getWindowHeight())
 			mDir.y = -fabs(mDir.y);
-		if (pos.y < 0)
+		else if (pos.y < 0)
 			mDir.y = fabs(mDir.y);
 
 		tr->setPosition(pos);
+
+		//goals
+		if (pos.x > RocketEngine->getWindowWidth())
+		{
+			GameApp::getInstance()->getGameManager()->score(true);
+			reset();
+		}
+		else if (pos.x < 0)
+		{
+			GameApp::getInstance()->getGameManager()->score(false);
+			reset();
+		}
 	}
 
 	return Actor::update(message);

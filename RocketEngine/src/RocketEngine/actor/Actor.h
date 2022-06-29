@@ -14,10 +14,11 @@ namespace RKTEngine
 	class Actor : public RKTUtil::Trackable
 	{
 		public:
-			void init() { setGameObjOwner(); };
+			void init(bool isUIElement = false);
 		
 			virtual bool onCollisionEnter(RKTEngine::CollisionEnterMessage& message) { return mpGameObject->getColliderId() == message.colliderID; };
 			virtual bool update(UpdateMessage& message) { return true; };
+			
 			virtual void onMessage(Message& message) OVERRIDE_REQUIRED;
 
 			inline void Actor::setGameObjOwner() { mpGameObject->setOwner(this); }
@@ -26,7 +27,7 @@ namespace RKTEngine
 			GameObject* mpGameObject = nullptr;
 		protected:
 			Actor() : mpGameObject(nullptr) {};
-			~Actor() {};
+			~Actor();
 	};
 }
 

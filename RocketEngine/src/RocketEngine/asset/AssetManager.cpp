@@ -2,7 +2,7 @@
 #include <RocketEngine/core/Log.h>
 #include "RocketEngine/render/buffers/Texture.h"
 #include "RocketEngine/render/Font.h"
-#include <fstream>
+#include "Serialization.h"
 
 namespace RKTEngine
 {
@@ -73,7 +73,7 @@ namespace RKTEngine
 		else
 		{
 			auto path = mFONT_ASSET_PATH + fontName + mFONT_FILE_ENDING;
-			newFont = Font::create(loadByteData(path));
+			newFont = Font::create(Serialization::loadByteData(path));
 			mFontAssetCache[fontName] = newFont;
 		}
 
@@ -95,29 +95,6 @@ namespace RKTEngine
 		}
 
 		return offset;
-	}
-
-	unsigned char* AssetManager::loadByteData(const std::string& path)
-	{
-		uint32 bufferSize = 1 << 20;
-		unsigned char* buffer = new unsigned char[bufferSize];
-		std::basic_ifstream<unsigned char> infile(path, std::ios::in | std::ifstream::binary);
-
-		//get length of file
-		infile.seekg(0, std::ios::end);
-		auto length = infile.tellg();
-		infile.seekg(0, std::ios::beg);
-
-		// don't overflow the buffer
-		if (length > bufferSize)
-		{
-			length = bufferSize;
-		}
-
-		//read file
-		infile.read(buffer, length);
-
-		return buffer;
 	}
 
 }

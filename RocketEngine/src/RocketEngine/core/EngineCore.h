@@ -7,6 +7,7 @@
 #include "ComponentManager.h"
 #include "RocketEngine/gameobject/GameObjectManager.h"
 #include "RocketEngine/asset/AssetManager.h"
+#include "RocketEngine/asset/scene/SceneManager.h"
 #include "RocketEngine/input/message/Message.h"
 
 namespace RKTEngine
@@ -28,6 +29,7 @@ namespace RKTEngine
 			inline ComponentManager* getComponentManager() { return mpComponentManager; }
 			inline AssetManager* getAssetManager() { return mpAssetManager; }
 			inline GameObjectManager* getEntityManager() { return mpEntityManager; }
+			inline SceneManager* getSceneManager() { return mpSceneManager; }
 			InputSystem* getInputSystem();
 			MessageManager* getMessageManager();
 			ShaderManager* getShaderManager();
@@ -48,6 +50,7 @@ namespace RKTEngine
 			AssetManager* mpAssetManager = nullptr;
 			GameObjectManager* mpEntityManager = nullptr;
 			ComponentManager* mpComponentManager = nullptr;
+			SceneManager* mpSceneManager = nullptr;
 
 			float mLastFrame = 0;
 

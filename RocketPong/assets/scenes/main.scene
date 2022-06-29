@@ -1,0 +1,22 @@
+Name: main
+UI:
+  - Label: New Gameobject
+    TransformComponent:
+      Position: [608, 10]
+      Rotation: [0, [0, 0, 1]]
+      Scale: [1, 1]
+    TextComponent:
+      Text: MAIN
+      Color: [255, 255, 255, 255]
+      FontName: calibri
+      FontSize: 32
+  - Label: New Gameobject
+    TransformComponent:
+      Position: [672, 10]
+      Rotation: [0, [0, 0, 1]]
+      Scale: [1, 1]
+    TextComponent:
+      Text: MAIN
+      Color: [255, 255, 255, 255]
+      FontName: calibri
+      FontSize: 32

@@ -43,8 +43,6 @@ namespace RKTEngine
 			std::map<std::string, std::pair<int,int>> mSpriteTileAssetCache;
 			std::map<std::string, Texture2D*> mTextureAssetCache;
 			std::map<std::string, Font*> mFontAssetCache;
-
-			unsigned char* loadByteData(const std::string& path);
 	};
 }
 #endif // !ASSET_MANAGER_H

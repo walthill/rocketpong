@@ -134,6 +134,7 @@ namespace RKTEngine
 			 * @param angle New rotation angle
 			 *************************************************************************/
 			void setRotation(const glm::vec3& rotationAxis, float angle);	
+			void setRotation(const Rotation& rot);
 
 			/**********************************************************************//**
 			 * Set mDataChanged flag

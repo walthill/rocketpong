@@ -45,4 +45,11 @@ namespace RKTEngine
 		mTransformData.mRotation.rotationAxis = rotationAxis;
 		mDataChanged = true;
 	}
+
+	void TransformComponent::setRotation(const Rotation& rot)
+	{
+		mTransformData.mRotation.angle = rot.angle;
+		mTransformData.mRotation.rotationAxis = rot.rotationAxis;
+		mDataChanged = true;
+	}
 }

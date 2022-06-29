@@ -25,6 +25,11 @@ namespace RKTEngine
 		mColorValue = glm::vec4(r, g, b, a);
 	}
 
+	Color::Color(const glm::vec4& vec4)
+	{
+		mColorValue = vec4;
+	}
+
 
 	Color::~Color()
 	{

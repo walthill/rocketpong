@@ -22,6 +22,7 @@ namespace RKTEngine
 	void EngineCore::clean()
 	{
 		delete mpMasterTimer;
+		delete mpSceneManager;
 		delete mpEntityManager;
 		delete mpAssetManager;
 		delete mpComponentManager;
@@ -40,7 +41,7 @@ namespace RKTEngine
 			return false;
 		}
 		
-
+		mpSceneManager = new SceneManager();
 		mpComponentManager = new ComponentManager(5000);
 		mpEntityManager = new GameObjectManager(5000);
 

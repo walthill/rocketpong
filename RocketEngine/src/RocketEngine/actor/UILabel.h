@@ -13,13 +13,31 @@ namespace RKTEngine
 			UILabel(const glm::vec2& pos, const std::string& text, int fontSize);
 			UILabel(const glm::vec2& pos, const std::string& text, const std::string& fontName, int fontSize);
 
-			virtual void onMessage(RKTEngine::Message& message) override;
+			virtual void onMessage(Message& message) override;
 
+			std::string getText();
+			glm::vec4 getColor();
+			std::string getFontName();
+			int getFontSize();
+
+			void setText(int text);
+			void setText(float text);
 			void setText(const std::string& text);
-			void setSize(int fontSize);
+			void setFontSize(int fontSize);
+			void setFont(const std::string& fontName);
 			void setColor(const Color& color);
 
 		private:
+
+			std::string getTextInternal();
+			glm::vec4 getColorInternal();
+			std::string getFontNameInternal();
+			int getFontSizeInternal();
+
+			void setTextInternal(const std::string& text);
+			void setFontSizeInternal(int fontSize);
+			void setFontInternal(const std::string& fontName);
+			void setColorInternal(const Color& color);
 	};
 }
 

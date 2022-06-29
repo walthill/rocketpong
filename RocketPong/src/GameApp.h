@@ -9,7 +9,8 @@
 
 class Paddle;
 class Ball;
-	
+class GameManager;
+
 class GameApp : public RKTUtil::Singleton<GameApp>
 {
 	friend class RKTUtil::Singleton<GameApp>;
@@ -25,7 +26,8 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 
 		void onMessage(RKTEngine::Message& message);
 
-		double getTime(); 
+		GameManager* getGameManager();
+		double getTime();
 
 		bool quit(RKTEngine::ExitMessage& msg);
 
@@ -42,18 +44,23 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 		bool mIsRunning = false;
 		bool mDisplayFrameTime = false;
 		bool mShowFPS = false;
+		bool mRunSceneGenerator = true;
 
 		//Performance tracker data
 		RKTUtil::PerformanceTracker* pinitPerformanceTracker = nullptr;
 		RKTUtil::PerformanceTracker* mpPerformanceTracker = nullptr;
 		RKTUtil::Timer* mpFrameTimer = nullptr;
 
+		GameManager* mpGameManager = nullptr;
+		
 		Paddle* mpPlayer1 = nullptr;
 		Paddle* mpPlayer2 = nullptr;
-		Ball* mpBall;
+		Ball* mpBall = nullptr;
 
 		void beginInit();
 		void endInit();
+		void loadStartupScene(const std::string& scene);
+		void generateSceneData(bool quitOnComplete);
 
 };
 

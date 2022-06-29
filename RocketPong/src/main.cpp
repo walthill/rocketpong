@@ -9,7 +9,8 @@ int main()
 
 	RKT_PROFILE_BEGIN_SESSION("Init", "profile_init.json");
 	GameApp::initInstance();
-	GameApp::getInstance()->initialize();
+	if(!GameApp::getInstance()->initialize())
+		return 1;
 	RKT_PROFILE_END_SESSION();
 
 	RKT_PROFILE_BEGIN_SESSION("Runtime", "profile_runtime.json");
