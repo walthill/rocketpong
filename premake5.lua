@@ -37,6 +37,7 @@ project "RocketEngine"
         "%{prj.name}/vendor/glfw/include/glfw",
         "%{prj.name}/vendor/stb_image",
         "%{prj.name}/vendor/kc_truetypeassembler",
+        "%{prj.name}/vendor/yaml-cpp/include",
         "%{prj.name}/vendor/glm"
     }
 
@@ -49,12 +50,13 @@ project "RocketEngine"
     {
         "RocketUtils",
         "Glad",
-        "GLFW"
+        "GLFW",
+		"yaml-cpp"
     }
 
-    defines
+	defines
     {
-         
+        "YAML_CPP_STATIC_DEFINE"
     }
 
     postbuildcommands
@@ -146,4 +148,5 @@ group "Dependencies"
 	include "RocketEngine/vendor/GLFW"
 	include "RocketEngine/vendor/Glad"
 	include "RocketEngine/vendor/RocketUtils/lib"
+	include "RocketEngine/vendor/yaml-cpp"
 group ""
