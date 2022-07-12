@@ -309,8 +309,6 @@ namespace RKTEngine
 		if (sData.quadIndexCount >= Renderer2DData::MAX_INDICES)
 			FlushAndReset();
 
-		glm::vec4 defaultColor = Color::white.getColorAlpha01();
-
 		float textureIndex = 0.0f;
 
 		for (size_t i = 1; i < sData.textureSlotIndex; i++)
@@ -329,46 +327,44 @@ namespace RKTEngine
 			sData.textureSlots[sData.textureSlotIndex] = texture;
 			sData.textureSlotIndex += 1;
 		}
-
-
 		
 		/*
-			leftX, topY,		//top left					
+			 leftX, topY,		//top left					
 			 rightX, bottomY,	//bottom right
-			 leftX, bottomY,		//bottom left
+			 leftX, bottomY,	//bottom left
 
-					//tri #2
+						//tri #2
 			 leftX, topY,		//top left
 			 rightX, topY,		//top right
-			 rightX, bottomY		//bottom right
+			 rightX, bottomY	//bottom right
 		*/
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[0];
-		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = { atlasCoords.leftX, atlasCoords.bottomY };	//0,0 bottom left in OpenGL
 		sData.quadVertexBufferPtr->texIndex = textureIndex;
 		sData.quadVertexBufferPtr->tiling = tilingFactor;
 		sData.quadVertexBufferPtr++;
 
 		sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[1];
-		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = { atlasCoords.rightX, atlasCoords.bottomY }; //1,0
 		sData.quadVertexBufferPtr->texIndex = textureIndex;
 		sData.quadVertexBufferPtr->tiling = tilingFactor;
 		sData.quadVertexBufferPtr++;
 
 		sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[2];
-		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = { atlasCoords.rightX, atlasCoords.topY };	//1,1
 		sData.quadVertexBufferPtr->texIndex = textureIndex;
 		sData.quadVertexBufferPtr->tiling = tilingFactor;
 		sData.quadVertexBufferPtr++;
 
 		sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[3];
-		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = { atlasCoords.leftX, atlasCoords.topY };	//0,1
 		sData.quadVertexBufferPtr->texIndex = textureIndex;
 		sData.quadVertexBufferPtr->tiling = tilingFactor;
