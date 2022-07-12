@@ -1,6 +1,7 @@
 #include "Actor.h"
 #include "RocketEngine/core/EngineCore.h"
 #include "RocketEngine/asset/scene/SceneManager.h"
+#include "UILabel.h"
 
 namespace RKTEngine
 {
@@ -9,7 +10,11 @@ namespace RKTEngine
 		setGameObjOwner();
 		if (!isUIElement)
 		{
-			EngineCore::getInstance()->getSceneManager()->registerEntity(this);
+			EngineCore::getInstance()->getSceneManager()->registerActor(this);
+		}
+		else
+		{
+			EngineCore::getInstance()->getSceneManager()->registerUI(dynamic_cast<UILabel*>(this));
 		}
 	}
 

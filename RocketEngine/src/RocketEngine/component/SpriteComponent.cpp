@@ -66,11 +66,11 @@ namespace RKTEngine
 		{
 			if (mRenderInfo.rotation != 0)
 			{
-				RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mSpriteData.pSprite, mAtlasCoords, 1.0f);
+				RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mSpriteData.pSprite, mAtlasCoords, 1.0f, mSpriteData.mColor);
 			}
 			else
 			{
-				RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mSpriteData.pSprite, mAtlasCoords, 1.0f);
+				RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mSpriteData.pSprite, mAtlasCoords, 1.0f, mSpriteData.mColor);
 			}
 		}
 	}

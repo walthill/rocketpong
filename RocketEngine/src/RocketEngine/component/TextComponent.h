@@ -36,12 +36,13 @@ namespace RKTEngine
 			///Default deconstructor
 			~TextComponent();
 
+			void cleanup();
 			void load();
 			void process(const glm::vec2& position, const glm::vec2& scale, float rotationAngle);
 			void render();
 
 			///Access text component data
-			inline TextData getData() { return mTextData; }
+			inline TextData* getData() { return &mTextData; }
 
 			void setData(const TextData& data);
 			

@@ -14,6 +14,11 @@ namespace RKTEngine
 
 	TextComponent::~TextComponent()
 	{
+		cleanup();
+	}
+
+	void TextComponent::cleanup()
+	{
 		delete mTextData.mTextInfo;
 	}
 

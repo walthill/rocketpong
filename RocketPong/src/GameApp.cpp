@@ -35,23 +35,24 @@ bool GameApp::initialize()
 	auto w = RocketEngine->getWindowWidth();
 	auto h = RocketEngine->getWindowHeight();
 
-	mpPlayer1 = new Paddle(150);
-	mpPlayer1->mpGameObject->name = "P1 Paddle";
-	mpPlayer1->mpGameObject->getTransform()->setPosition({ 100, h / 2 });
-	mpPlayer1->mpGameObject->getBoxCollider()->setTag("lp");
-	mpPlayer2 = new Paddle(150, false);
-	mpPlayer2->mpGameObject->name = "P2 Paddle";
-	mpPlayer2->mpGameObject->getTransform()->setPosition({ w - 100, h / 2 });
-	mpPlayer2->mpGameObject->getBoxCollider()->setTag("rp");
-
-	mpBall = new Ball({ w / 2,h / 2 }, 200);
-	mpBall->mpGameObject->name = "Ball";
-
 	generateSceneData(false);
 	if (mIsRunning)
 	{
 		loadStartupScene("game");
 	}
+
+	mpPlayer1 = new Paddle(300);
+	mpPlayer1->mpGameObject->name = "P1 Paddle";
+	mpPlayer1->mpGameObject->getTransform()->setPosition({ 100, h / 2 });
+	mpPlayer1->mpGameObject->getBoxCollider()->setTag("lp");
+	mpPlayer2 = new Paddle(300, false);
+	mpPlayer2->mpGameObject->name = "P2 Paddle";
+	mpPlayer2->mpGameObject->getTransform()->setPosition({ w - 100, h / 2 });
+	mpPlayer2->mpGameObject->getBoxCollider()->setTag("rp");
+
+	mpBall = new Ball({ w / 2,h / 2 }, 250);
+	mpBall->mpGameObject->name = "Ball";
+
 
 	endInit();
 
@@ -96,9 +97,14 @@ void GameApp::generateSceneData(bool quitOnComplete)
 		auto h = RocketEngine->getWindowHeight();
 
 		RocketEngine->getSceneManager()->beginScene("game");
-		UILabel* p1Score = new UILabel({ w / 2 - 32, 10 }, std::to_string(mpGameManager->mP1Score));
+		//midline
+		auto midlineSprite = RocketEngine->getEntityManager()->createSprite("paddle", { w / 2, h / 2 }, { 0.25f, 100.0f });
+		midlineSprite->getSprite()->setColor(RKTEngine::Color(127.5f, 127.5f, 127.5f, .2f));
+		midlineSprite->name = "midline";
+
+		UILabel* p1Score = new UILabel({ w / 2 - 72, 10 }, std::to_string(mpGameManager->mP1Score), "Arkitech-Medium", RKTEngine::Text::sDefaultTextSize);
 		p1Score->mpGameObject->name = "p1score";
-		UILabel* p2Score = new UILabel({ w / 2 + 32, 10 }, std::to_string(mpGameManager->mP2Score));
+		UILabel* p2Score = new UILabel({ w / 2 + 32, 10 }, std::to_string(mpGameManager->mP2Score), "Arkitech-Medium", RKTEngine::Text::sDefaultTextSize);
 		p2Score->mpGameObject->name = "p2score";
 		RocketEngine->getSceneManager()->endScene();
 

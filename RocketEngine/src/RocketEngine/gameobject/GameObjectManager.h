@@ -82,7 +82,7 @@ namespace RKTEngine
 				glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
 #endif
 
-			GameObject* createSprite(const std::string& spriteToLoad, glm::vec2 position = glm::vec2(0,0),
+			GameObject* createSprite(const std::string& spriteToLoad = AssetManager::sDEFAULT_SPRITE, glm::vec2 position = glm::vec2(0,0),
 									 glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
 
 			GameObject* createPlayer(const std::string& texture, glm::vec2 position = glm::vec2(0, 0),

@@ -7,6 +7,7 @@
 
 namespace RKTEngine
 {
+	class GameObject;
 	class Actor;
 	class UILabel;
 
@@ -14,7 +15,8 @@ namespace RKTEngine
 	{
 		std::string name;
 		std::vector<UILabel*> textUIs;
-		std::vector<Actor*> entities;
+		std::vector<Actor*> actors;
+		std::vector<GameObject*> entities;
 	};
 
 	class SceneManager : public RKTUtil::Trackable
@@ -26,7 +28,8 @@ namespace RKTEngine
 		void cleanActiveScene();
 
 		void registerUI(UILabel* textUI);
-		void registerEntity(Actor* actor);
+		void registerEntity(GameObject* obj);
+		void registerActor(Actor* actor);
 
 		/// <summary>
 		/// Mark beginning of scene data. Actors between this call and endScene() will be assigned to sceneName
@@ -50,7 +53,7 @@ namespace RKTEngine
 		Scene* mpActiveScene = nullptr;
 
 		void cleanupScenes();
-		void cleanUIElements(Scene* scene);
+		void cleanSceneElements(Scene* scene);
 	};
 }
 

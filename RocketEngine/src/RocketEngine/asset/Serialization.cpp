@@ -3,9 +3,10 @@
 #include <fstream>
 #include "scene/SceneManager.h"
 #include <RocketEngine/actor/UILabel.h>
-#include <RocketEngine/component/TextComponent.h>
+#include <RocketEngine/core/ComponentManager.h>
 #include <RocketEngine/actor/Actor.h>
 #include <RocketEngine/core/Log.h>
+#include <RocketEngine/core/EngineCore.h>
 
 //added from https://github.com/TheCherno/Hazel
 //under Apache 2.0 License
@@ -151,6 +152,8 @@ namespace RKTEngine
 
 	void Serialization::serializeScene(Scene* scene)
 	{
+		RKT_CORE_TRACE("Serializing scene '{0}'", scene->name);
+
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << "Name" << scene->name;
@@ -162,17 +165,26 @@ namespace RKTEngine
 		}
 
 		out << YAML::EndSeq;
-		/*out << YAML::Key << "gameobjs" << YAML::Value << YAML::BeginSeq;
+		out << YAML::Key << "GameObjects" << YAML::Value << YAML::BeginSeq;
 
 		for (size_t i = 0; i < scene->entities.size(); i++)
 		{
+			serializeGameObject(out, scene->entities[i]);
 		}
 
-		out << YAML::EndSeq;*/
+		out << YAML::EndSeq;
 		out << YAML::EndMap;
 
 		std::ofstream fout("assets/scenes/" + scene->name + ".scene");
 		fout << out.c_str();
+	}
+
+	void Serialization::serializeGameObject(YAML::Emitter& out, GameObject* gameObject)
+	{
+		out << YAML::BeginMap;
+		out << YAML::Key << "Obj" << YAML::Value << gameObject->name;
+		serializeTransform(out, gameObject->getTransform());
+		serializeSprite(out, gameObject->getSprite());
 	}
 
 	void Serialization::serializeUILabel(YAML::Emitter& out, UILabel* uiLabel)
@@ -198,6 +210,22 @@ namespace RKTEngine
 			out << YAML::Key << "Scale" << YAML::Value << transform->getScale();
 
 			out << YAML::EndMap; // TransformComponent
+		}
+	}
+
+	void Serialization::serializeSprite(YAML::Emitter& out, SpriteComponent* sprite)
+	{
+		if (sprite != nullptr)
+		{
+			out << YAML::Key << "SpriteComponent";
+			out << YAML::BeginMap;
+
+			out << YAML::Key << "SpriteName" << YAML::Value << sprite->getData()->mSpriteName;
+			out << YAML::Key << "TileName" << YAML::Value << sprite->getData()->mTileName;
+			out << YAML::Key << "Color" << YAML::Value << sprite->getData()->mColor.getColorAlpha();
+			out << YAML::Key << "Dimensions" << YAML::Value << glm::vec2{ sprite->getData()->mWidth, sprite->getData()->mHeight};
+
+			out << YAML::EndMap; // SpriteComponent
 		}
 	}
 
@@ -236,10 +264,20 @@ namespace RKTEngine
 		Scene* loadedScene = new Scene();
 		loadedScene->name = sceneName;
 
+		auto gameObjs = data["GameObjects"];
+		deserializeGameObjects(gameObjs, loadedScene);
+
 		auto uiElements = data["UI"];
-		if (uiElements)
+		deserializeUILabels(uiElements, loadedScene);
+
+		return loadedScene;
+	}
+
+	void Serialization::deserializeUILabels(YAML::Node& node, Scene* scene)
+	{
+		if (node)
 		{
-			for (auto entity : uiElements)
+			for (auto entity : node)
 			{
 				std::string name = entity["Label"].as<std::string>();
 				int fakeuuid = 123456789;
@@ -266,13 +304,54 @@ namespace RKTEngine
 					deserializedUI->setFontSize(textComponent["FontSize"].as<int>());
 				}
 
-				loadedScene->textUIs.push_back(deserializedUI);
+				scene->textUIs.push_back(deserializedUI);
 			}
 		}
-
-		return loadedScene;
-
 	}
+
+	void Serialization::deserializeGameObjects(YAML::Node& node, Scene* scene)
+	{
+		if (node)
+		{
+			for (auto entity : node)
+			{
+				std::string name = entity["Obj"].as<std::string>();
+				int fakeuuid = 123456789;
+				RKT_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", fakeuuid, name);
+
+				auto deserializedObj = EngineCore::getInstance()->getEntityManager()->createSprite();
+				deserializedObj->name = name;
+
+				auto transformComponent = entity["TransformComponent"];
+				if (transformComponent)
+				{
+					auto tr = deserializedObj->getTransform();
+					tr->setPosition(transformComponent["Position"].as<glm::vec2>());
+					tr->setRotation(transformComponent["Rotation"].as<Rotation>());
+					tr->setScale(transformComponent["Scale"].as<glm::vec2>());
+				}
+
+				auto spriteComponent = entity["SpriteComponent"];
+				if (spriteComponent)
+				{
+					auto spr = deserializedObj->getSprite();
+					auto data = spr->getData();
+
+					data->mSpriteName = (spriteComponent["SpriteName"].as<std::string>());
+					data->mTileName = (spriteComponent["TileName"].as<std::string>());
+					data->mColor = (Color(spriteComponent["Color"].as<glm::vec4>()));
+					auto dimensions = spriteComponent["Dimensions"].as<glm::vec2>();
+					data->mWidth = (int)dimensions.x;
+					data->mHeight = (int)dimensions.y;
+					spr->load();
+				}
+
+				scene->entities.push_back(deserializedObj);
+			}
+		}
+	}
+
+
 
 	unsigned char* Serialization::loadByteData(const std::string& path)
 	{

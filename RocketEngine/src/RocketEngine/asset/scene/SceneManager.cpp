@@ -3,6 +3,7 @@
 #include <RocketEngine/actor/UILabel.h>
 #include <RocketEngine/actor/Actor.h>
 #include <RocketEngine/core/Log.h>
+#include <RocketEngine/core/EngineCore.h>
 
 namespace RKTEngine
 {
@@ -21,7 +22,7 @@ namespace RKTEngine
 	{
 		for (auto& s : mScenes)
 		{
-			cleanUIElements(s.second);
+			cleanSceneElements(s.second);
 			s.second->entities.clear();
 		}
 		mScenes.clear();
@@ -32,13 +33,13 @@ namespace RKTEngine
 		if (mpActiveScene != nullptr)
 		{
 			auto sceneName = mpActiveScene->name;
-			cleanUIElements(mpActiveScene);
+			cleanSceneElements(mpActiveScene);
 			mScenes.erase(sceneName);
 			mpActiveScene = nullptr;
 		}
 	}
 
-	void SceneManager::cleanUIElements(Scene* scene)
+	void SceneManager::cleanSceneElements(Scene* scene)
 	{
 		for (auto& text : scene->textUIs)
 		{
@@ -49,18 +50,41 @@ namespace RKTEngine
 			}
 		}
 		scene->textUIs.clear();
+
+		for (auto& entity : scene->entities)
+		{
+			if (entity != nullptr)
+			{
+				RocketEngine->getEntityManager()->destroy(entity->getId());
+				entity = nullptr;
+			}
+		}
+		scene->entities.clear();
 	}
 
 
 	void SceneManager::registerUI(UILabel* textUI)
 	{
-		if(mpActiveScene != nullptr)
+		if (mpActiveScene != nullptr)
+		{
+			mpActiveScene->entities.pop_back();
 			mpActiveScene->textUIs.push_back(textUI);
+		}
 	}
 
-	void SceneManager::registerEntity(Actor* actor)
+	void SceneManager::registerEntity(GameObject* obj)
 	{
-		//mpActiveScene->entities.push_back(actor);
+		if (mpActiveScene != nullptr)
+			mpActiveScene->entities.push_back(obj);
+	}
+
+	void SceneManager::registerActor(Actor* actor)
+	{
+		if (mpActiveScene != nullptr)
+		{
+			mpActiveScene->entities.pop_back();
+			mpActiveScene->actors.push_back(actor);
+		}
 	}
 
 	void SceneManager::beginScene(const std::string& sceneName)
@@ -107,7 +131,8 @@ namespace RKTEngine
 			mScenes[sceneName] = Serialization::deserializeScene(sceneName);
 		}
 
-		RKT_MEMREPORT();
+		//TODO: investigate deserializing increasing mem footprint 
+		//RKT_MEMREPORT();
 	}
 
 	bool SceneManager::isActiveScene(const std::string& sceneName)

@@ -6,7 +6,6 @@ namespace RKTEngine
 {
 	UILabel::UILabel(const glm::vec2& pos, const std::string& text)
 	{
-		EngineCore::getInstance()->getSceneManager()->registerUI(this);
 		mpGameObject = GameObjManager->createLabel(text, pos);
 		Actor::init(true);
 	}
@@ -95,7 +94,13 @@ namespace RKTEngine
 	}
 	void UILabel::setFontInternal(const std::string& fontName)
 	{
-		mpGameObject->getUILabel()->getData().mFontName = fontName;
+		auto label = mpGameObject->getUILabel();
+		if (label != nullptr)
+		{
+			label->getData().mFontName = fontName;
+			label->cleanup();
+			label->load();
+		}
 	}
 	void UILabel::setColorInternal(const Color& color)
 	{

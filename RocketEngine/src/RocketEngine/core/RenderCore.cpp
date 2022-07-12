@@ -68,7 +68,7 @@ namespace RKTEngine
 	{
 		RKT_PROFILE_FUNCTION();
 
-		RenderCommand::clearColor(Color::grey);
+		RenderCommand::clearColor(Color(2, 114, 111));
 		RenderCommand::clearBuffer(BufferType::COLOR_BUFFER);	//depth buffer not enable for now. so render order determines layering
 	}	
 
@@ -118,7 +118,7 @@ namespace RKTEngine
 		RKT_PROFILE_FUNCTION();
 
 		mpWindowHandle = new Window();
-		if (!mpWindowHandle->initialize(1280, 720, "RocketPong", BLEND))
+		if (!mpWindowHandle->initialize(800, 800, "RocketPong", BLEND))
 		{
 			return false;
 		}

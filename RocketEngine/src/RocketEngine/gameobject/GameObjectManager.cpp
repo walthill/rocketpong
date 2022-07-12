@@ -62,6 +62,8 @@ namespace RKTEngine
 				ComponentId newLabelId = pComponentManager->allocateTextComponent(newObj->getTransformId(), labelData);
 				newObj->connectLabel(newLabelId);
 			}
+
+			EngineCore::getInstance()->getSceneManager()->registerEntity(newObj);
 		}
 		return newObj;
 	}
