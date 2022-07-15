@@ -14,6 +14,7 @@ namespace RKTEngine
 {
 	class RenderCore;
 	class InputSystem;
+	class AudioManager;
 	class MessageManager;
 	
 	class EngineCore : public RKTUtil::Singleton<EngineCore>
@@ -51,6 +52,7 @@ namespace RKTEngine
 			GameObjectManager* mpEntityManager = nullptr;
 			ComponentManager* mpComponentManager = nullptr;
 			SceneManager* mpSceneManager = nullptr;
+			AudioManager* mpAudioManager = nullptr;
 
 			float mLastFrame = 0;
 

@@ -4,6 +4,8 @@
 #include "Log.h"
 #include "InputSystem.h"
 #include "MessageManager.h"
+#include "AudioManager.h"
+#include <RocketEngine/audio/AudioCommand.h>
 
 namespace RKTEngine
 {
@@ -28,6 +30,7 @@ namespace RKTEngine
 		delete mpComponentManager;
 		delete mpMessageManager;
 		delete mpInputSystem;
+		delete mpAudioManager;
 		delete mpRenderCore;
 	}
 
@@ -40,10 +43,7 @@ namespace RKTEngine
 		{
 			return false;
 		}
-		
-		mpSceneManager = new SceneManager();
-		mpComponentManager = new ComponentManager(5000);
-		mpEntityManager = new GameObjectManager(5000);
+		initInputSystem();
 
 		mpAssetManager = new AssetManager();
 		if (!mpAssetManager->initialize())
@@ -51,7 +51,10 @@ namespace RKTEngine
 			return false;
 		}
 
-		initInputSystem();
+		mpComponentManager = new ComponentManager(5000);
+		mpEntityManager = new GameObjectManager(5000);
+		mpAudioManager = new AudioManager();
+		mpSceneManager = new SceneManager();
 
 		mpMasterTimer->start();
 		return true;
