@@ -13,3 +13,6 @@
 [submodule "RocketEngine/vendor/yaml-cpp"]
 	path = RocketEngine/vendor/yaml-cpp
 	url = https://github.com/walthill/yaml-cpp.git
+[submodule "RocketEngine/vendor/soloud"]
+	path = RocketEngine/vendor/soloud
+	url = https://github.com/walthill/soloud.git

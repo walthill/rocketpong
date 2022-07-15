@@ -38,6 +38,7 @@ project "RocketEngine"
         "%{prj.name}/vendor/stb_image",
         "%{prj.name}/vendor/kc_truetypeassembler",
         "%{prj.name}/vendor/yaml-cpp/include",
+        "%{prj.name}/vendor/soloud/include",
         "%{prj.name}/vendor/glm"
     }
 
@@ -51,7 +52,8 @@ project "RocketEngine"
         "RocketUtils",
         "Glad",
         "GLFW",
-		"yaml-cpp"
+		"yaml-cpp",
+        "soloud"
     }
 
 	defines
@@ -149,4 +151,5 @@ group "Dependencies"
 	include "RocketEngine/vendor/Glad"
 	include "RocketEngine/vendor/RocketUtils/lib"
 	include "RocketEngine/vendor/yaml-cpp"
+	include "RocketEngine/vendor/soloud"
 group ""
