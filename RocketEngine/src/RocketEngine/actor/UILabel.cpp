@@ -70,19 +70,19 @@ namespace RKTEngine
 
 	std::string UILabel::getTextInternal()
 	{
-		return mpGameObject->getUILabel()->getData().mText;
+		return mpGameObject->getUILabel()->getData()->mText;
 	}
 	glm::vec4 UILabel::getColorInternal()
 	{
-		return mpGameObject->getUILabel()->getData().mColor.getColorAlpha();
+		return mpGameObject->getUILabel()->getData()->mColor.getColorAlpha();
 	}
 	std::string UILabel::getFontNameInternal()
 	{
-		return mpGameObject->getUILabel()->getData().mFontName;
+		return mpGameObject->getUILabel()->getData()->mFontName;
 	}
 	int UILabel::getFontSizeInternal()
 	{
-		return mpGameObject->getUILabel()->getData().mFontSize;
+		return mpGameObject->getUILabel()->getData()->mFontSize;
 	}
 	void UILabel::setTextInternal(const std::string& text)
 	{
@@ -97,7 +97,7 @@ namespace RKTEngine
 		auto label = mpGameObject->getUILabel();
 		if (label != nullptr)
 		{
-			label->getData().mFontName = fontName;
+			label->getData()->mFontName = fontName;
 			label->cleanup();
 			label->load();
 		}

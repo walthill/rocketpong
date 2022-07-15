@@ -235,10 +235,10 @@ namespace RKTEngine
 		{
 			out << YAML::Key << "TextComponent";
 			out << YAML::BeginMap;
-			out << YAML::Key << "Text" << YAML::Value << text->getData().mText;
-			out << YAML::Key << "Color" << YAML::Value << text->getData().mColor.getColorAlpha();
-			out << YAML::Key << "FontName" << YAML::Value << text->getData().mFontName;
-			out << YAML::Key << "FontSize" << YAML::Value << text->getData().mFontSize;
+			out << YAML::Key << "Text" << YAML::Value << text->getData()->mText;
+			out << YAML::Key << "Color" << YAML::Value << text->getData()->mColor.getColorAlpha();
+			out << YAML::Key << "FontName" << YAML::Value << text->getData()->mFontName;
+			out << YAML::Key << "FontSize" << YAML::Value << text->getData()->mFontSize;
 			out << YAML::EndMap; // TextComponent
 		}
 	}
