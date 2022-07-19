@@ -19,9 +19,9 @@ namespace RKTEngine
 			}
 
 
-			inline static int play(AudioSource* source)
+			inline static uint32 play(AudioSource* source, float vol = -1.0f, float pan = 0.0f, bool paused = false)
 			{
-				return spAudioAPI->play(source);
+				return spAudioAPI->play(source, vol, pan, paused);
 			}
 
 		private:

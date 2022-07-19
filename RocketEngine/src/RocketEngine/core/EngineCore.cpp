@@ -99,6 +99,7 @@ namespace RKTEngine
 	{
 		//TODO: update orthographic projection on window resize
 		mpEntityManager->onMessage(message);
+		mpAudioManager->onMessage(message);
 	}
 
 	void EngineCore::calculateDeltaTime()

@@ -7,12 +7,23 @@ namespace RKTEngine
 	{
 		AudioCommand::initialize();
 
-		//AudioSource* src = AudioSource::create("assets/audio/winwin.wav");
-		//AudioCommand::play(src);
+		
 	}
 
 	AudioManager::~AudioManager()
 	{
 		AudioCommand::cleanup();
+	}
+
+	void AudioManager::onMessage(RKTEngine::Message& message)
+	{
+		RKTEngine::MessageDispatcher dispatcher(message);
+		dispatcher.dispatch<RKTEngine::AudioPlayWAVMessage>(RKT_BIND_MESSAGE_FN(AudioManager::playSound));
+	}
+
+	bool AudioManager::playSound(RKTEngine::AudioPlayWAVMessage& msg)
+	{
+		AudioCommand::play(msg.getAudioSource(), msg.getVolume(), msg.getPan(), msg.isPaused());
+		return true;
 	}
 }

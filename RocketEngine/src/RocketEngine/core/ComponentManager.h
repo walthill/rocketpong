@@ -27,6 +27,7 @@
 #include "RocketEngine/component/TransformComponent.h"
 #include "RocketEngine/component/TextComponent.h"
 #include "RocketEngine/component/BoxColliderComponent.h"
+#include "RocketEngine/component/AudioSourceComponent.h"
 
 namespace RKTEngine
 {
@@ -154,7 +155,32 @@ namespace RKTEngine
 		*************************************************************************/
 		void deallocateBoxColliderComponent(const ComponentId& id);
 
-		
+
+
+		//------	AUDIO SOURCE COMPONENT------ //
+
+		/**********************************************************************//**
+		* Access the transform component based on the component identifier.
+		*
+		* @param id Component identifier
+		*************************************************************************/
+		AudioSourceComponent* getAudioSourceComponent(const ComponentId& id);
+
+		/**********************************************************************//**
+		* Create transform component based on data passed in and return the component identifier.
+		*
+		* @param data data Transform component data
+		*************************************************************************/
+		ComponentId allocateAudioSourceComponent(const AudioSourceComponentData& data = ZERO_AUDIO_SRC_DATA);
+
+		/**********************************************************************//**
+		* Remove and destroy transform component from the collection based on the component identifier.
+		*
+		* @param id Component identifier
+		*************************************************************************/
+		void deallocateAudioSourceComponent(const ComponentId& id);
+
+
 		/**********************************************************************//**
 		* Process components and perform calulations.
 		*
@@ -184,17 +210,20 @@ namespace RKTEngine
 		RKTUtil::MemoryPool mLabelPool;
 		RKTUtil::MemoryPool mSpritePool;
 		RKTUtil::MemoryPool mColliderPool;
+		RKTUtil::MemoryPool mAudioSourcePool;
 
 		std::map<ComponentId, TransformComponent*> mTransformComponentMap;
 		std::map<ComponentId, TextComponent*> mTextComponentMap;
 		std::map<ComponentId, SpriteComponent*> mSpriteComponentMap;
 		std::map<ComponentId, BoxColliderComponent*> mColliderComponentMap;
+		std::map<ComponentId, AudioSourceComponent*> mAudioSourceComponentMap;
 
 		static ComponentId msNextTransformComponentId;
 		static ComponentId msNextTextComponentId;
 		static ComponentId msNextSpriteComponentId;
 		static ComponentId msNextMaterialComponentId;
 		static ComponentId msNextColliderComponentId;
+		static ComponentId msNextAudioSourceComponentId;
 	};
 }
 #endif // !COMPONENT_MAN_H

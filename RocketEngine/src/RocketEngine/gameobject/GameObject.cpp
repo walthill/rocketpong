@@ -3,11 +3,13 @@
 #include "RocketEngine/component/TransformComponent.h"
 #include "RocketEngine/core/ComponentManager.h"
 #include "RocketEngine/actor/Actor.h"
+#include <string>
 
 namespace RKTEngine
 {
 
-	GameObject::GameObject()
+	GameObject::GameObject() :
+		name("")
 	{
 	}
 
@@ -49,6 +51,14 @@ namespace RKTEngine
 			mpActorOwner->onMessage(message);
 	}
 
+	void GameObject::setName()
+	{ 
+		name = "New GameObject("; 
+		name.append(std::to_string(mId));
+		name.append(")");
+	}
+
+
 	SpriteComponent* GameObject::getSprite()
 	{
 		auto pComponent = EngineCore::getInstance()->getComponentManager()->getSpriteComponent(mSpriteId);
@@ -64,6 +74,12 @@ namespace RKTEngine
 	TextComponent* GameObject::getUILabel()
 	{
 		auto pComponent = EngineCore::getInstance()->getComponentManager()->getTextComponent(mLabelId);
+		return pComponent;
+	}
+
+	AudioSourceComponent* GameObject::getAudioSource()
+	{
+		auto pComponent = EngineCore::getInstance()->getComponentManager()->getAudioSourceComponent(mAudioSourceId);
 		return pComponent;
 	}
 }

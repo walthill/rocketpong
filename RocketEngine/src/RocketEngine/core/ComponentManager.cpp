@@ -12,12 +12,14 @@ namespace RKTEngine
 	ComponentId ComponentManager::msNextTextComponentId = 0;
 	ComponentId ComponentManager::msNextTransformComponentId = 0;
 	ComponentId ComponentManager::msNextColliderComponentId = 0;
+	ComponentId ComponentManager::msNextAudioSourceComponentId = 0;
 
 	ComponentManager::ComponentManager(uint32 maxSize)
 		: mTransformPool(maxSize, sizeof(TransformComponent))
 		, mLabelPool(maxSize, sizeof(TextComponent))
 		, mSpritePool(maxSize, sizeof(SpriteComponent))
 		, mColliderPool(maxSize, sizeof(BoxColliderComponent))
+		, mAudioSourcePool(maxSize, sizeof(AudioSourceComponent))
 	{
 	}
 
@@ -49,18 +51,25 @@ namespace RKTEngine
 			BoxColliderComponent* pComponent = it.second;
 			pComponent->~BoxColliderComponent();
 		}
+		for (auto& it : mAudioSourceComponentMap)
+		{
+			AudioSourceComponent* pComponent = it.second;
+			pComponent->~AudioSourceComponent();
+		}
 
 		//clear maps
 		mTransformComponentMap.clear();
 		mSpriteComponentMap.clear();
 		mTextComponentMap.clear();
 		mColliderComponentMap.clear();
+		mAudioSourceComponentMap.clear();
 
 		//reset memory pools
 		mTransformPool.reset();
 		mSpritePool.reset();
 		mLabelPool.reset();
 		mColliderPool.reset();
+		mAudioSourcePool.reset();
 	}
 
 
@@ -265,6 +274,56 @@ namespace RKTEngine
 
 			ptr->~BoxColliderComponent();
 			mColliderPool.freeObject((RKTUtil::Byte*)ptr);
+		}
+	}
+
+	/******************************************************************************
+	******************************************************************************
+
+	AUDIO SOURCE COMPONENT
+
+	******************************************************************************
+	*****************************************************************************/
+
+	AudioSourceComponent* ComponentManager::getAudioSourceComponent(const ComponentId& id)
+	{
+		auto& it = mAudioSourceComponentMap.find(id);
+
+		if (it != mAudioSourceComponentMap.end())
+			return it->second;
+		else
+			return nullptr;
+	}
+
+	ComponentId ComponentManager::allocateAudioSourceComponent(const AudioSourceComponentData& data)
+	{
+		ComponentId newID = INVALID_COMPONENT_ID;
+		RKTUtil::Byte* ptr = mAudioSourcePool.allocateObject();
+
+		if (ptr != nullptr)
+		{
+			newID = msNextAudioSourceComponentId;
+			AudioSourceComponent* pComponent = ::new (ptr)AudioSourceComponent(newID);
+			pComponent->setData(data);
+			pComponent->load();
+			mAudioSourceComponentMap[newID] = pComponent;
+			msNextAudioSourceComponentId++;
+		}
+
+		return newID;
+	}
+
+	void ComponentManager::deallocateAudioSourceComponent(const ComponentId& id)
+	{
+		auto it = mAudioSourceComponentMap.find(id);
+
+		if (it != mAudioSourceComponentMap.end())
+		{
+			AudioSourceComponent* ptr = it->second;
+			mAudioSourceComponentMap.erase(it);
+
+			ptr->~AudioSourceComponent();
+			mAudioSourcePool.freeObject((RKTUtil::Byte*)ptr);
 		}
 	}
 

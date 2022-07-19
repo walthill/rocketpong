@@ -10,6 +10,7 @@ namespace RKTEngine
 {
 	class Texture2D;
 	class Font;
+	class AudioSource;
 
 	class AssetManager : public RKTUtil::Trackable
 		{
@@ -23,6 +24,7 @@ namespace RKTEngine
 
 			Texture2D* loadSpriteAsset(const std::string& spriteName); //take model name and make it the key, add to map if not there, else return model ref
 			Font* loadFontAsset(const std::string& fontName);
+			AudioSource* loadAudioSource(const std::string& audioFileName);
 
 			std::pair<int, int> getSpriteAtlasIndex(std::string tileName);
 			
@@ -41,7 +43,10 @@ namespace RKTEngine
 			const std::string mSPRITE_FILE_ENDING = ".png";
 			const std::string mFONT_ASSET_PATH = "assets/fonts/";
 			const std::string mFONT_FILE_ENDING = ".ttf";
+			const std::string mAUDIO_ASSET_PATH = "assets/audio/";
+			const std::string mAUDIO_WAV_FILE_ENDING = ".wav";
 
+			std::map<std::string, AudioSource*> mAudioAssetCache;
 			std::map<std::string, std::pair<int,int>> mSpriteTileAssetCache;
 			std::map<std::string, Texture2D*> mTextureAssetCache;
 			std::map<std::string, Font*> mFontAssetCache;

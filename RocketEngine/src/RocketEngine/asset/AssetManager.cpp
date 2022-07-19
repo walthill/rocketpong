@@ -2,6 +2,7 @@
 #include <RocketEngine/core/Log.h>
 #include "RocketEngine/render/buffers/Texture.h"
 #include "RocketEngine/render/Font.h"
+#include "RocketEngine/audio/AudioSource.h"
 #include "Serialization.h"
 
 namespace RKTEngine
@@ -45,6 +46,16 @@ namespace RKTEngine
 		{
 			delete iter2->second;
 		}
+
+		auto iter3 = mAudioAssetCache.begin();
+		for (iter3; iter3 != mAudioAssetCache.end(); ++iter3)
+		{
+			delete iter3->second;
+		}
+
+		mTextureAssetCache.clear();
+		mFontAssetCache.clear();
+		mAudioAssetCache.clear();
 	}
 
 	Texture2D* AssetManager::loadSpriteAsset(const std::string& spriteName)
@@ -80,6 +91,24 @@ namespace RKTEngine
 		}
 
 		return newFont;
+	}
+
+	AudioSource* AssetManager::loadAudioSource(const std::string& audioFileName)
+	{
+		AudioSource* newAudio = nullptr;
+		const auto& iter = mAudioAssetCache.find(audioFileName);
+		if (iter != mAudioAssetCache.end())
+		{
+			newAudio = iter->second;
+		}
+		else
+		{
+			auto path = mAUDIO_ASSET_PATH + audioFileName + mAUDIO_WAV_FILE_ENDING;
+			newAudio = AudioSource::create(path);
+			mAudioAssetCache[audioFileName] = newAudio;
+		}
+
+		return newAudio;
 	}
 
 	std::pair<int, int> AssetManager::getSpriteAtlasIndex(std::string tileName)

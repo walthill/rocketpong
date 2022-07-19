@@ -91,8 +91,9 @@ namespace RKTEngine
 			GameObject* createLabel(const std::string& text, glm::vec2 position = glm::vec2(0, 0), glm::vec2 scale = glm::vec2(1, 1), 
 									float rotation = 0, const std::string& fontName = AssetManager::sDEFAULT_FONT, int fontSize = Text::sDefaultTextSize);
 
-			void addBoxCollider(int objId, int w, int h, const std::string& t = "");
-			
+			void addBoxCollider(int objId, int w, int h, const std::string& t = "untagged");
+			void addAudioSource(int objId, const std::string& audio);
+
 			/**********************************************************************//**
 			* Destroy GameObject and remove from manager based on its id
 			*

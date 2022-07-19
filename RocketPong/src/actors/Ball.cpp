@@ -9,6 +9,7 @@ Ball::Ball(glm::vec2 startPos, float speed) :
 	
 	auto spr = mpGameObject->getSprite();
 	GameObjManager->addBoxCollider(mpGameObject->getId(), spr->getData()->mWidth/2, spr->getData()->mHeight/2);
+	GameObjManager->addAudioSource(mpGameObject->getId(), "boop");
 
 	reset();
 	Actor::init();
@@ -46,7 +47,10 @@ bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
 				auto ballMag = glm::length(ballPos);
 				float t = ((ballPos.y - racketPos.y) / other->getHeight());
 				mDir.x = 1;
-				mDir.y = t;			}
+				mDir.y = t;
+
+				mpGameObject->getAudioSource()->play();
+			}
 			else if (other->getTag().compare("rp") == 0)
 			{
 				auto ballTr = getTransform();
@@ -58,6 +62,8 @@ bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
 				float t = ((ballPos.y - racketPos.y) / other->getHeight());
 				mDir.x = -1;
 				mDir.y = t;
+
+				mpGameObject->getAudioSource()->play();
 			}
 		}
 	}

@@ -38,6 +38,7 @@ namespace RKTEngine
 			//add new object to map and set the object's id locally
 			mGameObjMap[newId] = newObj;
 			newObj->setId(newId);
+			newObj->setName();
 
 			//Hook up components
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
@@ -96,6 +97,18 @@ namespace RKTEngine
 			ComponentId newBoxColliderId = pComponentManager->allocateBoxColliderComponent(data);
 			it->second->connectCollider(newBoxColliderId);
 			it->second->getBoxCollider()->setTransformParent(it->second->getTransform());
+		}
+	}
+
+	void GameObjectManager::addAudioSource(int objId, const std::string& audio)
+	{
+		auto it = mGameObjMap.find(objId);
+		if (it != mGameObjMap.end())
+		{
+			AudioSourceComponentData data = { audio };
+			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
+			ComponentId newAudioSrcID = pComponentManager->allocateAudioSourceComponent(data);
+			it->second->connectAudioSource(newAudioSrcID);
 		}
 	}
 

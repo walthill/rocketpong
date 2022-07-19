@@ -2,6 +2,7 @@
 #define AUDIO_ENGINE_API_H
 
 #include <RocketEngine/audio/AudioSource.h>
+#include <RocketEngine/Defines.h>
 
 namespace RKTEngine
 {
@@ -12,7 +13,7 @@ namespace RKTEngine
 
 			virtual void initialize() =0;
 			virtual void cleanup() =0;
-			virtual int play(AudioSource* source) =0;
+			virtual uint32 play(AudioSource* source, float vol = -1.0f, float pan = 0.0f, bool paused = false) =0;
 
 			inline static AudioEngine::API getAPI() { return msAPI; };
 		private:

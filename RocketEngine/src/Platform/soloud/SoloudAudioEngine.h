@@ -13,10 +13,10 @@ namespace RKTEngine
 		public:
 			virtual void initialize() override;
 			virtual void cleanup() override;
-			virtual int play(AudioSource* source) override;
+			virtual uint32 play(AudioSource* source, float vol = -1.0f, float pan = 0.0f, bool paused = false) override;
 
 		private:
-			int playWAV(SoloudAudioSourceWAV* source);
+			uint32 playWAV(SoloudAudioSourceWAV* source, float vol = -1.0f, float pan = 0.0f, bool paused = false);
 			
 			SoLoud::Soloud mAudioEngine;
 	};

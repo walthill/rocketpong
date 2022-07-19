@@ -1,6 +1,6 @@
 Name: main
 UI:
-  - Label: New Gameobject
+  - Label: New GameObject(4)
     TransformComponent:
       Position: [368, 10]
       Rotation: [0, [0, 0, 1]]
@@ -10,7 +10,7 @@ UI:
       Color: [255, 255, 255, 255]
       FontName: calibri
       FontSize: 32
-  - Label: New Gameobject
+  - Label: New GameObject(5)
     TransformComponent:
       Position: [432, 10]
       Rotation: [0, [0, 0, 1]]

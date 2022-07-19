@@ -31,6 +31,7 @@ namespace RKTEngine
 	class TransformComponent;
 	class TextComponent;
 	class BoxColliderComponent;
+	class AudioSourceComponent;
 
 	/***************************************************************************//**
 	 * @brief 	GameObject class with identifiers for components.
@@ -70,6 +71,7 @@ namespace RKTEngine
 			///Access the GameObject's text component id
 			inline ComponentId getLabelId() { return mLabelId; };
 			inline ComponentId getColliderId() { return mColliderId; };
+			inline ComponentId getAudioSourceId() { return mAudioSourceId; };
 
 			///Acesss the GameObject's transform 
 			TransformComponent* getTransform() { return mpTransform; }
@@ -79,8 +81,10 @@ namespace RKTEngine
 			BoxColliderComponent* getBoxCollider();
 			///Acesss the GameObject's material
 			TextComponent* getUILabel();
+			AudioSourceComponent* getAudioSource();
 
-			std::string name = "New Gameobject";
+
+			std::string name;
 
 		private:
 			uint32 mId;
@@ -88,12 +92,15 @@ namespace RKTEngine
 			ComponentId mTransformId;
 			ComponentId mLabelId;
 			ComponentId mColliderId;
+			ComponentId mAudioSourceId;
 
 			TransformComponent* mpTransform;
 			Actor* mpActorOwner = nullptr;
 
 			//Register this gameobj as an Actor
 			inline void setOwner(Actor* actor) { mpActorOwner = actor; }
+
+			void setName();
 
 			/**********************************************************************//**
 			* Set GameObject's unique id
@@ -136,6 +143,13 @@ namespace RKTEngine
 			* @param labelId TextComponent identifier
 			*************************************************************************/
 			void connectCollider(ComponentId colliderId) { mColliderId = colliderId; }
+
+			/**********************************************************************//**
+			* Set GameObject's audio source id
+			*
+			* @param labelId TextComponent identifier
+			*************************************************************************/
+			void connectAudioSource(ComponentId colliderId) { mAudioSourceId = colliderId; }
 	};
 }
 #endif // !GAME_OBJ_H

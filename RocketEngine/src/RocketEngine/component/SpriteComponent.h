@@ -27,8 +27,6 @@
 
 namespace RKTEngine
 {
-	const std::string modelFileLocation = "../RogueOne/assets/sprites/";
-
 	struct SpriteRenderData
 	{
 		glm::vec3 position;
