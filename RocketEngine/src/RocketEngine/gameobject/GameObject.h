@@ -32,6 +32,7 @@ namespace RKTEngine
 	class TextComponent;
 	class BoxColliderComponent;
 	class AudioSourceComponent;
+	class NativeScriptComponent;
 
 	/***************************************************************************//**
 	 * @brief 	GameObject class with identifiers for components.
@@ -60,8 +61,6 @@ namespace RKTEngine
 			*************************************************************************/
 			void update(float elapsedTime);
 
-			virtual void onMessage(Message& message);
-
 			///Access the GameObject's id
 			inline uint32 getId() { return mId; }
 			///Access the GameObject's transform component id
@@ -72,6 +71,7 @@ namespace RKTEngine
 			inline ComponentId getLabelId() { return mLabelId; };
 			inline ComponentId getColliderId() { return mColliderId; };
 			inline ComponentId getAudioSourceId() { return mAudioSourceId; };
+			inline ComponentId getNativeScriptId() { return mNativeScriptId; };
 
 			///Acesss the GameObject's transform 
 			TransformComponent* getTransform() { return mpTransform; }
@@ -82,6 +82,7 @@ namespace RKTEngine
 			///Acesss the GameObject's material
 			TextComponent* getUILabel();
 			AudioSourceComponent* getAudioSource();
+			NativeScriptComponent* getScript();
 
 
 			std::string name;
@@ -93,13 +94,10 @@ namespace RKTEngine
 			ComponentId mLabelId;
 			ComponentId mColliderId;
 			ComponentId mAudioSourceId;
+			ComponentId mNativeScriptId;
 
 			TransformComponent* mpTransform;
-			Actor* mpActorOwner = nullptr;
-
-			//Register this gameobj as an Actor
-			inline void setOwner(Actor* actor) { mpActorOwner = actor; }
-
+			
 			void setName();
 
 			/**********************************************************************//**
@@ -149,7 +147,14 @@ namespace RKTEngine
 			*
 			* @param labelId TextComponent identifier
 			*************************************************************************/
-			void connectAudioSource(ComponentId colliderId) { mAudioSourceId = colliderId; }
+			void connectAudioSource(ComponentId audioSrcId) { mAudioSourceId = audioSrcId; }
+
+			/**********************************************************************//**
+			* Set GameObject's script id
+			*
+			* @param labelId TextComponent identifier
+			*************************************************************************/
+			void connectNativeScript(ComponentId scriptId) { mNativeScriptId = scriptId; }
 	};
 }
 #endif // !GAME_OBJ_H

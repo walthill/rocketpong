@@ -14,20 +14,31 @@ namespace RKTEngine
 	class Actor : public RKTUtil::Trackable
 	{
 		public:
-			void init(bool isUIElement = false);
-		
-			virtual bool onCollisionEnter(RKTEngine::CollisionEnterMessage& message) { return mpGameObject->getColliderId() == message.colliderID; };
-			virtual bool update(UpdateMessage& message) { return true; };
-			
-			virtual void onMessage(Message& message) OVERRIDE_REQUIRED;
+			virtual ~Actor() {}
 
-			inline void Actor::setGameObjOwner() { mpGameObject->setOwner(this); }
-			inline TransformComponent* Actor::getTransform() { return mpGameObject->getTransform(); }
+			inline TransformComponent* Actor::getTransform() { return getGameObject()->getTransform(); }
+			GameObject* getGameObject();
 
-			GameObject* mpGameObject = nullptr;
 		protected:
-			Actor() : mpGameObject(nullptr) {};
-			~Actor();
+			//Object instatiated
+			virtual void onCreate() {};
+			//First update loop
+			virtual void onStart() {};
+			virtual void onDestroy() {};
+			virtual void onUpdate() {};
+
+			virtual void onMessage(Message& message) {};
+			virtual bool onCollisionEnter(RKTEngine::CollisionEnterMessage& message) { return getGameObject()->getColliderId() == message.colliderID; };
+			
+			virtual void onSerialize() {};
+			virtual void onDeserialize() {};
+
+			uint32 gameObjectId;
+		private:
+			friend class ComponentManager;
+			friend class Serialization;
+			friend class NativeScriptComponent;
+			bool mFirstUpdate = true;
 	};
 }
 

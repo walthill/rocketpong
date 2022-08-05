@@ -4,8 +4,12 @@
 #include "Log.h"
 #include "InputSystem.h"
 #include "MessageManager.h"
+#include "RocketEngine/render/shader/ShaderManager.h"
+#include "ComponentManager.h"
+#include "RocketEngine/gameobject/GameObjectManager.h"
+#include "RocketEngine/asset/AssetManager.h"
+#include "RocketEngine/asset/scene/SceneManager.h"
 #include "AudioManager.h"
-#include <RocketEngine/audio/AudioCommand.h>
 
 namespace RKTEngine
 {
@@ -98,7 +102,7 @@ namespace RKTEngine
 	void EngineCore::onMessage(Message& message)
 	{
 		//TODO: update orthographic projection on window resize
-		mpEntityManager->onMessage(message);
+		mpComponentManager->onMessage(message);
 		mpAudioManager->onMessage(message);
 	}
 
@@ -110,6 +114,10 @@ namespace RKTEngine
 	}
 
 	double EngineCore::getTime() { return mpMasterTimer->getTimeElapsedMs(); }
+	ComponentManager* EngineCore::getComponentManager() { return mpComponentManager; }
+	AssetManager* EngineCore::getAssetManager() { return mpAssetManager; }
+	GameObjectManager* EngineCore::getEntityManager() { return mpEntityManager; }
+	SceneManager* EngineCore::getSceneManager() { return mpSceneManager; }
 	RenderCore* EngineCore::getRenderer() { return mpRenderCore; }
 	InputSystem* EngineCore::getInputSystem() { return mpInputSystem; }
 	MessageManager* EngineCore::getMessageManager() { return mpMessageManager; }

@@ -1,7 +1,8 @@
 #include "TextComponent.h"
 #include "RocketEngine/core/EngineCore.h"
-#include "RocketEngine/core/Log.h"
+#include "RocketEngine/asset/AssetManager.h"
 #include "RocketEngine/render/shader/ShaderManager.h"
+#include "RocketEngine/core/Log.h"
 #include <glm\ext\matrix_transform.hpp>
 
 namespace RKTEngine
@@ -79,6 +80,17 @@ namespace RKTEngine
 			mTextData.mTextInfo->setText(text, mTextData.mFontSize);
 		}
 	}
+
+	void TextComponent::setText(int text)
+	{
+		//if (mTextData.mText.compare(text) != 0)
+		{
+			auto str = std::to_string(text);
+			mTextData.mText = str;
+			mTextData.mTextInfo->setText(str, mTextData.mFontSize);
+		}
+	}
+
 	void TextComponent::setColor(const Color& color)
 	{
 		mTextData.mColor = color;

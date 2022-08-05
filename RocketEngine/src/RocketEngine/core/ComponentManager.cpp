@@ -4,6 +4,7 @@
 #include <RocketEngine\core\MessageManager.h>
 #include <RocketEngine\core\EngineCore.h>
 #include <RocketEngine/core/Log.h>
+#include <RocketEngine/actor/Actor.h>
 
 namespace RKTEngine
 {
@@ -13,6 +14,7 @@ namespace RKTEngine
 	ComponentId ComponentManager::msNextTransformComponentId = 0;
 	ComponentId ComponentManager::msNextColliderComponentId = 0;
 	ComponentId ComponentManager::msNextAudioSourceComponentId = 0;
+	ComponentId ComponentManager::msNextNativeScriptComponentId = 0;
 
 	ComponentManager::ComponentManager(uint32 maxSize)
 		: mTransformPool(maxSize, sizeof(TransformComponent))
@@ -20,6 +22,7 @@ namespace RKTEngine
 		, mSpritePool(maxSize, sizeof(SpriteComponent))
 		, mColliderPool(maxSize, sizeof(BoxColliderComponent))
 		, mAudioSourcePool(maxSize, sizeof(AudioSourceComponent))
+		, mNativeScriptPool(maxSize, sizeof(NativeScriptComponent))
 	{
 	}
 
@@ -56,6 +59,11 @@ namespace RKTEngine
 			AudioSourceComponent* pComponent = it.second;
 			pComponent->~AudioSourceComponent();
 		}
+		for (auto& it : mNativeScriptComponentMap)
+		{
+			NativeScriptComponent* pComponent = it.second;
+			pComponent->~NativeScriptComponent();
+		}
 
 		//clear maps
 		mTransformComponentMap.clear();
@@ -63,6 +71,7 @@ namespace RKTEngine
 		mTextComponentMap.clear();
 		mColliderComponentMap.clear();
 		mAudioSourceComponentMap.clear();
+		mNativeScriptComponentMap.clear();
 
 		//reset memory pools
 		mTransformPool.reset();
@@ -70,6 +79,7 @@ namespace RKTEngine
 		mLabelPool.reset();
 		mColliderPool.reset();
 		mAudioSourcePool.reset();
+		mNativeScriptPool.reset();
 	}
 
 
@@ -143,7 +153,7 @@ namespace RKTEngine
 	}
 
 	//Load model and assign to gameobject
-	ComponentId ComponentManager::allocateSpriteComponent(const ComponentId& spriteID, const SpriteComponentData& data)
+	ComponentId ComponentManager::allocateSpriteComponent(const SpriteComponentData& data)
 	{
 		ComponentId newID = INVALID_COMPONENT_ID;
 		RKTUtil::Byte* ptr = mSpritePool.allocateObject();
@@ -327,9 +337,58 @@ namespace RKTEngine
 		}
 	}
 
+	/******************************************************************************
+	******************************************************************************
+
+	NATIVE SCRIPT COMPONENT
+
+	******************************************************************************
+	*****************************************************************************/
+
+	NativeScriptComponent* ComponentManager::getNativeScriptComponent(const ComponentId& id)
+	{
+		auto& it = mNativeScriptComponentMap.find(id);
+
+		if (it != mNativeScriptComponentMap.end())
+			return it->second;
+		else
+			return nullptr;
+	}
+
+	ComponentId ComponentManager::allocateNativeScriptComponent(const uint32& id)
+	{
+		ComponentId newID = INVALID_COMPONENT_ID;
+		RKTUtil::Byte* ptr = mNativeScriptPool.allocateObject();
+
+		if (ptr != nullptr)
+		{
+			newID = msNextNativeScriptComponentId;
+			NativeScriptComponent* pComponent = ::new (ptr)NativeScriptComponent(newID);
+			mNativeScriptComponentMap[newID] = pComponent;
+			msNextNativeScriptComponentId++;
+		}
+
+		return newID;
+	}
+
+	void ComponentManager::deallocateNativeScriptComponent(const ComponentId& id)
+	{
+		auto it = mNativeScriptComponentMap.find(id);
+
+		if (it != mNativeScriptComponentMap.end())
+		{
+			NativeScriptComponent* ptr = it->second;			
+			ptr->pInstance->onDestroy();
+			mNativeScriptComponentMap.erase(it);
+			ptr->~NativeScriptComponent();
+			mNativeScriptPool.freeObject((RKTUtil::Byte*)ptr);
+		}
+	}
+
 	void ComponentManager::update(float elapsedTime)
 	{
 		updateCollisions();
+		updateScripts();
 	}
 
 	void ComponentManager::updateCollisions()
@@ -360,10 +419,35 @@ namespace RKTEngine
 		}
 	}
 
+	void ComponentManager::updateScripts()
+	{
+		for (auto& it : mNativeScriptComponentMap)
+		{
+			if (!it.second->pInstance)
+				continue;
+
+			if (it.second->pInstance->mFirstUpdate)
+			{
+				it.second->pInstance->mFirstUpdate = false;
+				it.second->pInstance->onStart();
+			}
+
+			it.second->pInstance->onUpdate();
+		}
+	}
+
+	void ComponentManager::onMessage(Message& message)
+	{
+		for (auto& it : mNativeScriptComponentMap)
+		{
+			it.second->pInstance->onMessage(message);
+		}
+	}
+
 	void ComponentManager::renderComponents()
 	{
 		renderSprites();
-		//renderText();
+		renderText();
 	}
 
 	void ComponentManager::renderSprites()

@@ -28,6 +28,8 @@
 #include "RocketEngine/component/TextComponent.h"
 #include "RocketEngine/component/BoxColliderComponent.h"
 #include "RocketEngine/component/AudioSourceComponent.h"
+#include "RocketEngine/component/NativeScriptComponent.h"
+#include <RocketEngine/input/message/Message.h>
 
 namespace RKTEngine
 {
@@ -98,7 +100,7 @@ namespace RKTEngine
 		* @param meshId mesh component identifier
 		* @param data data Mesh component data
 		*************************************************************************/
-		ComponentId allocateSpriteComponent(const ComponentId& spriteID, const SpriteComponentData& data = ZERO_SPRITE_DATA);
+		ComponentId allocateSpriteComponent(const SpriteComponentData& data = ZERO_SPRITE_DATA);
 
 		/**********************************************************************//**
 		* Remove and destroy mesh component from the collection based on the component identifier.
@@ -157,7 +159,7 @@ namespace RKTEngine
 
 
 
-		//------	AUDIO SOURCE COMPONENT------ //
+//------	AUDIO SOURCE COMPONENT------ //
 
 		/**********************************************************************//**
 		* Access the transform component based on the component identifier.
@@ -180,6 +182,29 @@ namespace RKTEngine
 		*************************************************************************/
 		void deallocateAudioSourceComponent(const ComponentId& id);
 
+//------	NATIVE SCRIPT COMPONENT------ //
+
+		/**********************************************************************//**
+		* Access the transform component based on the component identifier.
+		*
+		* @param id Component identifier
+		*************************************************************************/
+		NativeScriptComponent* getNativeScriptComponent(const ComponentId& id);
+
+		/**********************************************************************//**
+		* Create transform component based on data passed in and return the component identifier.
+		*
+		* @param data data Transform component data
+		*************************************************************************/
+		ComponentId allocateNativeScriptComponent(const uint32& id);
+
+		/**********************************************************************//**
+		* Remove and destroy transform component from the collection based on the component identifier.
+		*
+		* @param id Component identifier
+		*************************************************************************/
+		void deallocateNativeScriptComponent(const ComponentId& id);
+
 
 		/**********************************************************************//**
 		* Process components and perform calulations.
@@ -188,6 +213,9 @@ namespace RKTEngine
 		*************************************************************************/
 		void update(float elapsedTime);
 		void updateCollisions();
+		void updateScripts();
+
+		void onMessage(Message& message);
 
 		void renderComponents();
 
@@ -205,18 +233,21 @@ namespace RKTEngine
 		int getNumberOfSprites() { return mSpriteComponentMap.size(); }
 		///Get number of Transform Components
 		int getNumberOfTransforms() { return mTransformComponentMap.size(); }
+
 	private:
 		RKTUtil::MemoryPool mTransformPool;
 		RKTUtil::MemoryPool mLabelPool;
 		RKTUtil::MemoryPool mSpritePool;
 		RKTUtil::MemoryPool mColliderPool;
 		RKTUtil::MemoryPool mAudioSourcePool;
+		RKTUtil::MemoryPool mNativeScriptPool;
 
 		std::map<ComponentId, TransformComponent*> mTransformComponentMap;
 		std::map<ComponentId, TextComponent*> mTextComponentMap;
 		std::map<ComponentId, SpriteComponent*> mSpriteComponentMap;
 		std::map<ComponentId, BoxColliderComponent*> mColliderComponentMap;
 		std::map<ComponentId, AudioSourceComponent*> mAudioSourceComponentMap;
+		std::map<ComponentId, NativeScriptComponent*> mNativeScriptComponentMap;
 
 		static ComponentId msNextTransformComponentId;
 		static ComponentId msNextTextComponentId;
@@ -224,6 +255,8 @@ namespace RKTEngine
 		static ComponentId msNextMaterialComponentId;
 		static ComponentId msNextColliderComponentId;
 		static ComponentId msNextAudioSourceComponentId;
+		static ComponentId msNextNativeScriptComponentId;
+
 	};
 }
 #endif // !COMPONENT_MAN_H

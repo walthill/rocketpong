@@ -64,7 +64,7 @@ namespace RKTEngine
 
 		///Access the id of the component
 		inline ComponentId getId() { return mId; }
-	private:
+	protected:
 		ComponentId mId;
 	protected:
 		bool mIsEnabled;

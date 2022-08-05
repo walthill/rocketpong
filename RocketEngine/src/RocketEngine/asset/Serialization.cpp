@@ -2,11 +2,12 @@
 #include <RocketEngine/Defines.h>
 #include <fstream>
 #include "scene/SceneManager.h"
-#include <RocketEngine/actor/UILabel.h>
 #include <RocketEngine/core/ComponentManager.h>
+#include <RocketEngine/audio/AudioSource.h>
 #include <RocketEngine/actor/Actor.h>
 #include <RocketEngine/core/Log.h>
 #include <RocketEngine/core/EngineCore.h>
+#include <RocketEngine/gameobject/GameObjectManager.h>
 
 //added from https://github.com/TheCherno/Hazel
 //under Apache 2.0 License
@@ -116,7 +117,7 @@ namespace YAML {
 
 namespace RKTEngine
 {
-
+	#pragma region Operator Overloads
 	//added from https://github.com/TheCherno/Hazel
 	//under Apache 2.0 License
 	YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v)
@@ -147,6 +148,8 @@ namespace RKTEngine
 		out << YAML::BeginSeq << rot.angle << rot.rotationAxis << YAML::EndSeq;
 		return out;
 	}
+	#pragma endregion //Operator Overloads
+
 
 	//TODO: add guid/uuid, object name
 
@@ -158,11 +161,6 @@ namespace RKTEngine
 		out << YAML::BeginMap;
 		out << YAML::Key << "Name" << scene->name;
 		out << YAML::Key << "UI" << YAML::Value << YAML::BeginSeq;
-
-		for (size_t i = 0; i < scene->textUIs.size(); i++)
-		{
-			serializeUILabel(out, scene->textUIs[i]);
-		}
 
 		out << YAML::EndSeq;
 		out << YAML::Key << "GameObjects" << YAML::Value << YAML::BeginSeq;
@@ -184,18 +182,22 @@ namespace RKTEngine
 		out << YAML::BeginMap;
 		out << YAML::Key << "Obj" << YAML::Value << gameObject->name;
 		serializeTransform(out, gameObject->getTransform());
+		serializeBoxColliderComponent(out, gameObject->getBoxCollider());
 		serializeSprite(out, gameObject->getSprite());
+		serializeAudioSourceComponent(out, gameObject->getAudioSource());
+		serializeNativeScriptComponent(out, gameObject->getScript());
+		out << YAML::EndMap;
 	}
 
 	void Serialization::serializeUILabel(YAML::Emitter& out, UILabel* uiLabel)
 	{
-		out << YAML::BeginMap;
+	/*	out << YAML::BeginMap;
 		out << YAML::Key << "Label" << YAML::Value << uiLabel->mpGameObject->name;
 
 		serializeTransform(out, uiLabel->getTransform());
 		serializeTextComponent(out, uiLabel->mpGameObject->getUILabel());
 
-		out << YAML::EndMap;
+		out << YAML::EndMap;*/
 	}
 
 	void Serialization::serializeTransform(YAML::Emitter& out, TransformComponent* transform)
@@ -213,6 +215,20 @@ namespace RKTEngine
 		}
 	}
 
+	void Serialization::serializeBoxColliderComponent(YAML::Emitter& out, BoxColliderComponent* col)
+	{
+		if (col != nullptr)
+		{
+			out << YAML::Key << "BoxColliderComponent";
+			out << YAML::BeginMap;
+
+			out << YAML::Key << "Dimensions" << YAML::Value << glm::vec2(col->getWidth(), col->getHeight());
+			out << YAML::Key << "Tag" << YAML::Value << col->getTag();
+
+			out << YAML::EndMap; // BoxColliderComponent
+		}
+	}
+
 	void Serialization::serializeSprite(YAML::Emitter& out, SpriteComponent* sprite)
 	{
 		if (sprite != nullptr)
@@ -223,7 +239,6 @@ namespace RKTEngine
 			out << YAML::Key << "SpriteName" << YAML::Value << sprite->getData()->mSpriteName;
 			out << YAML::Key << "TileName" << YAML::Value << sprite->getData()->mTileName;
 			out << YAML::Key << "Color" << YAML::Value << sprite->getData()->mColor.getColorAlpha();
-			out << YAML::Key << "Dimensions" << YAML::Value << glm::vec2{ sprite->getData()->mWidth, sprite->getData()->mHeight};
 
 			out << YAML::EndMap; // SpriteComponent
 		}
@@ -240,6 +255,30 @@ namespace RKTEngine
 			out << YAML::Key << "FontName" << YAML::Value << text->getData()->mFontName;
 			out << YAML::Key << "FontSize" << YAML::Value << text->getData()->mFontSize;
 			out << YAML::EndMap; // TextComponent
+		}
+	}
+
+	void Serialization::serializeAudioSourceComponent(YAML::Emitter& out, AudioSourceComponent* audioSrc)
+	{
+		if (audioSrc != nullptr)
+		{
+			out << YAML::Key << "AudioSourceComponent";
+			out << YAML::BeginMap;
+			out << YAML::Key << "Filename" << YAML::Value << audioSrc->getData()->audioFileName;
+			out << YAML::Key << "Vol" << YAML::Value << audioSrc->getData()->mVolume;
+			out << YAML::Key << "Pan" << YAML::Value << audioSrc->getData()->mPan;
+			out << YAML::EndMap; // AudioSourceComponent
+		}
+	}
+
+	void Serialization::serializeNativeScriptComponent(YAML::Emitter& out, NativeScriptComponent* scrpt)
+	{
+		if (scrpt != nullptr && scrpt->pInstance != nullptr)
+		{
+			//out << YAML::Key << "NativeScriptComponent";
+			//out << YAML::BeginMap;
+			//scrpt->pInstance->onSerialize();
+			//out << YAML::EndMap; // NativeScriptComponent
 		}
 	}
 
@@ -275,7 +314,7 @@ namespace RKTEngine
 
 	void Serialization::deserializeUILabels(YAML::Node& node, Scene* scene)
 	{
-		if (node)
+/*		if (node)
 		{
 			for (auto entity : node)
 			{
@@ -284,8 +323,8 @@ namespace RKTEngine
 				RKT_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", fakeuuid, name);
 
 				UILabel* deserializedUI = new UILabel(glm::vec2(0), "");
-				deserializedUI->mpGameObject->name = name;
-
+				/*deserializedUI->mpGameObject->name = name;
+				
 				auto transformComponent = entity["TransformComponent"];
 				if (transformComponent)
 				{
@@ -306,7 +345,7 @@ namespace RKTEngine
 
 				scene->textUIs.push_back(deserializedUI);
 			}
-		}
+		}*/
 	}
 
 	void Serialization::deserializeGameObjects(YAML::Node& node, Scene* scene)
@@ -319,7 +358,7 @@ namespace RKTEngine
 				int fakeuuid = 123456789;
 				RKT_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", fakeuuid, name);
 
-				auto deserializedObj = EngineCore::getInstance()->getEntityManager()->createSprite();
+				auto deserializedObj = EngineCore::getInstance()->getEntityManager()->createGameObject();
 				deserializedObj->name = name;
 
 				auto transformComponent = entity["TransformComponent"];
@@ -331,20 +370,56 @@ namespace RKTEngine
 					tr->setScale(transformComponent["Scale"].as<glm::vec2>());
 				}
 
+				auto boxColliderComponent = entity["BoxColliderComponent"];
+				if (boxColliderComponent)
+				{
+					auto d = (boxColliderComponent["Dimensions"].as<glm::vec2>());
+					auto t = (boxColliderComponent["Tag"].as<std::string>());
+
+					GameObjManager->addBoxCollider(deserializedObj->getId(), (int)d.x, (int)d.y);
+					deserializedObj->getBoxCollider()->setTag(t);
+				}
+
 				auto spriteComponent = entity["SpriteComponent"];
 				if (spriteComponent)
 				{
-					auto spr = deserializedObj->getSprite();
-					auto data = spr->getData();
+					auto spriteName = (spriteComponent["SpriteName"].as<std::string>());
+					auto tileName = (spriteComponent["TileName"].as<std::string>());
 
-					data->mSpriteName = (spriteComponent["SpriteName"].as<std::string>());
-					data->mTileName = (spriteComponent["TileName"].as<std::string>());
+					EngineCore::getInstance()->getEntityManager()->addSprite(deserializedObj->getId(), spriteName, tileName);
+
+					auto data = deserializedObj->getSprite()->getData();
 					data->mColor = (Color(spriteComponent["Color"].as<glm::vec4>()));
-					auto dimensions = spriteComponent["Dimensions"].as<glm::vec2>();
-					data->mWidth = (int)dimensions.x;
-					data->mHeight = (int)dimensions.y;
-					spr->load();
 				}
+
+				auto audioSrcComponent = entity["AudioSourceComponent"];
+				if (audioSrcComponent)
+				{
+					auto audioFileName = audioSrcComponent["Filename"].as<std::string>();
+					auto vol = audioSrcComponent["Vol"].as<float>();
+					auto pan = audioSrcComponent["Pan"].as<float>();
+
+					EngineCore::getInstance()->getEntityManager()->addAudioSource(deserializedObj->getId(), audioFileName, vol, pan);
+				}
+
+				auto scriptComponent = entity["NativeScriptComponent"];
+				if (scriptComponent)
+				{
+					EngineCore::getInstance()->getEntityManager()->addNativeScript(deserializedObj->getId());
+					//deserializedObj->getScript()->bind<Paddle>(deserializedObj->getId());
+				}
+
+
+				/*
+				
+						if (scrpt != nullptr)
+		{
+			out << YAML::Key << "NativeScriptComponent";
+			out << YAML::BeginMap;
+			scrpt->pInstance->onSerialize();
+			out << YAML::EndMap; // AudioSourceComponent
+		}
+				*/
 
 				scene->entities.push_back(deserializedObj);
 			}

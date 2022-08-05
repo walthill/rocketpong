@@ -1,7 +1,10 @@
 #include "GameObjectManager.h"
 #include "GameObject.h"
 #include "RocketEngine/core/EngineCore.h"
+#include "RocketEngine/asset/scene/SceneManager.h"
+#include "RocketEngine/core/ComponentManager.h"
 #include "RocketEngine/render/shader/ShaderManager.h"
+#include "RocketEngine/component/NativeScriptComponent.h"
 
 namespace RKTEngine
 {
@@ -52,7 +55,7 @@ namespace RKTEngine
 			//Create sprite component, store id in new object, and load the sprite to the component
 			if (!spriteData.mSpriteName.empty())
 			{
-				ComponentId newSpriteId = pComponentManager->allocateSpriteComponent(newObj->getTransformId(), spriteData);
+				ComponentId newSpriteId = pComponentManager->allocateSpriteComponent(spriteData);
 				newObj->connectSprite(newSpriteId);
 			}
 
@@ -63,6 +66,60 @@ namespace RKTEngine
 				ComponentId newLabelId = pComponentManager->allocateTextComponent(newObj->getTransformId(), labelData);
 				newObj->connectLabel(newLabelId);
 			}
+
+			EngineCore::getInstance()->getSceneManager()->registerEntity(newObj);
+		}
+		return newObj;
+	}
+
+	GameObject* GameObjectManager::createActor(const TransformData& transform, const SpriteComponentData& spriteData,
+		const TextData& labelData, const GameObjectId& id)
+	{
+		GameObject* newObj = nullptr;
+
+		RKTUtil::Byte* ptr = mGameObjectPool.allocateObject();
+
+		if (ptr != nullptr)
+		{
+			newObj = ::new (ptr)GameObject();//placement new
+
+			GameObjectId newId = id;
+			if (newId == INVALID_GAMEOBJECT_ID) //new game obj
+			{
+				newId = msNextUnitId;
+				msNextUnitId++;
+			}
+
+			//add new object to map and set the object's id locally
+			mGameObjMap[newId] = newObj;
+			newObj->setId(newId);
+			newObj->setName();
+
+			//Hook up components
+			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
+
+			//TRANSFORM
+			ComponentId newTransformId = pComponentManager->allocateTransformComponent(transform);
+			newObj->connectTransform(newTransformId);
+			newObj->setTransformHandle(pComponentManager->getTransformComponent(newTransformId));
+
+			//SPRITE
+			//Create sprite component, store id in new object, and load the sprite to the component
+			if (!spriteData.mSpriteName.empty())
+			{
+				ComponentId newSpriteId = pComponentManager->allocateSpriteComponent(spriteData);
+				newObj->connectSprite(newSpriteId);
+			}
+
+			//TEXT LABEL
+			//Create text component, store id in new object, and load the text to the component
+			if (!labelData.mFontName.empty())
+			{
+				ComponentId newLabelId = pComponentManager->allocateTextComponent(newObj->getTransformId(), labelData);
+				newObj->connectLabel(newLabelId);
+			}
+
+			addNativeScript(newObj->getId());
 
 			EngineCore::getInstance()->getSceneManager()->registerEntity(newObj);
 		}
@@ -87,6 +144,19 @@ namespace RKTEngine
 		return createGameObject(transformData, ZERO_SPRITE_DATA, textData);
 	}
 
+
+	void GameObjectManager::addAudioSource(int objId, const std::string& audio, float vol, float pan)
+	{
+		auto it = mGameObjMap.find(objId);
+		if (it != mGameObjMap.end())
+		{
+			AudioSourceComponentData data = { audio, vol, pan };
+			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
+			ComponentId newAudioSrcID = pComponentManager->allocateAudioSourceComponent(data);
+			it->second->connectAudioSource(newAudioSrcID);
+		}
+	}
+
 	void GameObjectManager::addBoxCollider(int objId, int w, int h, const std::string& t)
 	{
 		auto it = mGameObjMap.find(objId);
@@ -100,17 +170,29 @@ namespace RKTEngine
 		}
 	}
 
-	void GameObjectManager::addAudioSource(int objId, const std::string& audio)
+	void GameObjectManager::addSprite(int objId, const std::string& spriteToLoad, const std::string& tileName, glm::vec2 position, glm::vec2 scale, float rotation)
 	{
 		auto it = mGameObjMap.find(objId);
 		if (it != mGameObjMap.end())
 		{
-			AudioSourceComponentData data = { audio };
+			SpriteComponentData spriteData = SpriteComponentData(spriteToLoad, tileName);
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
-			ComponentId newAudioSrcID = pComponentManager->allocateAudioSourceComponent(data);
-			it->second->connectAudioSource(newAudioSrcID);
+			ComponentId newSpriteId = pComponentManager->allocateSpriteComponent(spriteData);
+			it->second->connectSprite(newSpriteId);
 		}
 	}
+
+	void GameObjectManager::addNativeScript(int objId)
+	{
+		auto it = mGameObjMap.find(objId);
+		if (it != mGameObjMap.end())
+		{
+			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
+			ComponentId id = pComponentManager->allocateNativeScriptComponent(objId);
+			it->second->connectNativeScript(id);
+		}
+	}
+
 
 	GameObject* GameObjectManager::createPlayer(const std::string& texture, glm::vec2 position, glm::vec2 scale, float rotation)
 	{
@@ -162,12 +244,6 @@ namespace RKTEngine
 		{
 			it.second->update(elapsedTime);
 		}
-	}
-
-	void GameObjectManager::onMessage(Message& message)
-	{
-		for (auto const& it : mGameObjMap)
-			it.second->onMessage(message);
 	}
 
 	int GameObjectManager::getNumGameObjects()

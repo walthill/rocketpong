@@ -4,10 +4,6 @@
 #include <RKTUtils/Singleton.h>
 #include <RKTUtils/Timer.h>
 #include <RKTUtils/Profiling.h>
-#include "ComponentManager.h"
-#include "RocketEngine/gameobject/GameObjectManager.h"
-#include "RocketEngine/asset/AssetManager.h"
-#include "RocketEngine/asset/scene/SceneManager.h"
 #include "RocketEngine/input/message/Message.h"
 
 namespace RKTEngine
@@ -16,6 +12,11 @@ namespace RKTEngine
 	class InputSystem;
 	class AudioManager;
 	class MessageManager;
+	class SceneManager;
+	class ComponentManager;
+	class AssetManager;
+	class GameObjectManager;
+	class ShaderManager;
 	
 	class EngineCore : public RKTUtil::Singleton<EngineCore>
 	{
@@ -27,10 +28,10 @@ namespace RKTEngine
 
 			double getTime();
 
-			inline ComponentManager* getComponentManager() { return mpComponentManager; }
-			inline AssetManager* getAssetManager() { return mpAssetManager; }
-			inline GameObjectManager* getEntityManager() { return mpEntityManager; }
-			inline SceneManager* getSceneManager() { return mpSceneManager; }
+			ComponentManager* getComponentManager(); 
+			AssetManager* getAssetManager(); 
+			GameObjectManager* getEntityManager(); 
+			SceneManager* getSceneManager();
 			InputSystem* getInputSystem();
 			MessageManager* getMessageManager();
 			ShaderManager* getShaderManager();

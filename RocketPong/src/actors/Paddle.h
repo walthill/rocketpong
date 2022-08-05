@@ -6,15 +6,17 @@
 class Paddle : public RKTEngine::Actor
 {
 	public:
-		Paddle() {};
-		Paddle(float startSpeed, bool isP1 = true);
-		~Paddle();
+		
+		virtual void onCreate() override;
+		virtual void onStart() override;
+		//virtual void onDestroy();
+		virtual void onUpdate() override;
+		//virtual void onSerialize() override;
+		//virtual void onDeserialize() override;
 
-		virtual bool update(RKTEngine::UpdateMessage& message) override;
-		virtual void onMessage(RKTEngine::Message& message) override;
+		bool mIsP1;
 
 	private:
-		bool mIsP1;
 		float mSpeed = 20;
 };
 

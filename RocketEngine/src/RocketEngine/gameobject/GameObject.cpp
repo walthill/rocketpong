@@ -45,12 +45,6 @@ namespace RKTEngine
 		}
 	}
 
-	void GameObject::onMessage(Message& message)
-	{
-		if (mpActorOwner != nullptr)
-			mpActorOwner->onMessage(message);
-	}
-
 	void GameObject::setName()
 	{ 
 		name = "New GameObject("; 
@@ -80,6 +74,12 @@ namespace RKTEngine
 	AudioSourceComponent* GameObject::getAudioSource()
 	{
 		auto pComponent = EngineCore::getInstance()->getComponentManager()->getAudioSourceComponent(mAudioSourceId);
+		return pComponent;
+	}
+
+	NativeScriptComponent* GameObject::getScript()
+	{
+		auto pComponent = EngineCore::getInstance()->getComponentManager()->getNativeScriptComponent(mNativeScriptId);
 		return pComponent;
 	}
 }

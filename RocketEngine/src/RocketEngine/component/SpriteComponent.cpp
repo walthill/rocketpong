@@ -1,5 +1,6 @@
 #include "SpriteComponent.h"
 #include "RocketEngine/core/EngineCore.h"
+#include "RocketEngine/asset/AssetManager.h"
 #include "RocketEngine/render/RenderCommand.h"
 
 namespace RKTEngine

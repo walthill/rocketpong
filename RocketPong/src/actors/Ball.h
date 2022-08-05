@@ -6,20 +6,24 @@
 
 class Ball : public RKTEngine::Actor
 {
-	public:
-		Ball(glm::vec2 startPos, float speed);
-		~Ball();
+	public:		
+		virtual void onCreate() override;
+		virtual void onStart() override;
+		//virtual void onDestroy();
+		virtual void onUpdate() override;
+		//virtual void onSerialize() override;
+		//virtual void onDeserialize() override;
 
 		void reset();
 
-		virtual bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message) override;
-		virtual bool update(RKTEngine::UpdateMessage& message) override;
+		virtual bool onCollisionEnter(RKTEngine::CollisionEnterMessage& message) override;
 		virtual void onMessage(RKTEngine::Message& message) override;
 
+		glm::vec2 mStartPos;
+	
 	private:
 		const float mSTART_DELAY = 2.0f;
 
-		glm::vec2 mStartPos;
 		glm::vec2 mDir;
 		float mSpeed;
 		bool mStartMoving = false;

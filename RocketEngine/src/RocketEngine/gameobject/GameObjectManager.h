@@ -73,6 +73,11 @@ namespace RKTEngine
 										 const SpriteComponentData& spriteData = ZERO_SPRITE_DATA,
 										 const TextData& labelData = ZERO_LABEL_DATA,
 						 				 const GameObjectId& id = INVALID_GAMEOBJECT_ID);
+			
+			GameObject* createActor(const TransformData& transform = ZERO_TRANSFORM_DATA,
+				const SpriteComponentData& spriteData = ZERO_SPRITE_DATA,
+				const TextData& labelData = ZERO_LABEL_DATA,
+				const GameObjectId& id = INVALID_GAMEOBJECT_ID);
 
 #ifdef ATLASED_CREATE_FUNCS	
 			GameObject* createAtlasedSprite(const std::string& spriteToLoad, const std::string& tileName, int width, int height, glm::vec2 position = glm::vec2(0, 0),
@@ -91,8 +96,11 @@ namespace RKTEngine
 			GameObject* createLabel(const std::string& text, glm::vec2 position = glm::vec2(0, 0), glm::vec2 scale = glm::vec2(1, 1), 
 									float rotation = 0, const std::string& fontName = AssetManager::sDEFAULT_FONT, int fontSize = Text::sDefaultTextSize);
 
+			void addAudioSource(int objId, const std::string& audio, float vol = -1.0f, float pan = 0.0f);
 			void addBoxCollider(int objId, int w, int h, const std::string& t = "untagged");
-			void addAudioSource(int objId, const std::string& audio);
+			void addSprite(int objId, const std::string& spriteToLoad = AssetManager::sDEFAULT_SPRITE, const std::string& tileName = "", glm::vec2 position = glm::vec2(0, 0),
+						   glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
+			void addNativeScript(int objId);
 
 			/**********************************************************************//**
 			* Destroy GameObject and remove from manager based on its id
@@ -116,7 +124,6 @@ namespace RKTEngine
 			~GameObjectManager();
 
 			void updateAll(float elapsedTime);
-			void onMessage(Message& message);
 	};
 }
 #endif // !GAME_OBJ_MAN_H

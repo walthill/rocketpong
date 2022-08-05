@@ -1,9 +1,9 @@
 #include "SceneManager.h"
 #include "RocketEngine/asset/Serialization.h"
-#include <RocketEngine/actor/UILabel.h>
 #include <RocketEngine/actor/Actor.h>
 #include <RocketEngine/core/Log.h>
 #include <RocketEngine/core/EngineCore.h>
+#include <RocketEngine/gameobject/GameObjectManager.h>
 
 namespace RKTEngine
 {
@@ -41,16 +41,6 @@ namespace RKTEngine
 
 	void SceneManager::cleanSceneElements(Scene* scene)
 	{
-		for (auto& text : scene->textUIs)
-		{
-			if (text != nullptr)
-			{
-				delete text;
-				text = nullptr;
-			}
-		}
-		scene->textUIs.clear();
-
 		for (auto& entity : scene->entities)
 		{
 			if (entity != nullptr)
@@ -62,30 +52,12 @@ namespace RKTEngine
 		scene->entities.clear();
 	}
 
-
-	void SceneManager::registerUI(UILabel* textUI)
-	{
-		if (mpActiveScene != nullptr)
-		{
-			mpActiveScene->entities.pop_back();
-			mpActiveScene->textUIs.push_back(textUI);
-		}
-	}
-
 	void SceneManager::registerEntity(GameObject* obj)
 	{
 		if (mpActiveScene != nullptr)
 			mpActiveScene->entities.push_back(obj);
 	}
 
-	void SceneManager::registerActor(Actor* actor)
-	{
-		if (mpActiveScene != nullptr)
-		{
-			mpActiveScene->entities.pop_back();
-			mpActiveScene->actors.push_back(actor);
-		}
-	}
 
 	void SceneManager::beginScene(const std::string& sceneName)
 	{
@@ -96,14 +68,14 @@ namespace RKTEngine
 		}
 		else
 		{
-			mpActiveScene = new Scene{ sceneName, std::vector<UILabel*>() };
+			mpActiveScene = new Scene{ sceneName, std::vector<GameObject*>() };
 			mScenes[sceneName] = mpActiveScene;
 		}
 	}
 
 	void SceneManager::endScene(bool destroySceneData)
 	{
-		Serialization::serializeScene(mpActiveScene);
+		//Serialization::serializeScene(mpActiveScene);
 		if(destroySceneData)	
 			cleanActiveScene();
 	}
@@ -122,13 +94,13 @@ namespace RKTEngine
 			}
 			else
 			{
-				mScenes[sceneName] = Serialization::deserializeScene(sceneName);
+				//mScenes[sceneName] = Serialization::deserializeScene(sceneName);
 				mpActiveScene = mScenes[sceneName];
 			}
 		}
 		else
 		{
-			mScenes[sceneName] = Serialization::deserializeScene(sceneName);
+			//mScenes[sceneName] = Serialization::deserializeScene(sceneName);
 		}
 
 		//TODO: investigate deserializing increasing mem footprint 
@@ -145,15 +117,13 @@ namespace RKTEngine
 		return false;
 	}
 
-	UILabel* SceneManager::findUILabelInScene(const std::string& objName)
+	GameObject* SceneManager::findGameObjectInScene(uint32_t id)
 	{
-		const auto& labels = mpActiveScene->textUIs;
-		for (size_t i = 0; i < labels.size(); i++)
+		const auto& objs = mpActiveScene->entities;
+		for (size_t i = 0; i < objs.size(); i++)
 		{
-			if (strcmp(labels[i]->mpGameObject->name.c_str(), objName.c_str()) == 0)
-			{
-				return labels[i];
-			}
+			if (objs[i]->getId() == id)
+				return objs[i];
 		}
 
 		return nullptr;

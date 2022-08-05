@@ -18,10 +18,14 @@ namespace RKTEngine
 	{
 		std::string audioFileName;
 		AudioSource* audioSource;
+		float mVolume = -1.0f;
+		float mPan = 0.0f;
+		bool mPaused = false;
 
 		///Default constructor sets all values to zero
 		AudioSourceComponentData() : audioFileName(""), audioSource(nullptr) {};
-		AudioSourceComponentData(const std::string& audioFile) : audioFileName(audioFile), audioSource(nullptr) {};
+		AudioSourceComponentData(const std::string& audioFile, float vol = -1.0f, float pan = 0.0f, bool pause = false) 
+			: audioFileName(audioFile), audioSource(nullptr), mVolume(vol), mPan(pan), mPaused(pause) {};
 	};
 
 	const AudioSourceComponentData ZERO_AUDIO_SRC_DATA;
@@ -50,7 +54,10 @@ namespace RKTEngine
 		///Cleanup
 		void cleanup();
 
-		void play(float vol = -1.0f);
+		void play(float vol = mDEFAULT_VOL, float pan = mDEFAULT_PAN);
+		void setVolume(float vol);
+		void setPan(float pan);
+		void setPauseFlag(bool pause);
 
 		///Access the Audio Source component data
 		AudioSourceComponentData* getData() { return &mAudioSourceData; }
@@ -58,6 +65,8 @@ namespace RKTEngine
 		void setData(const AudioSourceComponentData& data);
 
 	private:
+		static const float mDEFAULT_VOL;
+		static const float mDEFAULT_PAN;
 		AudioSourceComponentData mAudioSourceData;
 	};
 }

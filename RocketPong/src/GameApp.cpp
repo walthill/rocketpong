@@ -11,9 +11,6 @@ GameApp::~GameApp()
 
 void GameApp::clean()
 {
-	delete mpPlayer1;
-	delete mpPlayer2;
-	delete mpBall;
 	RKTEngine::EngineCore::cleanInstance();
 }
 
@@ -32,27 +29,11 @@ bool GameApp::initialize()
 
 	mpGameManager = new GameManager();
 
-	auto w = RocketEngine->getWindowWidth();
-	auto h = RocketEngine->getWindowHeight();
-
 	generateSceneData(false);
 	if (mIsRunning)
 	{
-		loadStartupScene("game");
+		//loadStartupScene("game");
 	}
-
-	mpPlayer1 = new Paddle(300);
-	mpPlayer1->mpGameObject->name = "P1 Paddle";
-	mpPlayer1->mpGameObject->getTransform()->setPosition({ 100, h / 2 });
-	mpPlayer1->mpGameObject->getBoxCollider()->setTag("lp");
-	mpPlayer2 = new Paddle(300, false);
-	mpPlayer2->mpGameObject->name = "P2 Paddle";
-	mpPlayer2->mpGameObject->getTransform()->setPosition({ w - 100, h / 2 });
-	mpPlayer2->mpGameObject->getBoxCollider()->setTag("rp");
-
-	mpBall = new Ball({ w / 2,h / 2 }, 250);
-	mpBall->mpGameObject->name = "Ball";
-
 
 	endInit();
 
@@ -97,21 +78,45 @@ void GameApp::generateSceneData(bool quitOnComplete)
 		auto h = RocketEngine->getWindowHeight();
 
 		RocketEngine->getSceneManager()->beginScene("game");
+
+		GameObject* pPlayer1 = GameObjManager->createActor();
+		pPlayer1->getScript()->bind<Paddle>(pPlayer1->getId());
+		pPlayer1->getScript()->get<Paddle>()->mIsP1 = true;
+		pPlayer1->name = "P1 Paddle";
+		pPlayer1->getTransform()->setPosition({ 100, h / 2 });
+		pPlayer1->getBoxCollider()->setTag("lp");
+
+		GameObject* mpPlayer2 = GameObjManager->createActor();
+		mpPlayer2->getScript()->bind<Paddle>(mpPlayer2->getId());
+		mpPlayer2->getScript()->get<Paddle>()->mIsP1 = false;
+		mpPlayer2->name = "P2 Paddle";
+		mpPlayer2->getTransform()->setPosition({ w - 100, h / 2 });
+		mpPlayer2->getBoxCollider()->setTag("rp");
+
+		mpBall = GameObjManager->createActor();
+		mpBall->getScript()->bind<Ball>(mpBall->getId());
+		mpBall->getScript()->get<Ball>()->mStartPos = { w / 2,h / 2 };
+		mpBall->name = "Ball";
+
 		//midline
-		auto midlineSprite = RocketEngine->getEntityManager()->createSprite("paddle", { w / 2, h / 2 }, { 0.25f, 100.0f });
+		auto midlineSprite = RocketEngine->getEntityManager()->createSprite("paddle", {w / 2, h / 2}, {0.25f, 100.0f});
 		midlineSprite->getSprite()->setColor(RKTEngine::Color(127.5f, 127.5f, 127.5f, .2f));
 		midlineSprite->name = "midline";
 
-		UILabel* p1Score = new UILabel({ w / 2 - 72, 10 }, std::to_string(mpGameManager->mP1Score), "Arkitech-Medium", RKTEngine::Text::sDefaultTextSize);
-		p1Score->mpGameObject->name = "p1score";
-		UILabel* p2Score = new UILabel({ w / 2 + 32, 10 }, std::to_string(mpGameManager->mP2Score), "Arkitech-Medium", RKTEngine::Text::sDefaultTextSize);
-		p2Score->mpGameObject->name = "p2score";
-		RocketEngine->getSceneManager()->endScene();
+		GameObject* p1Score = GameObjManager->createLabel(std::to_string(mpGameManager->mP1Score), { w / 2 - 72, 10 }, glm::vec2(1.0f), 0, "Arkitech-Medium", RKTEngine::Text::sDefaultTextSize);
+		p1Score->name = "p1score";
+		GameObject* p2Score = GameObjManager->createLabel(std::to_string(mpGameManager->mP2Score), { w / 2 + 32, 10 }, glm::vec2(1.0f), 0, "Arkitech-Medium", RKTEngine::Text::sDefaultTextSize);
+		p2Score->name = "p2score";
 
-		RocketEngine->getSceneManager()->beginScene("main");
-		UILabel* main1 = new UILabel({ w / 2 - 32, 10 }, "MAIN");
-		UILabel* main2 = new UILabel({ w / 2 + 32, 10 }, "MAIN");
+		mpGameManager->setScoreUI(p1Score->getId(), p2Score->getId());
+
+		RocketEngine->getSceneManager()->endScene(false);
+
+		/*RocketEngine->getSceneManager()->beginScene("main");
+		GameObject* main1 = GameObjManager->createLabel("MAIN", { w / 2 - 32, 10 });
+		GameObject* main2 = GameObjManager->createLabel("MAIN", { w / 2 + 32, 10 });
 		RocketEngine->getSceneManager()->endScene();
+		*/
 	}
 
 	if (quitOnComplete)
@@ -168,7 +173,7 @@ void GameApp::update()
 	}
 	if (Input::getKeyDown(KeyCode::R))
 	{
-		mpBall->reset();
+		mpBall->getScript()->get<Ball>()->reset();
 		mpGameManager->reset();
 	}
 	if (Input::getKeyDown(KeyCode::Q))

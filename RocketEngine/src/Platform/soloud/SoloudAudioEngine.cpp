@@ -1,7 +1,5 @@
 #include "SoloudAudioEngine.h"
 #include "SoloudAudioSourceWAV.h"
-#include <RocketEngine/core/EngineCore.h>
-#include <RocketEngine/core/MessageManager.h>
 
 namespace RKTEngine
 {

@@ -3,15 +3,17 @@
 
 #include "RocketEngine/core/Log.h"
 #include "RocketEngine/core/EngineCore.h"
-#include "RocketEngine/core/InputSystem.h"
 #include "RocketEngine/core/MessageManager.h"
-#include "RocketEngine/actor/UILabel.h"
+#include "RocketEngine/asset/scene/SceneManager.h"
+#include "RocketEngine/core/ComponentManager.h"
+#include "RocketEngine/gameobject/GameObjectManager.h"
+#include "RocketEngine/core/InputSystem.h"
+#include "RocketEngine/actor/Actor.h"
 #include "RocketEngine/input/MessageDefines.h"
 #include "RocketEngine/math/Random.h"
-#include "RocketEngine/asset/scene/SceneManager.h"
 
 using Input = RKTEngine::InputSystem;
-using UILabel = RKTEngine::UILabel;
+using GameObject = RKTEngine::GameObject;
 using Random = RKTEngine::Random;
 
 namespace KeyCode = RKTEngine::Key;

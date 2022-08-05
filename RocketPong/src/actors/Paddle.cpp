@@ -1,20 +1,20 @@
 #include "Paddle.h"
 #include "RocketEngine.h"
 
-Paddle::Paddle(float startSpeed, bool isP1) :
-	mIsP1(isP1), mSpeed(startSpeed)
+void Paddle::onCreate()
 {
-	mpGameObject = GameObjManager->createSprite("paddle");
-	auto spr = mpGameObject->getSprite();
-	GameObjManager->addBoxCollider(mpGameObject->getId(), spr->getData()->mWidth, spr->getData()->mHeight);
-	Actor::init();
+	auto gameObj = getGameObject();
+	GameObjManager->addSprite(gameObjectId, "paddle");
+	auto spr = gameObj->getSprite();
+	GameObjManager->addBoxCollider(gameObjectId, spr->getData()->mWidth, spr->getData()->mHeight);
 }
 
-Paddle::~Paddle()
+void Paddle::onStart()
 {
+	mSpeed = 300;
 }
 
-bool Paddle::update(RKTEngine::UpdateMessage& message)
+void Paddle::onUpdate()
 {
 	auto transform = getTransform();
 	auto oldPos = transform->getPosition();
@@ -50,12 +50,4 @@ bool Paddle::update(RKTEngine::UpdateMessage& message)
 	{
 		transform->setPosition(oldPos);
 	}
-
-	return Actor::update(message);
-}
-
-void Paddle::onMessage(RKTEngine::Message& message)
-{
-	RKTEngine::MessageDispatcher dispatcher(message);
-	dispatcher.dispatch<RKTEngine::UpdateMessage>(RKT_BIND_MESSAGE_FN(Paddle::update));
 }

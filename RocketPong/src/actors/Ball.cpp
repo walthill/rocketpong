@@ -1,85 +1,30 @@
 #include "Ball.h"
 #include "GameApp.h"
 #include "managers/GameManager.h"
+#include "RocketEngine.h"
 
-Ball::Ball(glm::vec2 startPos, float speed) :
-	mStartPos(startPos), mSpeed(speed)
+void Ball::onCreate()
 {
-	mpGameObject = GameObjManager->createSprite("ball");
-	
-	auto spr = mpGameObject->getSprite();
-	GameObjManager->addBoxCollider(mpGameObject->getId(), spr->getData()->mWidth/2, spr->getData()->mHeight/2);
-	GameObjManager->addAudioSource(mpGameObject->getId(), "boop");
+	GameObjManager->addSprite(gameObjectId, "ball");
+	auto spr = getGameObject()->getSprite();
+	GameObjManager->addBoxCollider(gameObjectId, spr->getData()->mWidth / 2, spr->getData()->mHeight / 2);
+	GameObjManager->addAudioSource(gameObjectId, "winwin");
+}
 
+void Ball::onStart()
+{
+	mSpeed = 250;
 	reset();
-	Actor::init();
 }
 
-Ball::~Ball()
-{
-}
-
-void Ball::reset()
-{
-	bool dir = Random::range(0, 1);
-	mDir = dir == 0 ? glm::vec2(-1, 0) : glm::vec2(1, 0);
-
-	mStartMoving = false;
-	startTimer.start();
-	getTransform()->setPosition(mStartPos);
-}
-
-bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
-{
-	if (Actor::onCollisionEnter(message))
-	{	
-		auto other = message.otherCollider;
-		if (other != nullptr)
-		{
-			if (other->getTag().compare("lp") == 0)
-			{
-				auto ballTr = getTransform();
-				auto ballPos = getTransform()->getPosition();
-				auto racketPos = other->getTransform()->getPosition();
-
-				//help from https://www.noobtuts.com/cpp/2d-pong-game	
-				mDir = glm::normalize(ballPos);
-				auto ballMag = glm::length(ballPos);
-				float t = ((ballPos.y - racketPos.y) / other->getHeight());
-				mDir.x = 1;
-				mDir.y = t;
-
-				mpGameObject->getAudioSource()->play();
-			}
-			else if (other->getTag().compare("rp") == 0)
-			{
-				auto ballTr = getTransform();
-				auto ballPos = getTransform()->getPosition();
-				auto racketPos = other->getTransform()->getPosition();
-
-				mDir = glm::normalize(ballPos);
-				auto ballMag = glm::length(ballPos);
-				float t = ((ballPos.y - racketPos.y) / other->getHeight());
-				mDir.x = -1;
-				mDir.y = t;
-
-				mpGameObject->getAudioSource()->play();
-			}
-		}
-	}
-
-	return true;
-}
-
-
-bool Ball::update(RKTEngine::UpdateMessage& message)
+void Ball::onUpdate()
 {
 	if (!mStartMoving && startTimer.getTimeElapsedInSeconds() > mSTART_DELAY)
 	{
 		mStartMoving = true;
 		startTimer.stop();
 	}
-	else if(mStartMoving)
+	else if (mStartMoving)
 	{
 
 		auto tr = getTransform();
@@ -107,13 +52,62 @@ bool Ball::update(RKTEngine::UpdateMessage& message)
 			reset();
 		}
 	}
+}
 
-	return Actor::update(message);
+bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
+{
+	if (Actor::onCollisionEnter(message))
+	{
+		auto other = message.otherCollider;
+		if (other != nullptr)
+		{
+			if (other->getTag().compare("lp") == 0)
+			{
+				auto ballTr = getTransform();
+				auto ballPos = getTransform()->getPosition();
+				auto racketPos = other->getTransform()->getPosition();
+
+				//help from https://www.noobtuts.com/cpp/2d-pong-game	
+				mDir = glm::normalize(ballPos);
+				auto ballMag = glm::length(ballPos);
+				float t = ((ballPos.y - racketPos.y) / other->getHeight());
+				mDir.x = 1;
+				mDir.y = t;
+
+				getGameObject()->getAudioSource()->play();
+			}
+			else if (other->getTag().compare("rp") == 0)
+			{
+				auto ballTr = getTransform();
+				auto ballPos = getTransform()->getPosition();
+				auto racketPos = other->getTransform()->getPosition();
+
+				mDir = glm::normalize(ballPos);
+				auto ballMag = glm::length(ballPos);
+				float t = ((ballPos.y - racketPos.y) / other->getHeight());
+				mDir.x = -1;
+				mDir.y = t;
+
+				getGameObject()->getAudioSource()->play();
+			}
+		}
+	}
+
+	return true;
 }
 
 void Ball::onMessage(RKTEngine::Message& message)
 {
 	RKTEngine::MessageDispatcher dispatcher(message);
-	dispatcher.dispatch<RKTEngine::UpdateMessage>(RKT_BIND_MESSAGE_FN(Ball::update));
 	dispatcher.dispatch<RKTEngine::CollisionEnterMessage>(RKT_BIND_MESSAGE_FN(Ball::onCollisionEnter));
+}
+
+void Ball::reset()
+{
+	bool dir = Random::range(0, 1);
+	mDir = dir == 0 ? glm::vec2(-1, 0) : glm::vec2(1, 0);
+
+	mStartMoving = false;
+	startTimer.start();
+	getTransform()->setPosition(mStartPos);
 }

@@ -61,6 +61,11 @@ project "RocketEngine"
         "YAML_CPP_STATIC_DEFINE"
     }
 
+    flags
+	{
+		"MultiProcessorCompile"
+	}
+
     postbuildcommands
     {
         ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/%{wks.name}")

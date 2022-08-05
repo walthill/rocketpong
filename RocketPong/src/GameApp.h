@@ -6,9 +6,8 @@
 #include <RKTUtils/PerformanceTracker.h>
 #include <RKTUtils/Timer.h>
 #include <RocketEngine/input/MessageDefines.h>
+#include <RocketEngine/gameobject/GameObject.h>
 
-class Paddle;
-class Ball;
 class GameManager;
 
 class GameApp : public RKTUtil::Singleton<GameApp>
@@ -53,9 +52,7 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 
 		GameManager* mpGameManager = nullptr;
 		
-		Paddle* mpPlayer1 = nullptr;
-		Paddle* mpPlayer2 = nullptr;
-		Ball* mpBall = nullptr;
+		RKTEngine::GameObject* mpBall = nullptr;
 
 		void beginInit();
 		void endInit();

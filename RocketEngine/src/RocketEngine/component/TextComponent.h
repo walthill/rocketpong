@@ -47,6 +47,7 @@ namespace RKTEngine
 			void setData(const TextData& data);
 			
 			void setText(const std::string& text);
+			void setText(int text);
 			void setColor(const Color& color);
 			void setFontSize(int fontSize);
 

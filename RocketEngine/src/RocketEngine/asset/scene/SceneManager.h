@@ -8,14 +8,10 @@
 namespace RKTEngine
 {
 	class GameObject;
-	class Actor;
-	class UILabel;
-
+	
 	struct Scene
 	{
 		std::string name;
-		std::vector<UILabel*> textUIs;
-		std::vector<Actor*> actors;
 		std::vector<GameObject*> entities;
 	};
 
@@ -27,9 +23,7 @@ namespace RKTEngine
 
 		void cleanActiveScene();
 
-		void registerUI(UILabel* textUI);
 		void registerEntity(GameObject* obj);
-		void registerActor(Actor* actor);
 
 		/// <summary>
 		/// Mark beginning of scene data. Actors between this call and endScene() will be assigned to sceneName
@@ -46,7 +40,7 @@ namespace RKTEngine
 		void loadScene(const std::string& sceneName, bool destroySceneData = true, bool makeActiveScene = true);
 		bool isActiveScene(const std::string& sceneName);
 
-		UILabel* findUILabelInScene(const std::string& objName);
+		GameObject* findGameObjectInScene(uint32_t id);
 
 	private:
 		std::map<std::string, Scene*> mScenes;
