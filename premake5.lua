@@ -39,6 +39,7 @@ project "RocketEngine"
         "%{prj.name}/vendor/kc_truetypeassembler",
         "%{prj.name}/vendor/yaml-cpp/include",
         "%{prj.name}/vendor/soloud/include",
+        "%{prj.name}/vendor/cereal",
         "%{prj.name}/vendor/glm"
     }
 
@@ -109,6 +110,7 @@ project "RocketPong"
         "RocketEngine/vendor/RocketUtils/RocketUtils/include",
         "RocketEngine/vendor/stb_image",
         "RocketEngine/vendor/kc_truetypeassembler",
+        "RocketEngine/vendor/cereal",
         "RocketEngine/vendor/glm"
     }
         
