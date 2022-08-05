@@ -21,6 +21,7 @@ namespace RKTEngine
 
 		if (result == SoLoud::SOLOUD_ERRORS::SO_NO_ERROR)
 		{
+			mInitialized = true;
 			RKT_CORE_TRACE("SoloudAudioSourceWAV :: File loaded successfully. Path:'{0}'", path);
 		}
 		else if (result == SoLoud::SOLOUD_ERRORS::FILE_NOT_FOUND)

@@ -35,7 +35,7 @@ namespace RKTEngine
 
 	void AudioSourceComponent::play(float vol)
 	{
-		if (mAudioSourceData.audioSource == nullptr)
+		if (!mAudioSourceData.audioSource->isInitialized())
 		{
 			RKT_WARN("AudioSourceComponent::Attempting to play a missing audio source!");
 			return;

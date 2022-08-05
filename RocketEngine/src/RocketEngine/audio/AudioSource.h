@@ -15,11 +15,13 @@ namespace RKTEngine
 
 			virtual void load(const std::string& path) =0;
 			
+			inline bool isInitialized() { return mInitialized; }
 			inline AudioFileType getType() { return mFileType; }
 			static AudioSource* create(const std::string& path, AudioFileType fileType = AudioFileType::WAV);
-				
+			
 		protected:
 			AudioFileType mFileType;
+			bool mInitialized = false;
 	};
 }
 
