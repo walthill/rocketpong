@@ -15,7 +15,7 @@ void GameManager::score(bool p1Scored)
 	if (p1Scored)
 	{
 		mP1Score++;
-		auto gameObj = RocketEngine->getSceneManager()->findGameObjectInScene(mP2ScoreId);
+		auto gameObj = RocketEngine->getSceneManager()->findGameObjectInScene(mP1ScoreId);
 		gameObj->getUILabel()->setText(mP1Score);
 	}
 	else

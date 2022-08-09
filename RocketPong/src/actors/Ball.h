@@ -9,10 +9,7 @@ class Ball : public RKTEngine::Actor
 	public:		
 		virtual void onCreate() override;
 		virtual void onStart() override;
-		//virtual void onDestroy();
 		virtual void onUpdate() override;
-		//virtual void onSerialize() override;
-		//virtual void onDeserialize() override;
 
 		void reset();
 
@@ -28,6 +25,23 @@ class Ball : public RKTEngine::Actor
 		float mSpeed;
 		bool mStartMoving = false;
 		RKTUtil::Timer startTimer;
+
+	//Save & load Actor variables here.
+	#pragma region Serialization
+
+		friend cereal::access;
+		template <class Archive>
+		void serialize(Archive& ar)
+		{
+			ar(CEREAL_NVP(mSpeed), CEREAL_NVP(mStartPos));
+		}
+
+protected:
+	virtual void onDeserialize(int id) override;
+
+	#pragma endregion
 };
+
+REGISTER_ACTOR(Ball);	//Attachs actor to serialization engine.
 
 #endif // !BALL_H

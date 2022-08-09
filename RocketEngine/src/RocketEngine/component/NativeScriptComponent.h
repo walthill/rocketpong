@@ -23,18 +23,18 @@ namespace RKTEngine
 				Component(id) {};
 
 			///Default deconstructor
-			~NativeScriptComponent() { destroyScript(this); };
+			~NativeScriptComponent() { if(destroyScript != nullptr) destroyScript(this); };
 
-			Actor* pInstance = nullptr;
+			std::shared_ptr<Actor> pInstance = nullptr;
 
-			Actor* (*instantiateScript)() = nullptr;
+			std::shared_ptr<Actor> (*instantiateScript)() = nullptr;
 			void (*destroyScript)(NativeScriptComponent*) = nullptr;
 
 			template<typename T>
 			void bind(uint32 id)
 			{		
-				instantiateScript = []() { return static_cast<Actor*>(new T()); };
-				destroyScript = [](NativeScriptComponent* nsc) { delete nsc->pInstance; nsc->pInstance = nullptr; };
+				instantiateScript = []() { return static_cast<std::shared_ptr<Actor>>(new T()); };
+				destroyScript = [](NativeScriptComponent* nsc) { nsc->pInstance.reset(); nsc->pInstance = nullptr; };
 
 				pInstance = instantiateScript();
 				pInstance->gameObjectId = id;
@@ -44,7 +44,7 @@ namespace RKTEngine
 			template<typename T>
 			T* get()
 			{
-				return static_cast<T*>(pInstance);
+				return static_cast<T*>(pInstance.get());
 			}
 
 		private:

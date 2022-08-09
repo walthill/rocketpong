@@ -1,5 +1,4 @@
 #include "Paddle.h"
-#include "RocketEngine.h"
 
 void Paddle::onCreate()
 {
@@ -7,11 +6,15 @@ void Paddle::onCreate()
 	GameObjManager->addSprite(gameObjectId, "paddle");
 	auto spr = gameObj->getSprite();
 	GameObjManager->addBoxCollider(gameObjectId, spr->getData()->mWidth, spr->getData()->mHeight);
+	mSpeed = 300;
 }
 
 void Paddle::onStart()
 {
-	mSpeed = 300;
+}
+
+void Paddle::onDestroy()
+{
 }
 
 void Paddle::onUpdate()
@@ -51,3 +54,22 @@ void Paddle::onUpdate()
 		transform->setPosition(oldPos);
 	}
 }
+
+#pragma region Serialization
+
+void Paddle::onDeserialize(int id)
+{
+	auto obj = GameObjManager->findGameObject(id);
+	if (obj != nullptr)
+	{
+		auto script = obj->getScript();
+		script->bind<Paddle>(id);
+		auto inst = script->get<Paddle>();
+		
+		//assign vars
+		inst->mIsP1 = mIsP1;
+		inst->mSpeed = mSpeed;
+	}
+}
+
+#pragma endregion

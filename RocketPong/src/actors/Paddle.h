@@ -9,15 +9,30 @@ class Paddle : public RKTEngine::Actor
 		
 		virtual void onCreate() override;
 		virtual void onStart() override;
-		//virtual void onDestroy();
+		virtual void onDestroy() override;
 		virtual void onUpdate() override;
-		//virtual void onSerialize() override;
-		//virtual void onDeserialize() override;
 
 		bool mIsP1;
 
 	private:
 		float mSpeed = 20;
+
+	#pragma region Serialization
+
+		friend cereal::access;
+		template <class Archive>
+		void serialize(Archive& ar)
+		{
+			ar(CEREAL_NVP(mSpeed), CEREAL_NVP(mIsP1));
+		}
+	
+	protected:	
+		virtual void onDeserialize(int id) override;
+
+	#pragma endregion
+
 };
+
+REGISTER_ACTOR(Paddle);
 
 #endif //!PADDLE_H

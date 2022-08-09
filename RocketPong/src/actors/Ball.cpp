@@ -102,6 +102,20 @@ void Ball::onMessage(RKTEngine::Message& message)
 	dispatcher.dispatch<RKTEngine::CollisionEnterMessage>(RKT_BIND_MESSAGE_FN(Ball::onCollisionEnter));
 }
 
+void Ball::onDeserialize(int id)
+{
+	auto obj = GameObjManager->findGameObject(id);
+	if (obj != nullptr)
+	{
+		auto script = obj->getScript();
+		script->bind<Ball>(id);
+		auto inst = script->get<Ball>();
+
+		inst->mStartPos = mStartPos;
+		inst->mSpeed = mSpeed;
+	}
+}
+
 void Ball::reset()
 {
 	bool dir = Random::range(0, 1);

@@ -120,6 +120,11 @@ namespace RKTEngine
 		EngineCore::getInstance()->getEntityManager()->addUILabel(mId, data.mFontName, data.mText, data.mFontSize, data.mColor);
 	}
 
+	void GameObject::addNativeScriptComponent()
+	{
+		EngineCore::getInstance()->getEntityManager()->addNativeScript(mId);
+	}
+
 
 	SpriteComponent* GameObject::getSprite_Serialize() const
 	{
@@ -142,6 +147,11 @@ namespace RKTEngine
 	TextComponent* GameObject::getUILabel_Serialize() const
 	{
 		auto pComponent = EngineCore::getInstance()->getComponentManager()->getTextComponent(mLabelId);
+		return pComponent;
+	}
+	NativeScriptComponent* GameObject::getScript_Serialize() const
+	{
+		auto pComponent = EngineCore::getInstance()->getComponentManager()->getNativeScriptComponent(mNativeScriptId);
 		return pComponent;
 	}
 }

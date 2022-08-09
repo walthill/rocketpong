@@ -23,13 +23,15 @@
 
 #include <RKTUtils/Trackable.h>
 #include <cereal/cereal.hpp>
+#include <cereal/types/memory.hpp>
 #include "RocketEngine/Defines.h"
-#include "RocketEngine/input/message/Message.h"
 #include <RocketEngine/component/TransformComponent.h>
 #include <RocketEngine/component/SpriteComponent.h>
 #include <RocketEngine/component/BoxColliderComponent.h>
 #include <RocketEngine/component/TextComponent.h>
 #include <RocketEngine/component/AudioSourceComponent.h>
+#include <RocketEngine/component/NativeScriptComponent.h>
+#include <RocketEngine/actor/Actor.h>
 
 namespace RKTEngine
 {
@@ -106,11 +108,13 @@ namespace RKTEngine
 			BoxColliderComponent* getBoxCollider_Serialize() const;
 			AudioSourceComponent* getAudioSource_Serialize() const;
 			TextComponent* getUILabel_Serialize() const;
+			NativeScriptComponent* getScript_Serialize() const;
 
 			void addSpriteComponent(SpriteComponentData data);
 			void addBoxColliderComponent(BoxColliderData data);
 			void addAudioSourceComponent(AudioSourceComponentData data);
 			void addUILabelComponent(TextData data);
+			void addNativeScriptComponent();
 
 			void setName();
 
@@ -171,6 +175,7 @@ namespace RKTEngine
 			void connectNativeScript(ComponentId scriptId) { mNativeScriptId = scriptId; }
 
 			friend cereal::access;
+
 			template<class Archive>
 			void save(Archive& archive) const
 			{
@@ -179,7 +184,8 @@ namespace RKTEngine
 				auto box = getBoxCollider_Serialize();
 				auto aud = getAudioSource_Serialize();
 				auto lbl = getUILabel_Serialize();
-
+				auto pActor = getScript_Serialize() == nullptr ? std::shared_ptr<Actor>(nullptr) : std::shared_ptr<Actor>(getScript_Serialize()->pInstance);
+				
 				auto sprData = spr == nullptr ? nullptr : spr->getData();
 				auto boxData = box == nullptr ? nullptr : box->getData();
 				auto audData = aud == nullptr ? nullptr : aud->getData();
@@ -187,7 +193,7 @@ namespace RKTEngine
 
 				archive(CEREAL_NVP(name), cereal::make_nvp("TransformComponent", tr.getData()), cereal::make_nvp("SpriteComponent", *sprData),
 						cereal::make_nvp("BoxColliderComponent", *boxData), cereal::make_nvp("AudioSourceComponent", *audData),
-						cereal::make_nvp("UILabelComponent", *lblData));
+						cereal::make_nvp("UILabelComponent", *lblData), MAKE_NVP("Native Script", pActor));
 			}
 
 			template<class Archive>
@@ -198,10 +204,11 @@ namespace RKTEngine
 				auto box = ZERO_BOX_COLLIDER_DATA;
 				auto aud = ZERO_AUDIO_SRC_DATA;
 				auto lbl = ZERO_LABEL_DATA;
-				//NativeScriptComponent natv;
+				std::shared_ptr<Actor> pActor;
 
 				archive(CEREAL_NVP(name), cereal::make_nvp("TransformComponent", tr), cereal::make_nvp("SpriteComponent", spr),
-						cereal::make_nvp("BoxColliderComponent", box), cereal::make_nvp("AudioSourceComponent", aud), cereal::make_nvp("UILabelComponent", lbl));
+						cereal::make_nvp("BoxColliderComponent", box), cereal::make_nvp("AudioSourceComponent", aud), cereal::make_nvp("UILabelComponent", lbl),
+						MAKE_NVP("Native Script", pActor));
 
 				if (!spr.mSpriteName.empty())
 					addSpriteComponent(spr);
@@ -211,6 +218,11 @@ namespace RKTEngine
 					addAudioSourceComponent(aud);
 				if (!lbl.mFontName.empty())
 					addUILabelComponent(lbl);
+				if (pActor.get() != nullptr)
+				{					
+					addNativeScriptComponent();
+					pActor->onDeserialize(mId);
+				}
 
 				getTransform()->setData(tr);
 			}

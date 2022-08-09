@@ -2,7 +2,7 @@
     "Scene Data": {
         "GameObjects": [
             {
-                "name": "New GameObject(4)",
+                "name": "New GameObject(7)",
                 "TransformComponent": {
                     "mPosition": {
                         "x": 368.0,
@@ -36,10 +36,13 @@
                             "w": 255.0
                         }
                     }
+                },
+                "Native Script": {
+                    "polymorphic_id": 0
                 }
             },
             {
-                "name": "New GameObject(5)",
+                "name": "New GameObject(8)",
                 "TransformComponent": {
                     "mPosition": {
                         "x": 432.0,
@@ -73,6 +76,9 @@
                             "w": 255.0
                         }
                     }
+                },
+                "Native Script": {
+                    "polymorphic_id": 0
                 }
             }
         ]

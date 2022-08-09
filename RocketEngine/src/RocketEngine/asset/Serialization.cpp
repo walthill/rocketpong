@@ -1,11 +1,10 @@
 #include "Serialization.h"
-#include <RocketEngine/Defines.h>
 #include <fstream>
+#include <RocketEngine/Defines.h>
 #include "scene/SceneManager.h"
 #include <RKTUtils/Profiling.h>
 #include <RocketEngine/core/Log.h>
 #include <cereal/archives/json.hpp>
-#include <cereal/archives/portable_binary.hpp>
 
 namespace RKTEngine
 {

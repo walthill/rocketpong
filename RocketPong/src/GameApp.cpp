@@ -42,6 +42,8 @@ bool GameApp::initialize()
 
 void GameApp::beginInit()
 {
+	RKT_PROFILE_FUNCTION();
+
 	pinitPerformanceTracker = new RKTUtil::PerformanceTracker();
 	pinitPerformanceTracker->startTracking(mINIT_TRACKER_NAME);
 	mIsRunning = true;
@@ -56,6 +58,8 @@ void GameApp::beginInit()
 
 void GameApp::endInit()
 {
+	RKT_PROFILE_FUNCTION();
+
 	pinitPerformanceTracker->stopTracking(mINIT_TRACKER_NAME);
 	RKT_INFO("Time to init: " + std::to_string(pinitPerformanceTracker->getElapsedTime(mINIT_TRACKER_NAME)) + "ms\n");
 
@@ -67,11 +71,14 @@ void GameApp::endInit()
 
 void GameApp::loadStartupScene(const std::string& scene)
 {
+	RKT_PROFILE_FUNCTION();
 	RocketEngine->getSceneManager()->loadScene(scene);
 }
 
 void GameApp::generateSceneData(bool quitOnComplete)
 {
+	RKT_PROFILE_FUNCTION();
+
 	if (mRunSceneGenerator)
 	{
 		auto w = RocketEngine->getWindowWidth();
@@ -79,24 +86,24 @@ void GameApp::generateSceneData(bool quitOnComplete)
 
 		RocketEngine->getSceneManager()->beginScene("game");
 
-		//GameObject* pPlayer1 = GameObjManager->createActor();
-		//pPlayer1->getScript()->bind<Paddle>(pPlayer1->getId());
-		//pPlayer1->getScript()->get<Paddle>()->mIsP1 = true;
-		//pPlayer1->name = "P1 Paddle";
-		//pPlayer1->getTransform()->setPosition({ 100, h / 2 });
-		//pPlayer1->getBoxCollider()->setTag("lp");
-		//
-		//GameObject* mpPlayer2 = GameObjManager->createActor();
-		//mpPlayer2->getScript()->bind<Paddle>(mpPlayer2->getId());
-		//mpPlayer2->getScript()->get<Paddle>()->mIsP1 = false;
-		//mpPlayer2->name = "P2 Paddle";
-		//mpPlayer2->getTransform()->setPosition({ w - 100, h / 2 });
-		//mpPlayer2->getBoxCollider()->setTag("rp");
-		//
-		//mpBall = GameObjManager->createActor();
-		//mpBall->getScript()->bind<Ball>(mpBall->getId());
-		//mpBall->getScript()->get<Ball>()->mStartPos = { w / 2,h / 2 };
-		//mpBall->name = "Ball";
+		GameObject* pPlayer1 = GameObjManager->createActor();
+		pPlayer1->getScript()->bind<Paddle>(pPlayer1->getId());
+		pPlayer1->getScript()->get<Paddle>()->mIsP1 = true;
+		pPlayer1->name = "P1 Paddle";
+		pPlayer1->getTransform()->setPosition({ 100, h / 2 });
+		pPlayer1->getBoxCollider()->setTag("lp");
+		
+		GameObject* mpPlayer2 = GameObjManager->createActor();
+		mpPlayer2->getScript()->bind<Paddle>(mpPlayer2->getId());
+		mpPlayer2->getScript()->get<Paddle>()->mIsP1 = false;
+		mpPlayer2->name = "P2 Paddle";
+		mpPlayer2->getTransform()->setPosition({ w - 100, h / 2 });
+		mpPlayer2->getBoxCollider()->setTag("rp");
+		
+		mpBall = GameObjManager->createActor();
+		mpBall->getScript()->bind<Ball>(mpBall->getId());
+		mpBall->getScript()->get<Ball>()->mStartPos = { w / 2,h / 2 };
+		mpBall->name = "Ball";
 
 		//midline
 		auto midlineSprite = RocketEngine->getEntityManager()->createSprite("paddle", {w / 2, h / 2}, {0.25f, 100.0f});
@@ -107,8 +114,8 @@ void GameApp::generateSceneData(bool quitOnComplete)
 		p1Score->name = "p1score";
 		GameObject* p2Score = GameObjManager->createLabel(std::to_string(mpGameManager->mP2Score), { w / 2 + 32, 10 }, glm::vec2(1.0f), 0, "Arkitech-Medium", RKTEngine::Text::sDefaultTextSize);
 		p2Score->name = "p2score";
-		
 		mpGameManager->setScoreUI(p1Score->getId(), p2Score->getId());
+		
 		RocketEngine->getSceneManager()->endScene(false);
 
 		RocketEngine->getSceneManager()->beginScene("main");

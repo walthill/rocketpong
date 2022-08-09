@@ -256,6 +256,8 @@ namespace RKTEngine
 			pComponentManager->deallocateSpriteComponent(obj->getSpriteId());
 			pComponentManager->deallocateTextComponent(obj->getLabelId());
 			pComponentManager->deallocateBoxColliderComponent(obj->getColliderId());
+			pComponentManager->deallocateAudioSourceComponent(obj->getAudioSourceId());
+			pComponentManager->deallocateNativeScriptComponent(obj->getNativeScriptId());
 
 			//call destructor on gameObj
 			obj->~GameObject();
