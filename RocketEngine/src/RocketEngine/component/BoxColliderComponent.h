@@ -15,6 +15,20 @@ namespace RKTEngine
 
 		BoxColliderData() : ColliderData(""), width(0), height(0) {};
 		BoxColliderData(int w, int h, const std::string& t = "") : ColliderData(t), width(w), height(h) {};
+
+		template<class Archive>
+		void save(Archive& archive) const
+		{
+			if(this != nullptr)
+				archive(CEREAL_NVP(width), CEREAL_NVP(height), CEREAL_NVP(tag));
+		}
+
+		template<class Archive>
+		void load(Archive& archive)
+		{
+			if (!tag.empty())
+				archive(CEREAL_NVP(width), CEREAL_NVP(height), CEREAL_NVP(tag));
+		}
 	};
 
 	struct CollisionData
@@ -45,7 +59,7 @@ namespace RKTEngine
 			void setData(const BoxColliderData& data);
 
 			///Access the component data
-			inline BoxColliderData getData() { return mBoxColliderData; }
+			inline BoxColliderData* getData() { return &mBoxColliderData; }
 
 			virtual inline const std::string& getTag() override { return mBoxColliderData.tag; };
 			virtual inline void setTag(const std::string& tag) override { mBoxColliderData.tag = tag; };

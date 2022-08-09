@@ -22,16 +22,17 @@
 #define GAME_OBJ_H
 
 #include <RKTUtils/Trackable.h>
+#include <cereal/cereal.hpp>
 #include "RocketEngine/Defines.h"
 #include "RocketEngine/input/message/Message.h"
+#include <RocketEngine/component/TransformComponent.h>
+#include <RocketEngine/component/SpriteComponent.h>
+#include <RocketEngine/component/BoxColliderComponent.h>
+#include <RocketEngine/component/TextComponent.h>
+#include <RocketEngine/component/AudioSourceComponent.h>
 
 namespace RKTEngine
 {
-	class SpriteComponent;
-	class TransformComponent;
-	class TextComponent;
-	class BoxColliderComponent;
-	class AudioSourceComponent;
 	class NativeScriptComponent;
 
 	/***************************************************************************//**
@@ -48,6 +49,9 @@ namespace RKTEngine
 		public:
 			///Default constructor
 			GameObject();
+
+			GameObject(GameObjectId id);
+
 			///Default deconstructor
 			~GameObject();
 
@@ -84,7 +88,6 @@ namespace RKTEngine
 			AudioSourceComponent* getAudioSource();
 			NativeScriptComponent* getScript();
 
-
 			std::string name;
 
 		private:
@@ -96,8 +99,19 @@ namespace RKTEngine
 			ComponentId mAudioSourceId;
 			ComponentId mNativeScriptId;
 
-			TransformComponent* mpTransform;
-			
+			TransformComponent* mpTransform = nullptr;
+
+			TransformComponent getTransform_Serialize() const { return *mpTransform; }
+			SpriteComponent* getSprite_Serialize() const;
+			BoxColliderComponent* getBoxCollider_Serialize() const;
+			AudioSourceComponent* getAudioSource_Serialize() const;
+			TextComponent* getUILabel_Serialize() const;
+
+			void addSpriteComponent(SpriteComponentData data);
+			void addBoxColliderComponent(BoxColliderData data);
+			void addAudioSourceComponent(AudioSourceComponentData data);
+			void addUILabelComponent(TextData data);
+
 			void setName();
 
 			/**********************************************************************//**
@@ -155,6 +169,51 @@ namespace RKTEngine
 			* @param labelId TextComponent identifier
 			*************************************************************************/
 			void connectNativeScript(ComponentId scriptId) { mNativeScriptId = scriptId; }
+
+			friend cereal::access;
+			template<class Archive>
+			void save(Archive& archive) const
+			{
+				auto tr = getTransform_Serialize();
+				auto spr = getSprite_Serialize();
+				auto box = getBoxCollider_Serialize();
+				auto aud = getAudioSource_Serialize();
+				auto lbl = getUILabel_Serialize();
+
+				auto sprData = spr == nullptr ? nullptr : spr->getData();
+				auto boxData = box == nullptr ? nullptr : box->getData();
+				auto audData = aud == nullptr ? nullptr : aud->getData();
+				auto lblData = lbl == nullptr ? nullptr : lbl->getData();
+
+				archive(CEREAL_NVP(name), cereal::make_nvp("TransformComponent", tr.getData()), cereal::make_nvp("SpriteComponent", *sprData),
+						cereal::make_nvp("BoxColliderComponent", *boxData), cereal::make_nvp("AudioSourceComponent", *audData),
+						cereal::make_nvp("UILabelComponent", *lblData));
+			}
+
+			template<class Archive>
+			void load(Archive& archive)
+			{
+				auto tr = ZERO_TRANSFORM_DATA;
+				auto spr = ZERO_SPRITE_DATA;
+				auto box = ZERO_BOX_COLLIDER_DATA;
+				auto aud = ZERO_AUDIO_SRC_DATA;
+				auto lbl = ZERO_LABEL_DATA;
+				//NativeScriptComponent natv;
+
+				archive(CEREAL_NVP(name), cereal::make_nvp("TransformComponent", tr), cereal::make_nvp("SpriteComponent", spr),
+						cereal::make_nvp("BoxColliderComponent", box), cereal::make_nvp("AudioSourceComponent", aud), cereal::make_nvp("UILabelComponent", lbl));
+
+				if (!spr.mSpriteName.empty())
+					addSpriteComponent(spr);
+				if (!box.tag.empty())
+					addBoxColliderComponent(box);
+				if (!aud.mAudioFileName.empty())
+					addAudioSourceComponent(aud);
+				if (!lbl.mFontName.empty())
+					addUILabelComponent(lbl);
+
+				getTransform()->setData(tr);
+			}
 	};
 }
 #endif // !GAME_OBJ_H

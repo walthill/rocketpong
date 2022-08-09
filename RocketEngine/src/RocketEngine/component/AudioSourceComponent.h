@@ -16,16 +16,30 @@ namespace RKTEngine
 	 ******************************************************************************/
 	struct AudioSourceComponentData
 	{
-		std::string audioFileName;
+		std::string mAudioFileName;
 		AudioSource* audioSource;
 		float mVolume = -1.0f;
 		float mPan = 0.0f;
 		bool mPaused = false;
 
 		///Default constructor sets all values to zero
-		AudioSourceComponentData() : audioFileName(""), audioSource(nullptr) {};
+		AudioSourceComponentData() : mAudioFileName(""), audioSource(nullptr) {};
 		AudioSourceComponentData(const std::string& audioFile, float vol = -1.0f, float pan = 0.0f, bool pause = false) 
-			: audioFileName(audioFile), audioSource(nullptr), mVolume(vol), mPan(pan), mPaused(pause) {};
+			: mAudioFileName(audioFile), audioSource(nullptr), mVolume(vol), mPan(pan), mPaused(pause) {};
+
+		template<class Archive>
+		void save(Archive& archive) const
+		{
+			if (this != nullptr)
+				archive(CEREAL_NVP(mAudioFileName), CEREAL_NVP(mVolume), CEREAL_NVP(mPan));
+		}
+
+		template<class Archive>
+		void load(Archive& archive)
+		{
+			if (!mAudioFileName.empty())
+				archive(CEREAL_NVP(mAudioFileName), CEREAL_NVP(mVolume), CEREAL_NVP(mPan));
+		}
 	};
 
 	const AudioSourceComponentData ZERO_AUDIO_SRC_DATA;

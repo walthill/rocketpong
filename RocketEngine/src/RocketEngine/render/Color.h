@@ -2,8 +2,7 @@
 #define COLOR_H
 
 #include <RKTUtils/Trackable.h>
-#include <glm/vec4.hpp>
-#include <glm/vec3.hpp>
+#include <RocketEngine/component/Component.h>
 
 namespace RKTEngine
 {
@@ -53,6 +52,19 @@ namespace RKTEngine
 		private:
 			glm::vec4 mColorValue;
 			static const float RGB01_CONVERSION;
+
+			friend cereal::access;
+			template<class Archive>
+			void save(Archive& archive) const
+			{
+				archive(cereal::make_nvp("data", mColorValue));
+			}
+
+			template<class Archive>
+			void load(Archive& archive)
+			{
+				archive(cereal::make_nvp("data", mColorValue));
+			}
 	};
 }
 #endif // !COLOR_H

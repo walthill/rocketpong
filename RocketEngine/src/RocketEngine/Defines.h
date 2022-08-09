@@ -1,5 +1,7 @@
 #include <string>
 
+#define MAKE_NVP(x,y) ::cereal::make_nvp(x,y)
+
 namespace RKTEngine
 {
 	//Help from https://github.com/TheCherno/Hazel

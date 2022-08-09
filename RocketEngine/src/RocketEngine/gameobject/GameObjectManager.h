@@ -19,14 +19,13 @@
 #ifndef GAME_OBJ_MAN_H
 #define GAME_OBJ_MAN_H
 
-#include "RocketEngine/Defines.h"
 #include <map>
 #include <RKTUtils/DeanLib_MemoryPool.h>
+#include "RocketEngine/Defines.h"
 #include "RocketEngine/component/TransformComponent.h"
 #include "RocketEngine/component/SpriteComponent.h"
 #include "RocketEngine/component/TextComponent.h"
 #include "RocketEngine/component/BoxColliderComponent.h"
-#include "RocketEngine/input/message/Message.h"
 #include "RocketEngine/asset/AssetManager.h"
 
 namespace RKTEngine
@@ -73,6 +72,8 @@ namespace RKTEngine
 										 const SpriteComponentData& spriteData = ZERO_SPRITE_DATA,
 										 const TextData& labelData = ZERO_LABEL_DATA,
 						 				 const GameObjectId& id = INVALID_GAMEOBJECT_ID);
+
+			GameObject* registerGameObjectData(GameObject obj);
 			
 			GameObject* createActor(const TransformData& transform = ZERO_TRANSFORM_DATA,
 				const SpriteComponentData& spriteData = ZERO_SPRITE_DATA,
@@ -98,8 +99,8 @@ namespace RKTEngine
 
 			void addAudioSource(int objId, const std::string& audio, float vol = -1.0f, float pan = 0.0f);
 			void addBoxCollider(int objId, int w, int h, const std::string& t = "untagged");
-			void addSprite(int objId, const std::string& spriteToLoad = AssetManager::sDEFAULT_SPRITE, const std::string& tileName = "", glm::vec2 position = glm::vec2(0, 0),
-						   glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
+			void addSprite(int objId, const std::string& spriteToLoad = AssetManager::sDEFAULT_SPRITE, const std::string& tileName = "", Color color = Color::white);
+			void addUILabel(int objId, const std::string& font, const std::string& text, int size, Color color);
 			void addNativeScript(int objId);
 
 			/**********************************************************************//**

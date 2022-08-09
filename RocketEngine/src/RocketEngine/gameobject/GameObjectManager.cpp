@@ -29,18 +29,16 @@ namespace RKTEngine
 
 		if (ptr != nullptr)
 		{
-			newObj = ::new (ptr)GameObject();//placement new
-
 			GameObjectId newId = id;
 			if (newId == INVALID_GAMEOBJECT_ID) //new game obj
 			{
 				newId = msNextUnitId;
 				msNextUnitId++;
 			}
+			newObj = ::new (ptr)GameObject(newId);//placement new
 
 			//add new object to map and set the object's id locally
 			mGameObjMap[newId] = newObj;
-			newObj->setId(newId);
 			newObj->setName();
 
 			//Hook up components
@@ -63,13 +61,32 @@ namespace RKTEngine
 			//Create text component, store id in new object, and load the text to the component
 			if (!labelData.mFontName.empty())
 			{
-				ComponentId newLabelId = pComponentManager->allocateTextComponent(newObj->getTransformId(), labelData);
+				ComponentId newLabelId = pComponentManager->allocateTextComponent(labelData);
 				newObj->connectLabel(newLabelId);
 			}
 
 			EngineCore::getInstance()->getSceneManager()->registerEntity(newObj);
 		}
 		return newObj;
+	}
+
+	GameObject* GameObjectManager::registerGameObjectData(GameObject obj)
+	{
+		auto it = mGameObjMap.find(obj.getId());
+		if (it != mGameObjMap.end())
+		{
+			auto newObj = it->second;
+			newObj->name = obj.name;
+
+			auto trId = obj.getTransformId();
+
+			////Hook up components
+			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
+			newObj->connectTransform(trId);
+			newObj->setTransformHandle(pComponentManager->getTransformComponent(trId));
+		}
+
+		return it->second;
 	}
 
 	GameObject* GameObjectManager::createActor(const TransformData& transform, const SpriteComponentData& spriteData,
@@ -81,18 +98,16 @@ namespace RKTEngine
 
 		if (ptr != nullptr)
 		{
-			newObj = ::new (ptr)GameObject();//placement new
-
 			GameObjectId newId = id;
 			if (newId == INVALID_GAMEOBJECT_ID) //new game obj
 			{
 				newId = msNextUnitId;
 				msNextUnitId++;
 			}
+			newObj = ::new (ptr)GameObject(newId);//placement new
 
 			//add new object to map and set the object's id locally
 			mGameObjMap[newId] = newObj;
-			newObj->setId(newId);
 			newObj->setName();
 
 			//Hook up components
@@ -115,7 +130,7 @@ namespace RKTEngine
 			//Create text component, store id in new object, and load the text to the component
 			if (!labelData.mFontName.empty())
 			{
-				ComponentId newLabelId = pComponentManager->allocateTextComponent(newObj->getTransformId(), labelData);
+				ComponentId newLabelId = pComponentManager->allocateTextComponent(labelData);
 				newObj->connectLabel(newLabelId);
 			}
 
@@ -170,15 +185,27 @@ namespace RKTEngine
 		}
 	}
 
-	void GameObjectManager::addSprite(int objId, const std::string& spriteToLoad, const std::string& tileName, glm::vec2 position, glm::vec2 scale, float rotation)
+	void GameObjectManager::addSprite(int objId, const std::string& spriteToLoad, const std::string& tileName, Color color)
 	{
 		auto it = mGameObjMap.find(objId);
 		if (it != mGameObjMap.end())
 		{
-			SpriteComponentData spriteData = SpriteComponentData(spriteToLoad, tileName);
+			SpriteComponentData spriteData = SpriteComponentData(spriteToLoad, tileName, color);
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
 			ComponentId newSpriteId = pComponentManager->allocateSpriteComponent(spriteData);
 			it->second->connectSprite(newSpriteId);
+		}
+	}
+
+	void GameObjectManager::addUILabel(int objId, const std::string& font, const std::string& text, int size, Color color)
+	{
+		auto it = mGameObjMap.find(objId);
+		if (it != mGameObjMap.end())
+		{
+			TextData data = TextData(font, text, size, color);
+			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
+			ComponentId id = pComponentManager->allocateTextComponent(data);
+			it->second->connectLabel(id);
 		}
 	}
 

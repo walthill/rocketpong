@@ -21,8 +21,6 @@
 #define TRANSFORM_COMPONENT_H
 
 #include "Component.h"
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
 
 namespace RKTEngine
 {
@@ -35,6 +33,18 @@ namespace RKTEngine
 		Rotation() : angle(0), rotationAxis(glm::vec3(0,0,0)) {}
 		///Constructor that takes in values for struct variables
 		Rotation(glm::vec3 axis, float a) : angle(a), rotationAxis(axis) {}
+
+		template<class Archive>
+		void save(Archive& archive) const
+		{
+			archive(CEREAL_NVP(angle), CEREAL_NVP(rotationAxis));
+		}
+
+		template<class Archive>
+		void load(Archive& archive)
+		{
+			archive(CEREAL_NVP(angle), CEREAL_NVP(rotationAxis));
+		}
 	};
 
 
@@ -46,17 +56,6 @@ namespace RKTEngine
 	 ******************************************************************************/
 	struct TransformData
 	{
-		/*struct Rotation
-		{
-			float angle;			///< Rotation angle
-			rkm::Vector3 rotationAxis;	///< Axis of rotation
-
-			///Default constructor sets all values to zero
-			Rotation() : angle(0), rotationAxis(rkm::Vector3::up) {}
-			///Constructor that takes in values for struct variables
-			Rotation(rkm::Vector3 axis, float a) : angle(a), rotationAxis(axis) {}
-		};
-		*/
 		Rotation mRotation;	///< Transform rotation data
 		glm::vec2 mPosition;	///< Transform position value
 		glm::vec2 mScale;		///< Transform scale value
@@ -69,6 +68,18 @@ namespace RKTEngine
 
 		///Constructor that takes in values for struct variables
 		TransformData(glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation, float angle) : mPosition(pos), mScale(scale), mRotation(rotation, angle) {};
+
+		template<class Archive>
+		void save(Archive& archive) const
+		{
+			archive(CEREAL_NVP(mPosition), CEREAL_NVP(mScale), CEREAL_NVP(mRotation));
+		}
+
+		template<class Archive>
+		void load(Archive& archive)
+		{
+			archive(CEREAL_NVP(mPosition), CEREAL_NVP(mScale), CEREAL_NVP(mRotation));
+		}
 	};
 
 	const TransformData ZERO_TRANSFORM_DATA;

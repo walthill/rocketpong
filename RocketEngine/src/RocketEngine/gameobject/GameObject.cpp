@@ -1,15 +1,32 @@
 #include "GameObject.h"
 #include "RocketEngine/core/EngineCore.h"
-#include "RocketEngine/component/TransformComponent.h"
 #include "RocketEngine/core/ComponentManager.h"
-#include "RocketEngine/actor/Actor.h"
+#include "RocketEngine/gameobject/GameObjectManager.h"
 #include <string>
+#include "cereal/archives/json.hpp"
+
 
 namespace RKTEngine
 {
 
 	GameObject::GameObject() :
 		name("")
+	{
+		//register with ecs
+		auto obj = EngineCore::getInstance()->getEntityManager()->createGameObject();
+		mId = obj->getId();
+
+		//create a transform when creating gameObjs outside the ecs
+		if (getTransform() == nullptr)
+		{
+			auto pComponentManager = EngineCore::getInstance()->getComponentManager();
+			connectTransform(pComponentManager->allocateTransformComponent());
+			setTransformHandle(pComponentManager->getTransformComponent(mTransformId));
+		}
+	}
+
+	GameObject::GameObject(GameObjectId id) :
+		name(""), mId(id)
 	{
 	}
 
@@ -80,6 +97,51 @@ namespace RKTEngine
 	NativeScriptComponent* GameObject::getScript()
 	{
 		auto pComponent = EngineCore::getInstance()->getComponentManager()->getNativeScriptComponent(mNativeScriptId);
+		return pComponent;
+	}
+
+	void GameObject::addSpriteComponent(SpriteComponentData data)
+	{
+		EngineCore::getInstance()->getEntityManager()->addSprite(mId, data.mSpriteName, data.mTileName, data.mColor);
+	}
+	
+	void GameObject::addBoxColliderComponent(BoxColliderData data)
+	{
+		EngineCore::getInstance()->getEntityManager()->addBoxCollider(mId, data.width, data.height, data.tag);
+	}
+
+	void GameObject::addAudioSourceComponent(AudioSourceComponentData data)
+	{
+		EngineCore::getInstance()->getEntityManager()->addAudioSource(mId, data.mAudioFileName);
+	}
+
+	void GameObject::addUILabelComponent(TextData data)
+	{
+		EngineCore::getInstance()->getEntityManager()->addUILabel(mId, data.mFontName, data.mText, data.mFontSize, data.mColor);
+	}
+
+
+	SpriteComponent* GameObject::getSprite_Serialize() const
+	{
+		auto pComponent = EngineCore::getInstance()->getComponentManager()->getSpriteComponent(mSpriteId);
+		return pComponent;
+	}
+
+	BoxColliderComponent* RKTEngine::GameObject::getBoxCollider_Serialize() const
+	{
+		auto pComponent = EngineCore::getInstance()->getComponentManager()->getBoxColliderComponent(mColliderId);
+		return pComponent;
+	}
+
+	AudioSourceComponent* GameObject::getAudioSource_Serialize() const
+	{
+		auto pComponent = EngineCore::getInstance()->getComponentManager()->getAudioSourceComponent(mAudioSourceId);
+		return pComponent;
+	}
+
+	TextComponent* GameObject::getUILabel_Serialize() const
+	{
+		auto pComponent = EngineCore::getInstance()->getComponentManager()->getTextComponent(mLabelId);
 		return pComponent;
 	}
 }

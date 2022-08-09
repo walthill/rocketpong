@@ -5,7 +5,6 @@
 #include <RocketEngine\render\Color.h>
 #include <RocketEngine\render\Text.h>
 #include <RocketEngine\render\Font.h>
-#include <glm/mat4x4.hpp>
 
 namespace RKTEngine
 {
@@ -18,7 +17,32 @@ namespace RKTEngine
 		int mFontSize;
 
 		TextData() : mTextInfo(nullptr), mText("New Text"), mColor(), mFontSize(Text::sDefaultTextSize), mFontName("") {}
-		TextData(const std::string& fontName, const std::string& text, int fontSize = Text::sDefaultTextSize, Color color = Color::white) : mFontName(fontName), mTextInfo(nullptr), mText(text), mColor(color), mFontSize(fontSize) {}
+		TextData(const std::string& fontName, const std::string& text, int fontSize = Text::sDefaultTextSize, Color color = Color::white) 
+			: mFontName(fontName), mTextInfo(nullptr), mText(text), mColor(color), mFontSize(fontSize) {}
+	
+		template<class Archive>
+		void save(Archive& archive) const
+		{
+			if (this != nullptr)
+				archive(  CEREAL_NVP(mFontName), CEREAL_NVP(mText), CEREAL_NVP(mFontSize), MAKE_NVP("Color", mColor));
+		}
+
+		template<class Archive>
+		void load(Archive& archive)
+		{
+			try
+			{
+				archive(CEREAL_NVP(mFontName), CEREAL_NVP(mText), CEREAL_NVP(mFontSize), MAKE_NVP("Color", mColor));
+			}
+			catch (cereal::Exception&)
+			{
+				archive.setNextName(nullptr);
+				//help with handling null values here: https://github.com/USCiLab/cereal/issues/30#issuecomment-231848170
+				// Loading a key that doesn't exist results in an exception
+				// Since "Not Found" is a valid condition for us, we swallow
+				// this exception and the archive will not load anything
+			}
+		}
 	};
 
 	const TextData ZERO_LABEL_DATA;

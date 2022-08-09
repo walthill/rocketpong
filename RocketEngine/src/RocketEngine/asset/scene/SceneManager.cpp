@@ -1,9 +1,6 @@
 #include "SceneManager.h"
 #include "RocketEngine/asset/Serialization.h"
-#include <RocketEngine/actor/Actor.h>
 #include <RocketEngine/core/Log.h>
-#include <RocketEngine/core/EngineCore.h>
-#include <RocketEngine/gameobject/GameObjectManager.h>
 
 namespace RKTEngine
 {
@@ -45,7 +42,7 @@ namespace RKTEngine
 		{
 			if (entity != nullptr)
 			{
-				RocketEngine->getEntityManager()->destroy(entity->getId());
+				EngineCore::getInstance()->getEntityManager()->destroy(entity->getId());
 				entity = nullptr;
 			}
 		}
@@ -75,13 +72,15 @@ namespace RKTEngine
 
 	void SceneManager::endScene(bool destroySceneData)
 	{
-		//Serialization::serializeScene(mpActiveScene);
+		Serialization::serializeScene(mpActiveScene);
 		if(destroySceneData)	
 			cleanActiveScene();
 	}
 
 	void SceneManager::loadScene(const std::string& sceneName, bool destroySceneData, bool makeActiveScene)
 	{
+		RKT_PROFILE_FUNCTION();
+
 		if (makeActiveScene)
 		{
 			if (destroySceneData)
@@ -94,13 +93,14 @@ namespace RKTEngine
 			}
 			else
 			{
-				//mScenes[sceneName] = Serialization::deserializeScene(sceneName);
-				mpActiveScene = mScenes[sceneName];
+				mpActiveScene = new Scene{ sceneName, std::vector<GameObject*>() };
+				mpActiveScene = Serialization::deserializeScene(sceneName);
+				mScenes[sceneName] = mpActiveScene;
 			}
 		}
 		else
 		{
-			//mScenes[sceneName] = Serialization::deserializeScene(sceneName);
+			mScenes[sceneName] = Serialization::deserializeScene(sceneName);
 		}
 
 		//TODO: investigate deserializing increasing mem footprint 
@@ -119,6 +119,8 @@ namespace RKTEngine
 
 	GameObject* SceneManager::findGameObjectInScene(uint32_t id)
 	{
+		RKT_PROFILE_FUNCTION();
+
 		const auto& objs = mpActiveScene->entities;
 		for (size_t i = 0; i < objs.size(); i++)
 		{

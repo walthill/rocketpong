@@ -204,7 +204,7 @@ namespace RKTEngine
 			return nullptr;
 	}
 
-	ComponentId ComponentManager::allocateTextComponent(const ComponentId& labelID, const TextData& data)
+	ComponentId ComponentManager::allocateTextComponent(const TextData& data)
 	{
 		ComponentId newID = INVALID_COMPONENT_ID;
 		RKTUtil::Byte* ptr = mLabelPool.allocateObject();

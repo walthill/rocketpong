@@ -124,7 +124,7 @@ namespace RKTEngine
 		*
 		* @param data data Transform component data
 		*************************************************************************/
-		ComponentId allocateTextComponent(const ComponentId& labelID, const TextData& data = ZERO_LABEL_DATA);
+		ComponentId allocateTextComponent(const TextData& data = ZERO_LABEL_DATA);
 
 		/**********************************************************************//**
 		* Remove and destroy transform component from the collection based on the component identifier.

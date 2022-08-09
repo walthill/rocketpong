@@ -23,9 +23,9 @@ namespace RKTEngine
 	
 	void AudioSourceComponent::load()
 	{
-		if (!mAudioSourceData.audioFileName.empty())
+		if (!mAudioSourceData.mAudioFileName.empty())
 		{
-			mAudioSourceData.audioSource = EngineCore::getInstance()->getAssetManager()->loadAudioSource(mAudioSourceData.audioFileName);
+			mAudioSourceData.audioSource = EngineCore::getInstance()->getAssetManager()->loadAudioSource(mAudioSourceData.mAudioFileName);
 		}
 		else
 		{

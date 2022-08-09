@@ -1,33 +1,116 @@
-Name: game
-UI:
-  - Label: p1score
-    TransformComponent:
-      Position: [328, 10]
-      Rotation: [0, [0, 0, 1]]
-      Scale: [1, 1]
-    TextComponent:
-      Text: 0
-      Color: [255, 255, 255, 255]
-      FontName: Arkitech-Medium
-      FontSize: 32
-  - Label: p2score
-    TransformComponent:
-      Position: [432, 10]
-      Rotation: [0, [0, 0, 1]]
-      Scale: [1, 1]
-    TextComponent:
-      Text: 0
-      Color: [255, 255, 255, 255]
-      FontName: Arkitech-Medium
-      FontSize: 32
-GameObjects:
-  - Obj: midline
-    TransformComponent:
-      Position: [400, 400]
-      Rotation: [0, [0, 0, 1]]
-      Scale: [0.25, 100]
-    SpriteComponent:
-      SpriteName: paddle
-      TileName: ""
-      Color: [127.5, 127.5, 127.5, 0.200000003]
-      Dimensions: [16, 128]
+{
+    "Scene Data": {
+        "GameObjects": [
+            {
+                "name": "midline",
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 400.0,
+                        "y": 400.0
+                    },
+                    "mScale": {
+                        "x": 0.25,
+                        "y": 100.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {
+                    "mSpriteName": "paddle",
+                    "mTileName": "",
+                    "Color": {
+                        "data": {
+                            "x": 127.5,
+                            "y": 127.5,
+                            "z": 127.5,
+                            "w": 0.20000000298023225
+                        }
+                    }
+                },
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {}
+            },
+            {
+                "name": "p1score",
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 328.0,
+                        "y": 10.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {
+                    "mFontName": "Arkitech-Medium",
+                    "mText": "0",
+                    "mFontSize": 32,
+                    "Color": {
+                        "data": {
+                            "x": 255.0,
+                            "y": 255.0,
+                            "z": 255.0,
+                            "w": 255.0
+                        }
+                    }
+                }
+            },
+            {
+                "name": "p2score",
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 432.0,
+                        "y": 10.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {
+                    "mFontName": "Arkitech-Medium",
+                    "mText": "0",
+                    "mFontSize": 32,
+                    "Color": {
+                        "data": {
+                            "x": 255.0,
+                            "y": 255.0,
+                            "z": 255.0,
+                            "w": 255.0
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

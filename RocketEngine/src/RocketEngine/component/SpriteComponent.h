@@ -23,7 +23,6 @@
 #include "Component.h"
 #include "RocketEngine/render/buffers/Texture.h"
 #include <RocketEngine\render\Color.h>
-#include <glm/vec2.hpp>
 
 namespace RKTEngine
 {
@@ -58,9 +57,32 @@ namespace RKTEngine
 		///Constructor that takes in values for struct variables 
 		//width/height set when reading in sprite
 		//tileName used for id'ing atlased sprite cells
-		SpriteComponentData(std::string name, std::string tileName = "", int w = 0, int h = 0, Color color = Color::white) :
+		SpriteComponentData(std::string name, std::string tileName = "", Color color = Color::white) :
 			isLoaded(false), pSprite(nullptr), mSpriteName(name), mColor(color),
-			mWidth(w), mHeight(h), mTileName(tileName) {};
+			mWidth(0), mHeight(0), mTileName(tileName) {};
+
+		template<class Archive>
+		void save(Archive& archive) const
+		{
+			if (this != nullptr)
+				archive(CEREAL_NVP(mSpriteName), CEREAL_NVP(mTileName), MAKE_NVP("Color", mColor));
+		}
+
+		template<class Archive>
+		void load(Archive& archive)
+		{
+			try
+			{
+				archive(CEREAL_NVP(mSpriteName), CEREAL_NVP(mTileName), MAKE_NVP("Color", mColor));
+			}
+			catch (cereal::Exception&)
+			{
+				archive.setNextName(nullptr);
+				// Loading a key that doesn't exist results in an exception
+				// Since "Not Found" is a valid condition for us, we swallow
+				// this exception and the archive will not load anything
+			}
+		}
 	};
 
 	const SpriteComponentData ZERO_SPRITE_DATA;

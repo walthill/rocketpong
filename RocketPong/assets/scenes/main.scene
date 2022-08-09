@@ -1,24 +1,80 @@
-Name: main
-UI:
-  - Label: New GameObject(4)
-    TransformComponent:
-      Position: [368, 10]
-      Rotation: [0, [0, 0, 1]]
-      Scale: [1, 1]
-    TextComponent:
-      Text: MAIN
-      Color: [255, 255, 255, 255]
-      FontName: calibri
-      FontSize: 32
-  - Label: New GameObject(5)
-    TransformComponent:
-      Position: [432, 10]
-      Rotation: [0, [0, 0, 1]]
-      Scale: [1, 1]
-    TextComponent:
-      Text: MAIN
-      Color: [255, 255, 255, 255]
-      FontName: calibri
-      FontSize: 32
-GameObjects:
-  []
+{
+    "Scene Data": {
+        "GameObjects": [
+            {
+                "name": "New GameObject(4)",
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 368.0,
+                        "y": 10.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {
+                    "mFontName": "calibri",
+                    "mText": "MAIN",
+                    "mFontSize": 32,
+                    "Color": {
+                        "data": {
+                            "x": 255.0,
+                            "y": 255.0,
+                            "z": 255.0,
+                            "w": 255.0
+                        }
+                    }
+                }
+            },
+            {
+                "name": "New GameObject(5)",
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 432.0,
+                        "y": 10.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {
+                    "mFontName": "calibri",
+                    "mText": "MAIN",
+                    "mFontSize": 32,
+                    "Color": {
+                        "data": {
+                            "x": 255.0,
+                            "y": 255.0,
+                            "z": 255.0,
+                            "w": 255.0
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
