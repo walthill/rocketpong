@@ -72,10 +72,9 @@ namespace RKTEngine
 		glGenTextures(1, &mRendererId);
 		bind();
 
-		GLenum format = OpenGLTextureHelper::setColorChannel(channel, Renderer::TextureType::NONE);
+		GLenum format = OpenGLTextureHelper::setColorChannel(channel, Renderer::TextureType::RAW);
 		//GL_RGB8 - 8 bits per color value
-		glTexImage2D(GL_TEXTURE_2D, detailReductionLevel, GL_RGB8, width, height, OpenGLTextureHelper::BORDER_DEFAULT, format, GL_UNSIGNED_BYTE, data);
-
+		glTexImage2D(GL_TEXTURE_2D, detailReductionLevel, format, width, height, OpenGLTextureHelper::BORDER_DEFAULT, format, GL_UNSIGNED_BYTE, data);
 		OpenGLTextureHelper::setTextureParameters(sWrapParam, tWrapParam, miniFilter, magFilter);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -123,6 +122,8 @@ namespace RKTEngine
 		{
 			if (type == Renderer::TextureType::DIFFUSE)
 				format = GL_SRGB_ALPHA;
+			else if (type == Renderer::TextureType::RAW)
+				format = GL_RGB;
 			else
 				format = GL_RGBA;
 		}

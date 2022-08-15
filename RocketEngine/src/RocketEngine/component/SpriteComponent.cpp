@@ -25,6 +25,7 @@ namespace RKTEngine
 			{
 				std::pair<int, int> offsets = EngineCore::getInstance()->getAssetManager()->getSpriteAtlasIndex(mSpriteData.mTileName);
 				mAtlasCoords = calculateAtlasCoords(offsets.first, offsets.second);
+				mAtlasInitialized = true;
 			}
 			else
 			{
@@ -67,11 +68,17 @@ namespace RKTEngine
 		{
 			if (mRenderInfo.rotation != 0)
 			{
-				RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mSpriteData.pSprite, mAtlasCoords, 1.0f, mSpriteData.mColor);
+				if(mAtlasInitialized)
+					RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mSpriteData.pSprite, mAtlasCoords, 1.0f, mSpriteData.mColor);
+				else
+					RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mSpriteData.pSprite, 1.0f, mSpriteData.mColor);
 			}
 			else
 			{
-				RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mSpriteData.pSprite, mAtlasCoords, 1.0f, mSpriteData.mColor);
+				if(mAtlasInitialized)
+					RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mSpriteData.pSprite, mAtlasCoords, 1.0f, mSpriteData.mColor);
+				else
+					RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mSpriteData.pSprite, 1.0f, mSpriteData.mColor);
 			}
 		}
 	}

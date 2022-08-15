@@ -132,7 +132,7 @@ void GameApp::generateSceneData(bool quitOnComplete)
 		GameObject* main1 = GameObjManager->createButton();
 		main1->getTransform()->setPosition({ w / 2 - 64, h / 2 });
 		//GameObject* main2 = GameObjManager->createLabel("MAIN", { w / 2 + 32, 10 });
-		RocketEngine->getSceneManager()->endScene(false);
+		RocketEngine->getSceneManager()->endScene();
 	}
 
 	if (quitOnComplete)

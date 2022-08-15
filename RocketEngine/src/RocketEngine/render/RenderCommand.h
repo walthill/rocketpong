@@ -117,17 +117,17 @@ namespace RKTEngine
 
 			inline static void drawQuad(const glm::vec2& position, const glm::vec2& size, Texture2D* texture, AtlasCoordinateData atlasCoords, float tilingFactor, Color color = Color::white)
 			{
-				spRendererAPI->drawQuad(position, size, texture, atlasCoords, tilingFactor, color.getColorAlpha());
+				spRendererAPI->drawQuad(position, size, texture, atlasCoords, tilingFactor, color.getColorAlpha01());
 			}
 
 			inline static void drawQuad(const glm::vec2& position, const glm::vec2& size, Texture2D* texture, float tilingFactor, Color color = Color::white)
 			{
-				spRendererAPI->drawQuad(position, size, texture, tilingFactor, color.getColorAlpha());
+				spRendererAPI->drawQuad(position, size, texture, tilingFactor, color.getColorAlpha01());
 			}
 
 			inline static void drawQuad(const glm::vec3& position, const glm::vec2& size, Texture2D* texture, float tilingFactor, Color color = Color::white)
 			{
-				spRendererAPI->drawQuad(position, size, texture, tilingFactor, color.getColorAlpha());
+				spRendererAPI->drawQuad(position, size, texture, tilingFactor, color.getColorAlpha01());
 			}
 
 			inline static void drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
@@ -136,23 +136,23 @@ namespace RKTEngine
 			}
 			inline static void drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, Color color = Color::white)
 			{
-				spRendererAPI->drawRotatedQuad(position, size, rotation, color.getColorAlpha());
+				spRendererAPI->drawRotatedQuad(position, size, rotation, color.getColorAlpha01());
 			}
 			inline static void drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, Texture2D* texture, float tilingFactor, Color color = Color::white)
 			{
-				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, tilingFactor, color.getColorAlpha());
+				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, tilingFactor, color.getColorAlpha01());
 			}
 			inline static void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, float tilingFactor, Color color = Color::white)
 			{
-				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, tilingFactor, color.getColorAlpha());
+				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, tilingFactor, color.getColorAlpha01());
 			}
 			inline static void drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, Texture2D* texture, AtlasCoordinateData atlasCoords, float tilingFactor, Color color = Color::white)
 			{
-				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, atlasCoords, tilingFactor, color.getColorAlpha());
+				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, atlasCoords, tilingFactor, color.getColorAlpha01());
 			}
 			inline static void drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, Texture2D* texture, AtlasCoordinateData atlasCoords, float tilingFactor, Color color = Color::white)
 			{
-				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, atlasCoords, tilingFactor, color.getColorAlpha());
+				spRendererAPI->drawRotatedQuad(position, size, rotation, texture, atlasCoords, tilingFactor, color.getColorAlpha01());
 			}
 
 		private:

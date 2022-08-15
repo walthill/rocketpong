@@ -121,7 +121,7 @@ namespace RKTEngine
 		sData.pTextureShader = renderShader;
 		sData.pTextureShader->use();
 		sData.pTextureShader->setIntArray("textures", samplers, sData.MAX_TEXTURE_SLOTS);
-		sData.pTextureShader->setFloat("tiling", 1.0f);
+		//sData.pTextureShader->setFloat("tiling", 1.0f);
 
 		sData.quadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
 		sData.quadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
@@ -150,7 +150,7 @@ namespace RKTEngine
 	{
 		RKT_PROFILE_FUNCTION();
 
-		uint32_t dataSize = (uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase;
+		uint32_t dataSize = (uint32_t)((uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
 		sData.quadVertexBuffer->setRenderData(sData.quadVertexBufferBase, dataSize);
 		flush();
 	}
@@ -391,8 +391,6 @@ namespace RKTEngine
 		if (sData.quadIndexCount >= Renderer2DData::MAX_INDICES)
 			FlushAndReset();
 
-		glm::vec4 defaultColor = Color::white.getColorAlpha01();
-
 		float textureIndex = 0.0f;
 
 		for (size_t i = 1; i < sData.textureSlotIndex; i++)
@@ -416,28 +414,28 @@ namespace RKTEngine
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[0];
-		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = { 0.0f,0.0f };
 		sData.quadVertexBufferPtr->texIndex = textureIndex;
 		sData.quadVertexBufferPtr->tiling = tilingFactor;
 		sData.quadVertexBufferPtr++;
 
 		sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[1];
-		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = { 1.0f,0.0f };
 		sData.quadVertexBufferPtr->texIndex = textureIndex;
 		sData.quadVertexBufferPtr->tiling = tilingFactor;
 		sData.quadVertexBufferPtr++;
 
 		sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[2];
-		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = { 1.0f,1.0f };
 		sData.quadVertexBufferPtr->texIndex = textureIndex;
 		sData.quadVertexBufferPtr->tiling = tilingFactor;
 		sData.quadVertexBufferPtr++;
 
 		sData.quadVertexBufferPtr->position = transform * sData.quadVertexPositions[3];
-		sData.quadVertexBufferPtr->color = defaultColor;
+		sData.quadVertexBufferPtr->color = color;
 		sData.quadVertexBufferPtr->texCoord = { 0.0f,1.0f };
 		sData.quadVertexBufferPtr->texIndex = textureIndex;
 		sData.quadVertexBufferPtr->tiling = tilingFactor;

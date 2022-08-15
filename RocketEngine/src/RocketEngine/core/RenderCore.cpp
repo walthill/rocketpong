@@ -70,7 +70,7 @@ namespace RKTEngine
 
 		RenderCommand::clearColor(Color(2, 114, 111));
 		RenderCommand::clearBuffer(BufferType::COLOR_BUFFER);	//depth buffer not enable for now. so render order determines layering
-	}	
+	}
 
 	void RenderCore::render(ComponentManager* componentsToDraw, float deltaTime)
 	{
@@ -78,6 +78,8 @@ namespace RKTEngine
 
 		RenderCommand::resetStats();
 		RenderCommand::beginScene();
+		//RenderCommand::drawQuad({ 250, 250, 0 }, { 64, 64 }, { 1.0f, 1.0f, 1.0f, 0.1f });
+		RenderCommand::drawQuad({ 300, 400, 0 }, { 64, 64 }, { 0.2f,.3f,.8f, 0.8f });
 		componentsToDraw->renderSprites();
 		RenderCommand::endScene();
 		componentsToDraw->renderText();

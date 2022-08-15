@@ -89,6 +89,7 @@ namespace RKTEngine
 
 		ButtonComponentData mData;
 		AtlasCoordinateData mAtlasCoords, mHighlightAtlasCoords;
+		bool mAtlasInitialized = false, mHighlightAtlasInitialized = false;
 		SpriteRenderData mRenderInfo;
 		glm::mat4 mModelMatrix;
 

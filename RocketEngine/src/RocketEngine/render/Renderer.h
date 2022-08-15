@@ -18,7 +18,7 @@ namespace RKTEngine
 			enum BufferType { COLOR_BUFFER = 1, DEPTH_BUFFER = 2, ACCUM_BUFFER = 4, STENCIL_BUFFER = 8 };
 			enum BufferTestType { NEVER = 0, LESS, EQUAL, LESS_OR_EQUAL, GREATER, NOT_EQUAL, GREAT_OR_EQUAL, ALWAYS };
 			enum TextureChannel { TEX_CHANNEL0 = 0 };
-			enum TextureType { NONE = 0, DIFFUSE, SPECULAR, NORMAL, SPRITE };
+			enum TextureType { NONE = 0, DIFFUSE, SPECULAR, NORMAL, SPRITE, RAW };
 
 			struct Statistics
 			{

@@ -123,8 +123,9 @@ namespace RKTEngine
 		}
 		if (settingsToEnable & BLEND)
 		{
-			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glEnable(GL_BLEND);
+			//glBlendFunc(GL_ONE, GL_ZERO);
 		}
 		if (settingsToEnable & GAMMA_CORRECT)
 		{

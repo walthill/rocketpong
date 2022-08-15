@@ -158,6 +158,7 @@ namespace RKTEngine
 		SpriteRenderData mRenderInfo;
 		SpriteComponentData mSpriteData;
 		AtlasCoordinateData mAtlasCoords;
+		bool mAtlasInitialized;
 
 		AtlasCoordinateData calculateAtlasCoords(int x, int y);
 	};

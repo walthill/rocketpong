@@ -97,23 +97,34 @@ namespace RKTEngine
 			{
 				if (mData.mSelected)
 				{
-					RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mData.mHighlightSprite.pSprite, mHighlightAtlasCoords, 1.0f, mData.mHighlightSprite.mColor);
+					if(mHighlightAtlasInitialized)
+						RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mData.mHighlightSprite.pSprite, mHighlightAtlasCoords, 1.0f, mData.mHighlightSprite.mColor);
+					else
+						RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mData.mHighlightSprite.pSprite, 1.0f, mData.mHighlightSprite.mColor);
 				}
 				else
 				{
-					RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mData.mSprite.pSprite, mAtlasCoords, 1.0f, mData.mSprite.mColor);
+					if(mAtlasInitialized)
+						RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mData.mSprite.pSprite, mAtlasCoords, 1.0f, mData.mSprite.mColor);
+					else
+						RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mData.mSprite.pSprite, 1.0f, mData.mSprite.mColor);
 				}
-
 			}
 			else
 			{
 				if (mData.mSelected)
 				{
-					RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mData.mHighlightSprite.pSprite, mHighlightAtlasCoords, 1.0f, mData.mHighlightSprite.mColor);
+					if (mHighlightAtlasInitialized)
+						RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mData.mHighlightSprite.pSprite, mHighlightAtlasCoords, 1.0f, mData.mHighlightSprite.mColor);
+					else
+						RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mData.mHighlightSprite.pSprite, 1.0f, mData.mHighlightSprite.mColor);
 				}
 				else
 				{
-					RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mData.mSprite.pSprite, mAtlasCoords, 1.0f, mData.mSprite.mColor);
+					if(mAtlasInitialized)
+						RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mData.mSprite.pSprite, mAtlasCoords, 1.0f, mData.mSprite.mColor);
+					else
+						RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mData.mSprite.pSprite, 1.0f, mData.mSprite.mColor);
 				}
 			}
 		}
@@ -147,10 +158,16 @@ namespace RKTEngine
 			if (!sprData.mTileName.empty())
 			{
 				std::pair<int, int> offsets = EngineCore::getInstance()->getAssetManager()->getSpriteAtlasIndex(sprData.mTileName);
-				if(isHighlightSpr)
+				if (isHighlightSpr)
+				{
 					mHighlightAtlasCoords = calculateAtlasCoords(sprData, offsets.first, offsets.second);
+					mHighlightAtlasInitialized = true;
+				}
 				else
+				{
 					mAtlasCoords = calculateAtlasCoords(sprData, offsets.first, offsets.second);
+					mAtlasInitialized = true;
+				}
 			}
 			else
 			{
