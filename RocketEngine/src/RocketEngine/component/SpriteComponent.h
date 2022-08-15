@@ -26,12 +26,6 @@
 
 namespace RKTEngine
 {
-	struct SpriteRenderData
-	{
-		glm::vec3 position;
-		glm::vec2 scale;
-		float rotation;
-	};
 
 	/***************************************************************************//**
 	 * @brief 	Data used in every mesh component.

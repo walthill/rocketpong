@@ -40,6 +40,7 @@
                 },
                 "AudioSourceComponent": {},
                 "UILabelComponent": {},
+                "ButtonComponent": {},
                 "Native Script": {
                     "polymorphic_id": 2147483649,
                     "polymorphic_name": "Paddle",
@@ -91,6 +92,7 @@
                 },
                 "AudioSourceComponent": {},
                 "UILabelComponent": {},
+                "ButtonComponent": {},
                 "Native Script": {
                     "polymorphic_id": 1,
                     "ptr_wrapper": {
@@ -145,6 +147,7 @@
                     "mPan": 0.0
                 },
                 "UILabelComponent": {},
+                "ButtonComponent": {},
                 "Native Script": {
                     "polymorphic_id": 2147483650,
                     "polymorphic_name": "Ball",
@@ -195,6 +198,7 @@
                 "BoxColliderComponent": {},
                 "AudioSourceComponent": {},
                 "UILabelComponent": {},
+                "ButtonComponent": {},
                 "Native Script": {
                     "polymorphic_id": 0
                 }
@@ -235,6 +239,7 @@
                         }
                     }
                 },
+                "ButtonComponent": {},
                 "Native Script": {
                     "polymorphic_id": 0
                 }
@@ -275,6 +280,7 @@
                         }
                     }
                 },
+                "ButtonComponent": {},
                 "Native Script": {
                     "polymorphic_id": 0
                 }

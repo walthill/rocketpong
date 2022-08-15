@@ -16,14 +16,24 @@ void GameManager::score(bool p1Scored)
 	{
 		mP1Score++;
 		auto gameObj = RocketEngine->getSceneManager()->findGameObjectInScene(mP1ScoreId);
-		gameObj->getUILabel()->setText(mP1Score);
+		if (gameObj)
+		{
+			auto label = gameObj->getUILabel();
+			if (label)
+				label->setText(mP1Score);
+		}
 	}
 	else
 	{
 		mP2Score++;
 
 		auto gameObj = RocketEngine->getSceneManager()->findGameObjectInScene(mP2ScoreId);
-		gameObj->getUILabel()->setText(mP2Score);
+		if (gameObj)
+		{
+			auto label = gameObj->getUILabel();
+			if (label)
+				label->setText(mP1Score);
+		}
 	}
 }
 

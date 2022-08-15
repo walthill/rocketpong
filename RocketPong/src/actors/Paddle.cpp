@@ -2,10 +2,6 @@
 
 void Paddle::onCreate()
 {
-	auto gameObj = getGameObject();
-	GameObjManager->addSprite(gameObjectId, "paddle");
-	auto spr = gameObj->getSprite();
-	GameObjManager->addBoxCollider(gameObjectId, spr->getData()->mWidth, spr->getData()->mHeight);
 	mSpeed = 300;
 }
 

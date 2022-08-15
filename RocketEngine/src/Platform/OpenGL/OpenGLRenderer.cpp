@@ -64,14 +64,14 @@ namespace RKTEngine
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &tex_units);
 		std::string tu = std::string("Supported Texture Slots: " + std::to_string(tex_units));
 
-		RKT_INFO("=======OPENGL INFO=======");
-		RKT_INFO(glGetString(GL_VENDOR));
-		RKT_INFO(oglv);
-		RKT_INFO(sv);
-		RKT_INFO("=======GPU INFO=======");
-		RKT_INFO(glGetString(GL_RENDERER));
-		RKT_INFO(tu);
-		RKT_INFO("==============");
+		RKT_CORE_INFO("=======OPENGL INFO=======");
+		RKT_CORE_INFO(glGetString(GL_VENDOR));
+		RKT_CORE_INFO(oglv);
+		RKT_CORE_INFO(sv);
+		RKT_CORE_INFO("=======GPU INFO=======");
+		RKT_CORE_INFO(glGetString(GL_RENDERER));
+		RKT_CORE_INFO(tu);
+		RKT_CORE_INFO("==============");
 
 		sData.quadVertexArray.reset(VertexArray::create());
 

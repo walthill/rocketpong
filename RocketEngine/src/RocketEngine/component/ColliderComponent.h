@@ -7,9 +7,9 @@ namespace RKTEngine
 {
 	struct ColliderData
 	{
-		std::string tag;
-
-		ColliderData(const std::string& t = "") : tag(t) {};
+		//std::string tag;
+		//
+		//ColliderData(const std::string& t = "") : tag(t) {};
 	};
 
 	class ColliderComponent : public Component

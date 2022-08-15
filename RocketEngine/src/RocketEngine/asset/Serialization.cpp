@@ -8,10 +8,11 @@
 
 namespace RKTEngine
 {
+	
 	void Serialization::serializeScene(Scene* scene)
 	{
 		RKT_PROFILE_FUNCTION();
-		RKT_CORE_TRACE("Serializing scene '{0}'", scene->name);
+		RKT_CORE_TRACE("{0} Serializing scene '{1}'", LOG_SUBSYS(Serialization), scene->name);
 
 		{
 			std::ofstream out("assets/scenes/" + scene->name + ".scene", std::ios::out);
@@ -24,7 +25,7 @@ namespace RKTEngine
 	Scene* Serialization::deserializeScene(const std::string& sceneName)
 	{
 		RKT_PROFILE_FUNCTION();
-		RKT_CORE_TRACE("Deserializing scene '{0}'", sceneName);
+		RKT_CORE_TRACE("{0} Deserializing scene '{1}'", LOG_SUBSYS(Serialization), sceneName);
 
 		Scene* newScene = new Scene{sceneName, std::vector<GameObject*>()};
 		auto sceneToDeserialize = *newScene;

@@ -21,7 +21,7 @@ namespace RKTEngine
 	}
 
 	GameObject* GameObjectManager::createGameObject(const TransformData& transform, const SpriteComponentData& spriteData,
-													const TextData& labelData, const GameObjectId& id)
+													const TextData& labelData, const ButtonComponentData& btnData, const GameObjectId& id)
 	{
 		GameObject* newObj = nullptr;
 
@@ -65,6 +65,15 @@ namespace RKTEngine
 				newObj->connectLabel(newLabelId);
 			}
 
+			//BUTTON 
+			//Create button component, store id in new object, and load the text to the component
+			if (!btnData.mSprite.mSpriteName.empty() && !btnData.mHighlightSprite.mSpriteName.empty() 
+				&& !btnData.mText.mFontName.empty())
+			{
+				ComponentId id = pComponentManager->allocateButtonComponent(btnData);
+				newObj->connectButton(id);
+			}
+
 			EngineCore::getInstance()->getSceneManager()->registerEntity(newObj);
 		}
 		return newObj;
@@ -84,6 +93,12 @@ namespace RKTEngine
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
 			newObj->connectTransform(trId);
 			newObj->setTransformHandle(pComponentManager->getTransformComponent(trId));
+
+			auto box = newObj->getBoxCollider();
+			if (box)
+			{
+				box->setTransformParent(pComponentManager->getTransformComponent(trId));
+			}
 		}
 
 		return it->second;
@@ -159,6 +174,20 @@ namespace RKTEngine
 		return createGameObject(transformData, ZERO_SPRITE_DATA, textData);
 	}
 
+	GameObject* GameObjectManager::createButton(const std::string & spr, const std::string & highlightSpr, glm::vec2 pos, glm::vec2 scale, float rot,
+												const std::string& text, const std::string& fontName, int fontSize)
+	{
+		TransformData transformData = TransformData(pos, scale, rot);
+
+		TextData textData = TextData(fontName, text, fontSize);
+		SpriteComponentData spriteData = SpriteComponentData(spr);
+		SpriteComponentData highlightSpriteData = SpriteComponentData(highlightSpr);
+		ButtonComponentData btnData = { spriteData, highlightSpriteData, textData };
+
+		return createGameObject(transformData, ZERO_SPRITE_DATA, ZERO_LABEL_DATA, btnData);
+	}
+
+
 
 	void GameObjectManager::addAudioSource(int objId, const std::string& audio, float vol, float pan)
 	{
@@ -181,7 +210,6 @@ namespace RKTEngine
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
 			ComponentId newBoxColliderId = pComponentManager->allocateBoxColliderComponent(data);
 			it->second->connectCollider(newBoxColliderId);
-			it->second->getBoxCollider()->setTransformParent(it->second->getTransform());
 		}
 	}
 
@@ -209,6 +237,24 @@ namespace RKTEngine
 		}
 	}
 
+	void GameObjectManager::addButton(int objId, const std::string& font, const std::string& text, int size, Color textColor, 
+									  const std::string& spriteToLoad, const std::string& tileName, Color sprColor, const std::string& highlightSpriteToLoad, 
+									  const std::string& highlightTileName, Color highlightSprColor)
+	{
+		auto it = mGameObjMap.find(objId);
+		if (it != mGameObjMap.end())
+		{
+			TextData textData = TextData(font, text, size, textColor);
+			SpriteComponentData spriteData = SpriteComponentData(spriteToLoad);
+			SpriteComponentData highlightSpriteData = SpriteComponentData(highlightSpriteToLoad);
+			ButtonComponentData btnData = { spriteData, highlightSpriteData, textData };
+			
+			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
+			ComponentId id = pComponentManager->allocateButtonComponent(btnData);
+			it->second->connectButton(id);
+		}
+	}
+
 	void GameObjectManager::addNativeScript(int objId)
 	{
 		auto it = mGameObjMap.find(objId);
@@ -226,7 +272,7 @@ namespace RKTEngine
 		TransformData transformData = TransformData(position, scale, rotation);
 		SpriteComponentData spriteData = SpriteComponentData(texture);
 
-		return createGameObject(transformData, spriteData, ZERO_LABEL_DATA, PLAYER_OBJ_ID);
+		return createGameObject(transformData, spriteData, ZERO_LABEL_DATA, ZERO_BTN_DATA, PLAYER_OBJ_ID);
 	}
 
 
@@ -257,6 +303,7 @@ namespace RKTEngine
 			pComponentManager->deallocateTextComponent(obj->getLabelId());
 			pComponentManager->deallocateBoxColliderComponent(obj->getColliderId());
 			pComponentManager->deallocateAudioSourceComponent(obj->getAudioSourceId());
+			pComponentManager->deallocateButtonComponent(obj->getButtonId());
 			pComponentManager->deallocateNativeScriptComponent(obj->getNativeScriptId());
 
 			//call destructor on gameObj
@@ -279,4 +326,5 @@ namespace RKTEngine
 	{
 		return mGameObjMap.size();
 	}
+
 }

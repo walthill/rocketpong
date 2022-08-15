@@ -23,12 +23,7 @@
 
 #include <map>
 #include <RKTUtils/DeanLib_MemoryPool.h>
-#include "RocketEngine/component/SpriteComponent.h"
-#include "RocketEngine/component/TransformComponent.h"
-#include "RocketEngine/component/TextComponent.h"
-#include "RocketEngine/component/BoxColliderComponent.h"
-#include "RocketEngine/component/AudioSourceComponent.h"
-#include "RocketEngine/component/NativeScriptComponent.h"
+#include "RocketEngine/component/ComponentDefines.h"
 #include <RocketEngine/input/message/Message.h>
 
 namespace RKTEngine
@@ -205,6 +200,30 @@ namespace RKTEngine
 		*************************************************************************/
 		void deallocateNativeScriptComponent(const ComponentId& id);
 
+		//------	NATIVE SCRIPT COMPONENT------ //
+
+		/**********************************************************************//**
+		* Access the transform component based on the component identifier.
+		*
+		* @param id Component identifier
+		*************************************************************************/
+		ButtonComponent* getButtonComponent(const ComponentId& id);
+
+		/**********************************************************************//**
+		* Create transform component based on data passed in and return the component identifier.
+		*
+		* @param data data Transform component data
+		*************************************************************************/
+		ComponentId allocateButtonComponent(const ButtonComponentData& data = ZERO_BTN_DATA);
+
+		/**********************************************************************//**
+		* Remove and destroy transform component from the collection based on the component identifier.
+		*
+		* @param id Component identifier
+		*************************************************************************/
+		void deallocateButtonComponent(const ComponentId& id);
+
+
 
 		/**********************************************************************//**
 		* Process components and perform calulations.
@@ -241,6 +260,7 @@ namespace RKTEngine
 		RKTUtil::MemoryPool mColliderPool;
 		RKTUtil::MemoryPool mAudioSourcePool;
 		RKTUtil::MemoryPool mNativeScriptPool;
+		RKTUtil::MemoryPool mButtonPool;
 
 		std::map<ComponentId, TransformComponent*> mTransformComponentMap;
 		std::map<ComponentId, TextComponent*> mTextComponentMap;
@@ -248,6 +268,7 @@ namespace RKTEngine
 		std::map<ComponentId, BoxColliderComponent*> mColliderComponentMap;
 		std::map<ComponentId, AudioSourceComponent*> mAudioSourceComponentMap;
 		std::map<ComponentId, NativeScriptComponent*> mNativeScriptComponentMap;
+		std::map<ComponentId, ButtonComponent*> mButtonComponentMap;
 
 		static ComponentId msNextTransformComponentId;
 		static ComponentId msNextTextComponentId;
@@ -256,6 +277,7 @@ namespace RKTEngine
 		static ComponentId msNextColliderComponentId;
 		static ComponentId msNextAudioSourceComponentId;
 		static ComponentId msNextNativeScriptComponentId;
+		static ComponentId msNextButtonComponentId;
 
 	};
 }

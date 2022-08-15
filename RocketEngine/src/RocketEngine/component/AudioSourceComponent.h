@@ -37,8 +37,17 @@ namespace RKTEngine
 		template<class Archive>
 		void load(Archive& archive)
 		{
-			if (!mAudioFileName.empty())
+			try
+			{
 				archive(CEREAL_NVP(mAudioFileName), CEREAL_NVP(mVolume), CEREAL_NVP(mPan));
+			}
+			catch (cereal::Exception&)
+			{
+				archive.setNextName(nullptr);
+				// Loading a key that doesn't exist results in an exception
+				// Since "Not Found" is a valid condition for us, we swallow
+				// this exception and the archive will not load anything
+			}
 		}
 	};
 

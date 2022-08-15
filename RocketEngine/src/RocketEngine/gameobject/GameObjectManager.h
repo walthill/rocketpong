@@ -22,10 +22,7 @@
 #include <map>
 #include <RKTUtils/DeanLib_MemoryPool.h>
 #include "RocketEngine/Defines.h"
-#include "RocketEngine/component/TransformComponent.h"
-#include "RocketEngine/component/SpriteComponent.h"
-#include "RocketEngine/component/TextComponent.h"
-#include "RocketEngine/component/BoxColliderComponent.h"
+#include "RocketEngine/component/ComponentDefines.h"
 #include "RocketEngine/asset/AssetManager.h"
 
 namespace RKTEngine
@@ -71,6 +68,7 @@ namespace RKTEngine
 			GameObject* createGameObject(const TransformData& transform = ZERO_TRANSFORM_DATA,
 										 const SpriteComponentData& spriteData = ZERO_SPRITE_DATA,
 										 const TextData& labelData = ZERO_LABEL_DATA,
+										 const ButtonComponentData& btnData = ZERO_BTN_DATA,
 						 				 const GameObjectId& id = INVALID_GAMEOBJECT_ID);
 
 			GameObject* registerGameObjectData(GameObject obj);
@@ -94,10 +92,18 @@ namespace RKTEngine
 			GameObject* createPlayer(const std::string& texture, glm::vec2 position = glm::vec2(0, 0),
 									 glm::vec2 scale = glm::vec2(1, 1), float rotation = 0);
 			
-			GameObject* createLabel(const std::string& text, glm::vec2 position = glm::vec2(0, 0), glm::vec2 scale = glm::vec2(1, 1), 
+			GameObject* createLabel(const std::string& text = "New Text", glm::vec2 position = glm::vec2(0, 0), glm::vec2 scale = glm::vec2(1, 1),
 									float rotation = 0, const std::string& fontName = AssetManager::sDEFAULT_FONT, int fontSize = Text::sDefaultTextSize);
 
+			GameObject* createButton(const std::string& spr = AssetManager::sDEFAULT_BTN_SPRITE, const std::string& highlightSpr = AssetManager::sDEFAULT_BTN_HIGHLIGHT_SPRITE,
+									 glm::vec2 position = glm::vec2(0, 0), glm::vec2 scale = glm::vec2(1, 1), float rotation = 0, 
+									 //text
+									 const std::string& text = "New Text", const std::string& fontName = AssetManager::sDEFAULT_FONT, int fontSize = Text::sDefaultTextSize);
+
 			void addAudioSource(int objId, const std::string& audio, float vol = -1.0f, float pan = 0.0f);
+			void addButton(int objId, const std::string& font, const std::string& text, int size, Color textColor, 
+						   const std::string& spriteToLoad = AssetManager::sDEFAULT_BTN_SPRITE, const std::string& tileName = "", Color sprColor = Color::white,
+						   const std::string& highlightSpriteToLoad = AssetManager::sDEFAULT_BTN_HIGHLIGHT_SPRITE, const std::string& highlightTileName = "", Color highlightSprColor = Color::red);
 			void addBoxCollider(int objId, int w, int h, const std::string& t = "untagged");
 			void addSprite(int objId, const std::string& spriteToLoad = AssetManager::sDEFAULT_SPRITE, const std::string& tileName = "", Color color = Color::white);
 			void addUILabel(int objId, const std::string& font, const std::string& text, int size, Color color);

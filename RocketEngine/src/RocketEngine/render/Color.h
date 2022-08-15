@@ -1,8 +1,10 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <cereal/cereal.hpp>
 #include <RKTUtils/Trackable.h>
-#include <RocketEngine/component/Component.h>
 
 namespace RKTEngine
 {

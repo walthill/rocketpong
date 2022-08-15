@@ -32,7 +32,7 @@ bool GameApp::initialize()
 	generateSceneData(false);
 	if (mIsRunning)
 	{
-		loadStartupScene("game");
+		loadStartupScene("main");
 	}
 
 	endInit();
@@ -91,19 +91,29 @@ void GameApp::generateSceneData(bool quitOnComplete)
 		pPlayer1->getScript()->get<Paddle>()->mIsP1 = true;
 		pPlayer1->name = "P1 Paddle";
 		pPlayer1->getTransform()->setPosition({ 100, h / 2 });
+		GameObjManager->addSprite(pPlayer1->getId(), "paddle");
+		auto spr = pPlayer1->getSprite();
+		GameObjManager->addBoxCollider(pPlayer1->getId(), spr->getData()->mWidth, spr->getData()->mHeight);
 		pPlayer1->getBoxCollider()->setTag("lp");
 		
-		GameObject* mpPlayer2 = GameObjManager->createActor();
-		mpPlayer2->getScript()->bind<Paddle>(mpPlayer2->getId());
-		mpPlayer2->getScript()->get<Paddle>()->mIsP1 = false;
-		mpPlayer2->name = "P2 Paddle";
-		mpPlayer2->getTransform()->setPosition({ w - 100, h / 2 });
-		mpPlayer2->getBoxCollider()->setTag("rp");
+		GameObject* pPlayer2 = GameObjManager->createActor();
+		pPlayer2->getScript()->bind<Paddle>(pPlayer2->getId());
+		pPlayer2->getScript()->get<Paddle>()->mIsP1 = false;
+		pPlayer2->name = "P2 Paddle";
+		pPlayer2->getTransform()->setPosition({ w - 100, h / 2 });
+		GameObjManager->addSprite(pPlayer2->getId(), "paddle");
+		spr = pPlayer2->getSprite();
+		GameObjManager->addBoxCollider(pPlayer2->getId(), spr->getData()->mWidth, spr->getData()->mHeight);
+		pPlayer2->getBoxCollider()->setTag("rp");
 		
 		mpBall = GameObjManager->createActor();
 		mpBall->getScript()->bind<Ball>(mpBall->getId());
 		mpBall->getScript()->get<Ball>()->mStartPos = { w / 2,h / 2 };
 		mpBall->name = "Ball";
+		GameObjManager->addSprite(mpBall->getId(), "ball");
+		spr = mpBall->getSprite();
+		GameObjManager->addBoxCollider(mpBall->getId(), spr->getData()->mWidth / 2, spr->getData()->mHeight / 2);
+		GameObjManager->addAudioSource(mpBall->getId(), "winwin");
 
 		//midline
 		auto midlineSprite = RocketEngine->getEntityManager()->createSprite("paddle", {w / 2, h / 2}, {0.25f, 100.0f});
@@ -116,12 +126,13 @@ void GameApp::generateSceneData(bool quitOnComplete)
 		p2Score->name = "p2score";
 		mpGameManager->setScoreUI(p1Score->getId(), p2Score->getId());
 		
-		RocketEngine->getSceneManager()->endScene(false);
+		RocketEngine->getSceneManager()->endScene();
 
 		RocketEngine->getSceneManager()->beginScene("main");
-		GameObject* main1 = GameObjManager->createLabel("MAIN", { w / 2 - 32, 10 });
-		GameObject* main2 = GameObjManager->createLabel("MAIN", { w / 2 + 32, 10 });
-		RocketEngine->getSceneManager()->endScene();
+		GameObject* main1 = GameObjManager->createButton();
+		main1->getTransform()->setPosition({ w / 2 - 64, h / 2 });
+		//GameObject* main2 = GameObjManager->createLabel("MAIN", { w / 2 + 32, 10 });
+		RocketEngine->getSceneManager()->endScene(false);
 	}
 
 	if (quitOnComplete)

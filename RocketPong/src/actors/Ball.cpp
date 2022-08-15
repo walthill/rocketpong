@@ -5,10 +5,6 @@
 
 void Ball::onCreate()
 {
-	GameObjManager->addSprite(gameObjectId, "ball");
-	auto spr = getGameObject()->getSprite();
-	GameObjManager->addBoxCollider(gameObjectId, spr->getData()->mWidth / 2, spr->getData()->mHeight / 2);
-	GameObjManager->addAudioSource(gameObjectId, "winwin");
 }
 
 void Ball::onStart()

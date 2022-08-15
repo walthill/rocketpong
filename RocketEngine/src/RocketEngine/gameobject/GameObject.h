@@ -25,12 +25,7 @@
 #include <cereal/cereal.hpp>
 #include <cereal/types/memory.hpp>
 #include "RocketEngine/Defines.h"
-#include <RocketEngine/component/TransformComponent.h>
-#include <RocketEngine/component/SpriteComponent.h>
-#include <RocketEngine/component/BoxColliderComponent.h>
-#include <RocketEngine/component/TextComponent.h>
-#include <RocketEngine/component/AudioSourceComponent.h>
-#include <RocketEngine/component/NativeScriptComponent.h>
+#include <RocketEngine/component/ComponentDefines.h>
 #include <RocketEngine/actor/Actor.h>
 
 namespace RKTEngine
@@ -77,16 +72,18 @@ namespace RKTEngine
 			inline ComponentId getLabelId() { return mLabelId; };
 			inline ComponentId getColliderId() { return mColliderId; };
 			inline ComponentId getAudioSourceId() { return mAudioSourceId; };
+			inline ComponentId getButtonId() { return mButtonId; };
 			inline ComponentId getNativeScriptId() { return mNativeScriptId; };
 
 			///Acesss the GameObject's transform 
 			TransformComponent* getTransform() { return mpTransform; }
-			///Acesss the GameObject's mesh 
+			///Acesss the GameObject's sprite 
 			SpriteComponent* getSprite();
-			///Acesss the GameObject's mesh 
+			///Acesss the GameObject's box collider
 			BoxColliderComponent* getBoxCollider();
-			///Acesss the GameObject's material
+			///Acesss the GameObject's ui label
 			TextComponent* getUILabel();
+			ButtonComponent* getButton();
 			AudioSourceComponent* getAudioSource();
 			NativeScriptComponent* getScript();
 
@@ -97,6 +94,7 @@ namespace RKTEngine
 			ComponentId mSpriteId;
 			ComponentId mTransformId;
 			ComponentId mLabelId;
+			ComponentId mButtonId;
 			ComponentId mColliderId;
 			ComponentId mAudioSourceId;
 			ComponentId mNativeScriptId;
@@ -108,12 +106,14 @@ namespace RKTEngine
 			BoxColliderComponent* getBoxCollider_Serialize() const;
 			AudioSourceComponent* getAudioSource_Serialize() const;
 			TextComponent* getUILabel_Serialize() const;
+			ButtonComponent* getButton_Serialize() const;
 			NativeScriptComponent* getScript_Serialize() const;
 
-			void addSpriteComponent(SpriteComponentData data);
-			void addBoxColliderComponent(BoxColliderData data);
-			void addAudioSourceComponent(AudioSourceComponentData data);
-			void addUILabelComponent(TextData data);
+			void addSpriteComponent(const SpriteComponentData& data);
+			void addBoxColliderComponent(const BoxColliderData& data);
+			void addAudioSourceComponent(const AudioSourceComponentData& data);
+			void addUILabelComponent(const TextData& data);
+			void addButtonComponent(const ButtonComponentData& data);
 			void addNativeScriptComponent();
 
 			void setName();
@@ -151,7 +151,14 @@ namespace RKTEngine
 			*
 			* @param labelId TextComponent identifier
 			*************************************************************************/
-			void connectLabel(ComponentId labelId) { mLabelId = labelId; }
+			void connectLabel(ComponentId labelId) { mLabelId = labelId; };
+
+			/**********************************************************************//**
+			* Set GameObject's button id
+			*
+			* @param labelId TextComponent identifier
+			*************************************************************************/
+			void connectButton(ComponentId buttonId) { mButtonId = buttonId; }
 
 			/**********************************************************************//**
 			* Set GameObject's collider id
@@ -184,16 +191,18 @@ namespace RKTEngine
 				auto box = getBoxCollider_Serialize();
 				auto aud = getAudioSource_Serialize();
 				auto lbl = getUILabel_Serialize();
+				auto btn = getButton_Serialize();
 				auto pActor = getScript_Serialize() == nullptr ? std::shared_ptr<Actor>(nullptr) : std::shared_ptr<Actor>(getScript_Serialize()->pInstance);
 				
 				auto sprData = spr == nullptr ? nullptr : spr->getData();
 				auto boxData = box == nullptr ? nullptr : box->getData();
 				auto audData = aud == nullptr ? nullptr : aud->getData();
 				auto lblData = lbl == nullptr ? nullptr : lbl->getData();
+				auto btnData = btn == nullptr ? nullptr : btn->getData();
 
 				archive(CEREAL_NVP(name), cereal::make_nvp("TransformComponent", tr.getData()), cereal::make_nvp("SpriteComponent", *sprData),
 						cereal::make_nvp("BoxColliderComponent", *boxData), cereal::make_nvp("AudioSourceComponent", *audData),
-						cereal::make_nvp("UILabelComponent", *lblData), MAKE_NVP("Native Script", pActor));
+						cereal::make_nvp("UILabelComponent", *lblData), MAKE_NVP("ButtonComponent", *btnData), MAKE_NVP("Native Script", pActor));
 			}
 
 			template<class Archive>
@@ -204,11 +213,12 @@ namespace RKTEngine
 				auto box = ZERO_BOX_COLLIDER_DATA;
 				auto aud = ZERO_AUDIO_SRC_DATA;
 				auto lbl = ZERO_LABEL_DATA;
+				auto btn = ZERO_BTN_DATA;
 				std::shared_ptr<Actor> pActor;
 
 				archive(CEREAL_NVP(name), cereal::make_nvp("TransformComponent", tr), cereal::make_nvp("SpriteComponent", spr),
 						cereal::make_nvp("BoxColliderComponent", box), cereal::make_nvp("AudioSourceComponent", aud), cereal::make_nvp("UILabelComponent", lbl),
-						MAKE_NVP("Native Script", pActor));
+						MAKE_NVP("ButtonComponent", btn), MAKE_NVP("Native Script", pActor));
 
 				if (!spr.mSpriteName.empty())
 					addSpriteComponent(spr);
@@ -218,6 +228,11 @@ namespace RKTEngine
 					addAudioSourceComponent(aud);
 				if (!lbl.mFontName.empty())
 					addUILabelComponent(lbl);
+				if (!btn.mSprite.mSpriteName.empty() && !btn.mHighlightSprite.mSpriteName.empty()
+					&& !btn.mText.mFontName.empty())
+				{
+					addButtonComponent(btn);
+				}
 				if (pActor.get() != nullptr)
 				{					
 					addNativeScriptComponent();

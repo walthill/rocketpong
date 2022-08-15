@@ -15,6 +15,7 @@ namespace RKTEngine
 	ComponentId ComponentManager::msNextColliderComponentId = 0;
 	ComponentId ComponentManager::msNextAudioSourceComponentId = 0;
 	ComponentId ComponentManager::msNextNativeScriptComponentId = 0;
+	ComponentId ComponentManager::msNextButtonComponentId = 0;
 
 	ComponentManager::ComponentManager(uint32 maxSize)
 		: mTransformPool(maxSize, sizeof(TransformComponent))
@@ -23,6 +24,7 @@ namespace RKTEngine
 		, mColliderPool(maxSize, sizeof(BoxColliderComponent))
 		, mAudioSourcePool(maxSize, sizeof(AudioSourceComponent))
 		, mNativeScriptPool(maxSize, sizeof(NativeScriptComponent))
+		, mButtonPool(maxSize, sizeof(ButtonComponent))
 	{
 	}
 
@@ -64,6 +66,11 @@ namespace RKTEngine
 			NativeScriptComponent* pComponent = it.second;
 			pComponent->~NativeScriptComponent();
 		}
+		for (auto& it : mButtonComponentMap)
+		{
+			ButtonComponent* pComponent = it.second;
+			pComponent->~ButtonComponent();
+		}
 
 		//clear maps
 		mTransformComponentMap.clear();
@@ -72,6 +79,7 @@ namespace RKTEngine
 		mColliderComponentMap.clear();
 		mAudioSourceComponentMap.clear();
 		mNativeScriptComponentMap.clear();
+		mButtonComponentMap.clear();
 
 		//reset memory pools
 		mTransformPool.reset();
@@ -80,6 +88,7 @@ namespace RKTEngine
 		mColliderPool.reset();
 		mAudioSourcePool.reset();
 		mNativeScriptPool.reset();
+		mButtonPool.reset();
 	}
 
 
@@ -385,6 +394,56 @@ namespace RKTEngine
 		}
 	}
 
+
+	/******************************************************************************
+	******************************************************************************
+
+	BUTTON COMPONENT
+
+	******************************************************************************
+	*****************************************************************************/
+
+	ButtonComponent* ComponentManager::getButtonComponent(const ComponentId& id)
+	{
+		auto& it = mButtonComponentMap.find(id);
+
+		if (it != mButtonComponentMap.end())
+			return it->second;
+		else
+			return nullptr;
+	}
+
+	ComponentId ComponentManager::allocateButtonComponent(const ButtonComponentData& data)
+	{
+		ComponentId newID = INVALID_COMPONENT_ID;
+		RKTUtil::Byte* ptr = mButtonPool.allocateObject();
+
+		if (ptr != nullptr)
+		{
+			newID = msNextButtonComponentId;
+			ButtonComponent* pComponent = ::new (ptr)ButtonComponent(newID);
+			pComponent->setData(data);
+			pComponent->load();
+			mButtonComponentMap[newID] = pComponent;
+			msNextButtonComponentId++;
+		}
+
+		return newID;
+	}
+
+	void ComponentManager::deallocateButtonComponent(const ComponentId& id)
+	{
+		auto it = mButtonComponentMap.find(id);
+
+		if (it != mButtonComponentMap.end())
+		{
+			ButtonComponent* ptr = it->second;
+			mButtonComponentMap.erase(it);
+			ptr->~ButtonComponent();
+			mButtonPool.freeObject((RKTUtil::Byte*)ptr);
+		}
+	}
+
 	void ComponentManager::update(float elapsedTime)
 	{
 		updateCollisions();
@@ -456,6 +515,11 @@ namespace RKTEngine
 		{
 			it.second->render();
 		}
+
+		for (auto& it : mButtonComponentMap)
+		{
+			it.second->renderSprite();
+		}
 	}
 	void ComponentManager::renderText()
 	{
@@ -463,6 +527,11 @@ namespace RKTEngine
 		for (auto& it : mTextComponentMap)
 		{
 			it.second->render();
+		}
+
+		for (auto& it : mButtonComponentMap)
+		{
+			it.second->renderText();
 		}
 	}
 	void ComponentManager::renderWireframes()

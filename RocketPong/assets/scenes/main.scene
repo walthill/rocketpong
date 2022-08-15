@@ -5,8 +5,8 @@
                 "name": "New GameObject(7)",
                 "TransformComponent": {
                     "mPosition": {
-                        "x": 368.0,
-                        "y": 10.0
+                        "x": 336.0,
+                        "y": 400.0
                     },
                     "mScale": {
                         "x": 1.0,
@@ -24,56 +24,43 @@
                 "SpriteComponent": {},
                 "BoxColliderComponent": {},
                 "AudioSourceComponent": {},
-                "UILabelComponent": {
-                    "mFontName": "calibri",
-                    "mText": "MAIN",
-                    "mFontSize": 32,
-                    "Color": {
-                        "data": {
-                            "x": 255.0,
-                            "y": 255.0,
-                            "z": 255.0,
-                            "w": 255.0
+                "UILabelComponent": {},
+                "ButtonComponent": {
+                    "mSprite": {
+                        "mSpriteName": "defaultbtn",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
                         }
-                    }
-                },
-                "Native Script": {
-                    "polymorphic_id": 0
-                }
-            },
-            {
-                "name": "New GameObject(8)",
-                "TransformComponent": {
-                    "mPosition": {
-                        "x": 432.0,
-                        "y": 10.0
                     },
-                    "mScale": {
-                        "x": 1.0,
-                        "y": 1.0
-                    },
-                    "mRotation": {
-                        "angle": 0.0,
-                        "rotationAxis": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 1.0
+                    "mHighlightSprite": {
+                        "mSpriteName": "defaultbtn_highlight",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
                         }
-                    }
-                },
-                "SpriteComponent": {},
-                "BoxColliderComponent": {},
-                "AudioSourceComponent": {},
-                "UILabelComponent": {
-                    "mFontName": "calibri",
-                    "mText": "MAIN",
-                    "mFontSize": 32,
-                    "Color": {
-                        "data": {
-                            "x": 255.0,
-                            "y": 255.0,
-                            "z": 255.0,
-                            "w": 255.0
+                    },
+                    "mText": {
+                        "mFontName": "calibri",
+                        "mText": "New Text",
+                        "mFontSize": 32,
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
                         }
                     }
                 },

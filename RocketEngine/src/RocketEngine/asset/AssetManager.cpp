@@ -9,6 +9,8 @@ namespace RKTEngine
 {
 	const std::string AssetManager::sDEFAULT_FONT = "calibri";
 	const std::string AssetManager::sDEFAULT_SPRITE = "defaultcrab";
+	const std::string AssetManager::sDEFAULT_BTN_SPRITE = "defaultbtn";
+	const std::string AssetManager::sDEFAULT_BTN_HIGHLIGHT_SPRITE = "defaultbtn_highlight";
 
 	const std::string AssetManager::sSPRITE_SHADER_ID = "sprite";
 	const std::string AssetManager::sSPRITE_SHADER_FILENAME = "BatchTexture";

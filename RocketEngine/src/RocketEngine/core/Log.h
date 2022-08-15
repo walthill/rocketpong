@@ -28,6 +28,8 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <RKTUtils/MemoryTracker.h>
 
+#define LOG_SUBSYS(X) #X " ::"
+
 namespace RKTEngine
 {
 	class Log

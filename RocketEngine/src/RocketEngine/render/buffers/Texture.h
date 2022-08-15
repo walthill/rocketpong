@@ -1,12 +1,21 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include <vector>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <RKTUtils/Trackable.h>
 #include "RocketEngine/Defines.h"
-#include <vector>
 
 namespace RKTEngine
 {
+	struct SpriteRenderData
+	{
+		glm::vec3 position;
+		glm::vec2 scale;
+		float rotation;
+	};
+
 	struct AtlasCoordinateData { float leftX, rightX, topY, bottomY; };
 	class Texture : public RKTUtil::Trackable
 	{

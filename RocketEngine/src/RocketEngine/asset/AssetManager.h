@@ -30,6 +30,8 @@ namespace RKTEngine
 			
 			static const std::string sDEFAULT_FONT;
 			static const std::string sDEFAULT_SPRITE;
+			static const std::string sDEFAULT_BTN_SPRITE;
+			static const std::string sDEFAULT_BTN_HIGHLIGHT_SPRITE;
 
 			static const std::string sSPRITE_SHADER_ID;
 			static const std::string sSPRITE_SHADER_FILENAME;

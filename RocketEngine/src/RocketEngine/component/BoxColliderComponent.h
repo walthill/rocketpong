@@ -12,9 +12,10 @@ namespace RKTEngine
 	{
 		int width;
 		int height;
+		std::string tag;
 
-		BoxColliderData() : ColliderData(""), width(0), height(0) {};
-		BoxColliderData(int w, int h, const std::string& t = "") : ColliderData(t), width(w), height(h) {};
+		BoxColliderData() : ColliderData(), width(0), height(0), tag("") {};
+		BoxColliderData(int w, int h, const std::string& t = "") : ColliderData(), width(w), height(h), tag(t) {};
 
 		template<class Archive>
 		void save(Archive& archive) const
@@ -26,8 +27,17 @@ namespace RKTEngine
 		template<class Archive>
 		void load(Archive& archive)
 		{
-			if (!tag.empty())
+			try
+			{
 				archive(CEREAL_NVP(width), CEREAL_NVP(height), CEREAL_NVP(tag));
+			}
+			catch (cereal::Exception&)
+			{
+				archive.setNextName(nullptr);
+				// Loading a key that doesn't exist results in an exception
+				// Since "Not Found" is a valid condition for us, we swallow
+				// this exception and the archive will not load anything
+			}
 		}
 	};
 

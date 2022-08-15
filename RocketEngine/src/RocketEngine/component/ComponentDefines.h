@@ -7,5 +7,6 @@
 #include "TextComponent.h"
 #include "TransformComponent.h"
 #include "NativeScriptComponent.h"
+#include "ButtonComponent.h"
 
 #endif // !COMPONENT_DEF_H
