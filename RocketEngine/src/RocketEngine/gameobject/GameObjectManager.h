@@ -71,11 +71,13 @@ namespace RKTEngine
 										 const ButtonComponentData& btnData = ZERO_BTN_DATA,
 						 				 const GameObjectId& id = INVALID_GAMEOBJECT_ID);
 
+			GameObject* createGameObject(const TransformData& transform = ZERO_TRANSFORM_DATA, const GameObjectId& id = INVALID_GAMEOBJECT_ID);
+
 			GameObject* registerGameObjectData(GameObject obj);
 			
 			GameObject* createActor(const TransformData& transform = ZERO_TRANSFORM_DATA,
 				const SpriteComponentData& spriteData = ZERO_SPRITE_DATA,
-				const TextData& labelData = ZERO_LABEL_DATA,
+				const TextData& labelData = ZERO_LABEL_DATA, const ButtonComponentData& btnData = ZERO_BTN_DATA,
 				const GameObjectId& id = INVALID_GAMEOBJECT_ID);
 
 #ifdef ATLASED_CREATE_FUNCS	

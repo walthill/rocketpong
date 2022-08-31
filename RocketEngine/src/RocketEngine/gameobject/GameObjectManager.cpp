@@ -79,6 +79,38 @@ namespace RKTEngine
 		return newObj;
 	}
 
+	GameObject* GameObjectManager::createGameObject(const TransformData& transform, const GameObjectId& id)
+	{
+		GameObject* newObj = nullptr;
+		RKTUtil::Byte* ptr = mGameObjectPool.allocateObject();
+
+		if (ptr != nullptr)
+		{
+			GameObjectId newId = id;
+			if (newId == INVALID_GAMEOBJECT_ID) //new game obj
+			{
+				newId = msNextUnitId;
+				msNextUnitId++;
+			}
+			newObj = ::new (ptr)GameObject(newId);//placement new
+
+			//add new object to map and set the object's id locally
+			mGameObjMap[newId] = newObj;
+			newObj->setName();
+
+			//Hook up components
+			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
+
+			//TRANSFORM
+			ComponentId newTransformId = pComponentManager->allocateTransformComponent(transform);
+			newObj->connectTransform(newTransformId);
+			newObj->setTransformHandle(pComponentManager->getTransformComponent(newTransformId));
+
+			EngineCore::getInstance()->getSceneManager()->registerEntity(newObj);
+		}
+		return newObj;
+	}
+
 	GameObject* GameObjectManager::registerGameObjectData(GameObject obj)
 	{
 		auto it = mGameObjMap.find(obj.getId());
@@ -105,7 +137,7 @@ namespace RKTEngine
 	}
 
 	GameObject* GameObjectManager::createActor(const TransformData& transform, const SpriteComponentData& spriteData,
-		const TextData& labelData, const GameObjectId& id)
+		const TextData& labelData, const ButtonComponentData& btnData, const GameObjectId& id)
 	{
 		GameObject* newObj = nullptr;
 
@@ -265,7 +297,6 @@ namespace RKTEngine
 			it->second->connectNativeScript(id);
 		}
 	}
-
 
 	GameObject* GameObjectManager::createPlayer(const std::string& texture, glm::vec2 position, glm::vec2 scale, float rotation)
 	{

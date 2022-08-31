@@ -2,7 +2,47 @@
     "Scene Data": {
         "GameObjects": [
             {
+                "name": "GameManager",
+                "mId": 1,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {},
+                "ButtonComponent": {},
+                "Native Script": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "GameManager",
+                    "ptr_wrapper": {
+                        "id": 2147483649,
+                        "data": {
+                            "mBallId": 4,
+                            "mP1ScoreId": 6,
+                            "mP2ScoreId": 7
+                        }
+                    }
+                }
+            },
+            {
                 "name": "P1 Paddle",
+                "mId": 2,
                 "TransformComponent": {
                     "mPosition": {
                         "x": 100.0,
@@ -42,10 +82,10 @@
                 "UILabelComponent": {},
                 "ButtonComponent": {},
                 "Native Script": {
-                    "polymorphic_id": 2147483649,
+                    "polymorphic_id": 2147483650,
                     "polymorphic_name": "Paddle",
                     "ptr_wrapper": {
-                        "id": 2147483649,
+                        "id": 2147483650,
                         "data": {
                             "mSpeed": 300.0,
                             "mIsP1": true
@@ -55,6 +95,7 @@
             },
             {
                 "name": "P2 Paddle",
+                "mId": 3,
                 "TransformComponent": {
                     "mPosition": {
                         "x": 700.0,
@@ -94,9 +135,9 @@
                 "UILabelComponent": {},
                 "ButtonComponent": {},
                 "Native Script": {
-                    "polymorphic_id": 1,
+                    "polymorphic_id": 2,
                     "ptr_wrapper": {
-                        "id": 2147483650,
+                        "id": 2147483651,
                         "data": {
                             "mSpeed": 300.0,
                             "mIsP1": false
@@ -106,6 +147,7 @@
             },
             {
                 "name": "Ball",
+                "mId": 4,
                 "TransformComponent": {
                     "mPosition": {
                         "x": 0.0,
@@ -149,10 +191,10 @@
                 "UILabelComponent": {},
                 "ButtonComponent": {},
                 "Native Script": {
-                    "polymorphic_id": 2147483650,
+                    "polymorphic_id": 2147483651,
                     "polymorphic_name": "Ball",
                     "ptr_wrapper": {
-                        "id": 2147483651,
+                        "id": 2147483652,
                         "data": {
                             "mSpeed": 0.0,
                             "mStartPos": {
@@ -165,6 +207,7 @@
             },
             {
                 "name": "midline",
+                "mId": 5,
                 "TransformComponent": {
                     "mPosition": {
                         "x": 400.0,
@@ -205,6 +248,7 @@
             },
             {
                 "name": "p1score",
+                "mId": 6,
                 "TransformComponent": {
                     "mPosition": {
                         "x": 328.0,
@@ -246,6 +290,7 @@
             },
             {
                 "name": "p2score",
+                "mId": 7,
                 "TransformComponent": {
                     "mPosition": {
                         "x": 432.0,

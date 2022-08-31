@@ -2,7 +2,8 @@
     "Scene Data": {
         "GameObjects": [
             {
-                "name": "New GameObject(7)",
+                "name": "New GameObject(8)",
+                "mId": 8,
                 "TransformComponent": {
                     "mPosition": {
                         "x": 336.0,

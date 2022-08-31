@@ -181,6 +181,8 @@ namespace RKTEngine
 			*************************************************************************/
 			void connectNativeScript(ComponentId scriptId) { mNativeScriptId = scriptId; }
 
+			void onDeserialize(const TransformData& transformComponent);
+
 			friend cereal::access;
 
 			template<class Archive>
@@ -200,7 +202,7 @@ namespace RKTEngine
 				auto lblData = lbl == nullptr ? nullptr : lbl->getData();
 				auto btnData = btn == nullptr ? nullptr : btn->getData();
 
-				archive(CEREAL_NVP(name), cereal::make_nvp("TransformComponent", tr.getData()), cereal::make_nvp("SpriteComponent", *sprData),
+				archive(CEREAL_NVP(name), CEREAL_NVP(mId), cereal::make_nvp("TransformComponent", tr.getData()), cereal::make_nvp("SpriteComponent", *sprData),
 						cereal::make_nvp("BoxColliderComponent", *boxData), cereal::make_nvp("AudioSourceComponent", *audData),
 						cereal::make_nvp("UILabelComponent", *lblData), MAKE_NVP("ButtonComponent", *btnData), MAKE_NVP("Native Script", pActor));
 			}
@@ -216,14 +218,18 @@ namespace RKTEngine
 				auto btn = ZERO_BTN_DATA;
 				std::shared_ptr<Actor> pActor;
 
-				archive(CEREAL_NVP(name), cereal::make_nvp("TransformComponent", tr), cereal::make_nvp("SpriteComponent", spr),
+				archive(CEREAL_NVP(name), CEREAL_NVP(mId), cereal::make_nvp("TransformComponent", tr), cereal::make_nvp("SpriteComponent", spr),
 						cereal::make_nvp("BoxColliderComponent", box), cereal::make_nvp("AudioSourceComponent", aud), cereal::make_nvp("UILabelComponent", lbl),
 						MAKE_NVP("ButtonComponent", btn), MAKE_NVP("Native Script", pActor));
+
+				onDeserialize(tr);
 
 				if (!spr.mSpriteName.empty())
 					addSpriteComponent(spr);
 				if (!box.tag.empty())
+				{
 					addBoxColliderComponent(box);
+				}
 				if (!aud.mAudioFileName.empty())
 					addAudioSourceComponent(aud);
 				if (!lbl.mFontName.empty())
@@ -238,8 +244,6 @@ namespace RKTEngine
 					addNativeScriptComponent();
 					pActor->onDeserialize(mId);
 				}
-
-				getTransform()->setData(tr);
 			}
 	};
 }

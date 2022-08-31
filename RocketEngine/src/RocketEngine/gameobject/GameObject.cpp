@@ -1,10 +1,9 @@
 #include "GameObject.h"
+#include <string>
+#include "cereal/archives/json.hpp"
 #include "RocketEngine/core/EngineCore.h"
 #include "RocketEngine/core/ComponentManager.h"
 #include "RocketEngine/gameobject/GameObjectManager.h"
-#include <string>
-#include "cereal/archives/json.hpp"
-
 
 namespace RKTEngine
 {
@@ -12,17 +11,6 @@ namespace RKTEngine
 	GameObject::GameObject() :
 		name("")
 	{
-		//register with ecs
-		auto obj = EngineCore::getInstance()->getEntityManager()->createGameObject();
-		mId = obj->getId();
-
-		//create a transform when creating gameObjs outside the ecs
-		if (getTransform() == nullptr)
-		{
-			auto pComponentManager = EngineCore::getInstance()->getComponentManager();
-			connectTransform(pComponentManager->allocateTransformComponent());
-			setTransformHandle(pComponentManager->getTransformComponent(mTransformId));
-		}
 	}
 
 	GameObject::GameObject(GameObjectId id) :
@@ -75,6 +63,16 @@ namespace RKTEngine
 		name = "New GameObject("; 
 		name.append(std::to_string(mId));
 		name.append(")");
+	}
+
+	void GameObject::onDeserialize(const TransformData& transformData)
+	{
+		//create version of this gameObj in the ecs system. Will be used to register deserialized components later in SceneManager.h
+		EngineCore::getInstance()->getEntityManager()->createGameObject(transformData, mId);
+		auto pComponentManager = EngineCore::getInstance()->getComponentManager();
+		connectTransform(pComponentManager->allocateTransformComponent(transformData));
+		auto trComp = pComponentManager->getTransformComponent(mTransformId);
+		setTransformHandle(pComponentManager->getTransformComponent(mTransformId));
 	}
 
 

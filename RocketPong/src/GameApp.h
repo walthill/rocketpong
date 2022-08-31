@@ -25,7 +25,9 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 
 		void onMessage(RKTEngine::Message& message);
 
+		void setGameManager(int id){ mGameManagerId = id; }
 		GameManager* getGameManager();
+
 		double getTime();
 
 		bool quit(RKTEngine::ExitMessage& msg);
@@ -50,9 +52,7 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 		RKTUtil::PerformanceTracker* mpPerformanceTracker = nullptr;
 		RKTUtil::Timer* mpFrameTimer = nullptr;
 
-		GameManager* mpGameManager = nullptr;
-		
-		RKTEngine::GameObject* mpBall = nullptr;
+		int mGameManagerId = 0;
 
 		void beginInit();
 		void endInit();
