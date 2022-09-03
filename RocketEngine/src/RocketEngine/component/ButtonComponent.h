@@ -61,6 +61,7 @@ namespace RKTEngine
 
 	class ButtonComponent : public Component
 	{
+		friend class SceneManager;
 	public:
 		ButtonComponent(const ComponentId& id);
 		~ButtonComponent();
@@ -98,6 +99,7 @@ namespace RKTEngine
 		void loadSprite(SpriteComponentData& sprData, bool isHighlightSpr = false);
 		void loadText();
 		void processSprite(SpriteComponentData& sprData, const glm::vec2& position, const glm::vec2& scale, float rotationAngle);
+		void setSelected(bool selected);
 	};
 }
 

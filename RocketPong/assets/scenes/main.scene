@@ -68,6 +68,142 @@
                 "Native Script": {
                     "polymorphic_id": 0
                 }
+            },
+            {
+                "name": "New GameObject(9)",
+                "mId": 9,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 336.0,
+                        "y": 528.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {},
+                "ButtonComponent": {
+                    "mSprite": {
+                        "mSpriteName": "defaultbtn",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mHighlightSprite": {
+                        "mSpriteName": "defaultbtn_highlight",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mText": {
+                        "mFontName": "calibri",
+                        "mText": "New Text",
+                        "mFontSize": 32,
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    }
+                },
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
+            },
+            {
+                "name": "New GameObject(10)",
+                "mId": 10,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 336.0,
+                        "y": 656.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {},
+                "ButtonComponent": {
+                    "mSprite": {
+                        "mSpriteName": "defaultbtn",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mHighlightSprite": {
+                        "mSpriteName": "defaultbtn_highlight",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mText": {
+                        "mFontName": "calibri",
+                        "mText": "New Text",
+                        "mFontSize": 32,
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    }
+                },
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
             }
         ]
     }

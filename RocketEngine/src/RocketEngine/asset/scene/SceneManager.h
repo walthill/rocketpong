@@ -12,10 +12,19 @@
 
 namespace RKTEngine
 {
+	struct UIManager
+	{
+		int currentButtonIndex;
+		std::vector<ButtonComponent*> buttons;
+	};
+
 	struct Scene
 	{
 		std::string name;
 		std::vector<GameObject*> entities;
+		UIManager uiManager;
+
+		#pragma region Serialization
 
 		template<class Archive>
 		void save(Archive& archive) const
@@ -43,8 +52,16 @@ namespace RKTEngine
 			{
 				auto newObj = EngineCore::getInstance()->getEntityManager()->registerGameObjectData(entitiesToDeserialize[i]);
 				entities.push_back(newObj);
+				
+				auto buttonComp = newObj->getButton();
+				if (buttonComp != nullptr)
+				{
+					uiManager.buttons.push_back(buttonComp);
+				}
 			}
 		}
+
+		#pragma endregion
 	};
 
 	class SceneManager : public RKTUtil::Trackable
@@ -71,6 +88,10 @@ namespace RKTEngine
 
 		void loadScene(const std::string& sceneName, bool destroySceneData = true, bool makeActiveScene = true);
 		bool isActiveScene(const std::string& sceneName);
+
+		void onMessage(RKTEngine::Message& message);
+		bool onKeyDown(RKTEngine::KeyDownMessage& msg);
+		void updateButtonNavigation(bool moveDown);
 
 		GameObject* findGameObjectInScene(uint32_t id);
 

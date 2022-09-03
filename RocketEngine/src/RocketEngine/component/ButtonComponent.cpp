@@ -30,6 +30,7 @@ namespace RKTEngine
 
 	void ButtonComponent::cleanup()
 	{
+		delete mData.mText.mTextInfo;
 	}
 
 	const std::string& ButtonComponent::getText()
@@ -199,5 +200,10 @@ namespace RKTEngine
 		mRenderInfo.position = { position.x, position.y, 0.0f };
 		mRenderInfo.scale = glm::vec2(scale.x * sprData.mWidth, scale.y * sprData.mHeight); //scale sprite based on dimensions 
 		mRenderInfo.rotation = rotationAngle;
+	}
+
+	void ButtonComponent::setSelected(bool selected)
+	{
+		mData.mSelected = selected;
 	}
 }

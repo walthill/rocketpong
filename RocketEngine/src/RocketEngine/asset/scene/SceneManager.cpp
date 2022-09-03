@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 #include "RocketEngine/asset/Serialization.h"
 #include <RocketEngine/core/Log.h>
+#include "RocketEngine/input/KeyCodes.h"
 
 namespace RKTEngine
 {
@@ -96,6 +97,9 @@ namespace RKTEngine
 				mpActiveScene = new Scene{ sceneName, std::vector<GameObject*>() };
 				mpActiveScene = Serialization::deserializeScene(sceneName);
 				mScenes[sceneName] = mpActiveScene;
+
+				if(mpActiveScene->uiManager.buttons.size() > 0)
+					mpActiveScene->uiManager.buttons[0]->setSelected(true);
 			}
 		}
 		else
@@ -115,6 +119,70 @@ namespace RKTEngine
 		}
 
 		return false;
+	}
+
+	void SceneManager::onMessage(RKTEngine::Message& message)
+	{
+		RKTEngine::MessageDispatcher dispatcher(message);
+		dispatcher.dispatch<RKTEngine::KeyDownMessage>(RKT_BIND_MESSAGE_FN(SceneManager::onKeyDown));
+	}
+
+	bool SceneManager::onKeyDown(RKTEngine::KeyDownMessage& msg)
+	{
+		const auto& keyCode = msg.getKeyCode();
+		if (keyCode == Key::S || keyCode == Key::Down || keyCode == Key::D || keyCode == Key::Right)
+			updateButtonNavigation(true);		
+		else if (keyCode == Key::W || keyCode == Key::Up || keyCode == Key::A || keyCode == Key::Left)
+			updateButtonNavigation(false);
+
+		return true;
+	}
+
+	void SceneManager::updateButtonNavigation(bool moveDown)
+	{
+		RKT_PROFILE_FUNCTION();
+
+		if (mpActiveScene == nullptr)
+			return;
+
+		auto& uiManager = mpActiveScene->uiManager;
+		if (uiManager.buttons.empty())
+			return;
+
+		if (moveDown)
+		{			
+			if (uiManager.buttons[uiManager.currentButtonIndex]->mIsEnabled)
+			{
+				uiManager.buttons[uiManager.currentButtonIndex]->setSelected(false);
+				if (uiManager.currentButtonIndex == uiManager.buttons.size() - 1)
+				{
+					uiManager.currentButtonIndex = 0;
+				}
+				else
+				{
+					uiManager.currentButtonIndex += 1;
+				}
+
+				uiManager.buttons[uiManager.currentButtonIndex]->setSelected(true);
+			}			
+		}
+		else
+		{
+			if (uiManager.buttons[uiManager.currentButtonIndex]->mIsEnabled)
+			{
+				uiManager.buttons[uiManager.currentButtonIndex]->setSelected(false);
+				if (uiManager.currentButtonIndex == 0)
+				{
+					uiManager.currentButtonIndex = uiManager.buttons.size() - 1;
+				}
+				else
+				{
+					uiManager.currentButtonIndex += -1;
+				}
+
+				uiManager.buttons[uiManager.currentButtonIndex]->setSelected(true);
+			}
+		}
 	}
 
 	GameObject* SceneManager::findGameObjectInScene(uint32_t id)

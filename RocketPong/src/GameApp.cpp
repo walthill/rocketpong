@@ -30,7 +30,7 @@ bool GameApp::initialize()
 	generateSceneData(false);
 	if (mIsRunning)
 	{
-		loadStartupScene("game");
+		loadStartupScene("main");
 	}
 
 	endInit();
@@ -137,6 +137,11 @@ void GameApp::generateSceneData(bool quitOnComplete)
 		{
 			GameObject* main1 = GameObjManager->createButton();
 			main1->getTransform()->setPosition({ w / 2 - 64, h / 2 });
+			GameObject* main2 = GameObjManager->createButton();
+			main2->getTransform()->setPosition({ w / 2 - 64, h / 2 + 128});
+			GameObject* main3 = GameObjManager->createButton();
+			main3->getTransform()->setPosition({ w / 2 - 64, h / 2 + 256 });
+			//main1->getButton().setOnSelected(pUIManager.OnStartSelected);
 			//GameObject* main2 = GameObjManager->createLabel("MAIN", { w / 2 + 32, 10 });
 		}
 		RocketEngine->getSceneManager()->endScene();
