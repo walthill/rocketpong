@@ -273,7 +273,7 @@
                 "UILabelComponent": {
                     "mFontName": "Arkitech-Medium",
                     "mText": "0",
-                    "mFontSize": 32,
+                    "mFontSize": 28,
                     "Color": {
                         "data": {
                             "x": 255.0,
@@ -315,7 +315,7 @@
                 "UILabelComponent": {
                     "mFontName": "Arkitech-Medium",
                     "mText": "0",
-                    "mFontSize": 32,
+                    "mFontSize": 28,
                     "Color": {
                         "data": {
                             "x": 255.0,

@@ -3,6 +3,7 @@
 #include "actors/Paddle.h"
 #include "actors/Ball.h"
 #include "managers/GameManager.h"
+#include "managers/UIManager.h"
 
 GameApp::~GameApp()
 {
@@ -135,14 +136,19 @@ void GameApp::generateSceneData(bool quitOnComplete)
 
 		RocketEngine->getSceneManager()->beginScene("main");
 		{
+			GameObject* gameMan = GameObjManager->createActor();
+			gameMan->name = "UIManager";
+			gameMan->getScript()->bind<UIManager>(gameMan->getId());
+			auto pUIManager = gameMan->getScript()->get<UIManager>();
+
 			GameObject* main1 = GameObjManager->createButton();
 			main1->getTransform()->setPosition({ w / 2 - 64, h / 2 });
 			GameObject* main2 = GameObjManager->createButton();
+			main2->getButton()->setText("Quit");
 			main2->getTransform()->setPosition({ w / 2 - 64, h / 2 + 128});
-			GameObject* main3 = GameObjManager->createButton();
-			main3->getTransform()->setPosition({ w / 2 - 64, h / 2 + 256 });
-			//main1->getButton().setOnSelected(pUIManager.OnStartSelected);
-			//GameObject* main2 = GameObjManager->createLabel("MAIN", { w / 2 + 32, 10 });
+
+			pUIManager->playButtonId = main1->getId();
+			pUIManager->exitButtonId = main2->getId();
 		}
 		RocketEngine->getSceneManager()->endScene();
 	}

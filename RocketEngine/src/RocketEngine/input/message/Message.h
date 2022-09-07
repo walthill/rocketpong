@@ -33,8 +33,8 @@ namespace RKTEngine
 
 	//Event system defines made w/ help from https://github.com/TheCherno/Hazel under the Apache-2.0 license
 	#define EVENT_CLASS_TYPE(type)  static MessageType GetStaticType() { return MessageType::type; }\
-								virtual MessageType GetMessageType() const override { return GetStaticType(); }\
-								virtual const char* GetName() const override { return #type; }
+									virtual MessageType GetMessageType() const override { return GetStaticType(); }\
+									virtual const char* GetName() const override { return #type; }
 
 	#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 

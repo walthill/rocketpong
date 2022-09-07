@@ -86,6 +86,7 @@ void GameManager::onDeserialize(int id)
 		script->bind<GameManager>(id);
 		auto inst = script->get<GameManager>();
 
+		//restore serialized values here
 		inst->mP1ScoreId = mP1ScoreId;
 		inst->mP2ScoreId = mP2ScoreId;
 		inst->mBallId = mBallId;

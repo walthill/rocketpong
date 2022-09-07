@@ -5,32 +5,45 @@
 #include "SpriteComponent.h"
 #include "TextComponent.h"
 #include "RocketEngine/render/buffers/Texture.h"
+#include <functional>
 
 namespace RKTEngine
 {
 
+	typedef std::function<void()> ButtonCallbackVoid;
+	typedef std::function<void(bool)> ButtonCallbackBool;
+	typedef std::function<void(int)> ButtonCallbackInt;
 
 	struct ButtonComponentData
 	{
 		SpriteComponentData mSprite;
 		SpriteComponentData mHighlightSprite;
 		TextData mText;
-		bool mSelected;
+		bool mHighlighted;
+		ButtonCallbackVoid mCallbackVoid;
+		ButtonCallbackBool mCallbackBool;	//wip
+		ButtonCallbackInt mCallbackInt;		//wip
 
 		ButtonComponentData() 
 		{
-			mSelected = false;
+			mHighlighted = false;
 			mSprite = SpriteComponentData();
 			mHighlightSprite = SpriteComponentData();
 			mText = TextData();
+			mCallbackVoid = nullptr;
+			mCallbackBool = nullptr;
+			mCallbackInt = nullptr;
 		}
 
 		ButtonComponentData(const SpriteComponentData& spr, const SpriteComponentData& highlightSpr, const TextData& tData)
-			: mSelected(false)
+			: mHighlighted(false)
 		{
 			mSprite = spr;
 			mHighlightSprite = highlightSpr;
 			mText = tData;
+			mCallbackVoid = nullptr;
+			mCallbackBool = nullptr;
+			mCallbackInt = nullptr;
 		}
 
 		template<class Archive>
@@ -82,6 +95,11 @@ namespace RKTEngine
 		void processText(const glm::vec2& position, const glm::vec2& scale, float rotationAngle);
 		void renderSprite();
 		void renderText();
+		
+		void onSelected();
+		void setOnSelected(ButtonCallbackVoid func);
+		//void setOnSelected(ButtonCallbackBool func);
+		//void setOnSelected(ButtonCallbackInt func);	//wip
 
 	private:
 		const std::string mTEXT_COLOR_UNIFORM = "textColor";
@@ -94,12 +112,11 @@ namespace RKTEngine
 		SpriteRenderData mRenderInfo;
 		glm::mat4 mModelMatrix;
 
-
 		AtlasCoordinateData calculateAtlasCoords(SpriteComponentData& sprData, int x, int y);
 		void loadSprite(SpriteComponentData& sprData, bool isHighlightSpr = false);
 		void loadText();
 		void processSprite(SpriteComponentData& sprData, const glm::vec2& position, const glm::vec2& scale, float rotationAngle);
-		void setSelected(bool selected);
+		void setHighlighted(bool selected);
 	};
 }
 

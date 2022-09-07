@@ -53,7 +53,15 @@ namespace RKTEngine
 	void SceneManager::registerEntity(GameObject* obj)
 	{
 		if (mpActiveScene != nullptr)
+		{
 			mpActiveScene->entities.push_back(obj);
+			
+			auto buttonComp = obj->getButton();
+			if (buttonComp != nullptr)
+			{
+				mpActiveScene->uiManager.buttons.push_back(buttonComp);
+			}
+		}
 	}
 
 
@@ -74,8 +82,10 @@ namespace RKTEngine
 	void SceneManager::endScene(bool destroySceneData)
 	{
 		Serialization::serializeScene(mpActiveScene);
-		if(destroySceneData)	
+		if (destroySceneData)
+		{
 			cleanActiveScene();
+		}
 	}
 
 	void SceneManager::loadScene(const std::string& sceneName, bool destroySceneData, bool makeActiveScene)
@@ -99,7 +109,7 @@ namespace RKTEngine
 				mScenes[sceneName] = mpActiveScene;
 
 				if(mpActiveScene->uiManager.buttons.size() > 0)
-					mpActiveScene->uiManager.buttons[0]->setSelected(true);
+					mpActiveScene->uiManager.buttons[0]->setHighlighted(true);
 			}
 		}
 		else
@@ -134,6 +144,17 @@ namespace RKTEngine
 			updateButtonNavigation(true);		
 		else if (keyCode == Key::W || keyCode == Key::Up || keyCode == Key::A || keyCode == Key::Left)
 			updateButtonNavigation(false);
+		else if (keyCode == Key::Enter || keyCode == Key::Space || keyCode == Key::KPEnter)
+		{
+			if (mpActiveScene != nullptr)
+			{
+				const auto& uiManager = mpActiveScene->uiManager;
+				if (!uiManager.buttons.empty())
+				{
+					uiManager.buttons[uiManager.currentButtonIndex]->onSelected();
+				}
+			}
+		}
 
 		return true;
 	}
@@ -153,7 +174,7 @@ namespace RKTEngine
 		{			
 			if (uiManager.buttons[uiManager.currentButtonIndex]->mIsEnabled)
 			{
-				uiManager.buttons[uiManager.currentButtonIndex]->setSelected(false);
+				uiManager.buttons[uiManager.currentButtonIndex]->setHighlighted(false);
 				if (uiManager.currentButtonIndex == uiManager.buttons.size() - 1)
 				{
 					uiManager.currentButtonIndex = 0;
@@ -163,14 +184,14 @@ namespace RKTEngine
 					uiManager.currentButtonIndex += 1;
 				}
 
-				uiManager.buttons[uiManager.currentButtonIndex]->setSelected(true);
+				uiManager.buttons[uiManager.currentButtonIndex]->setHighlighted(true);
 			}			
 		}
 		else
 		{
 			if (uiManager.buttons[uiManager.currentButtonIndex]->mIsEnabled)
 			{
-				uiManager.buttons[uiManager.currentButtonIndex]->setSelected(false);
+				uiManager.buttons[uiManager.currentButtonIndex]->setHighlighted(false);
 				if (uiManager.currentButtonIndex == 0)
 				{
 					uiManager.currentButtonIndex = uiManager.buttons.size() - 1;
@@ -180,7 +201,7 @@ namespace RKTEngine
 					uiManager.currentButtonIndex += -1;
 				}
 
-				uiManager.buttons[uiManager.currentButtonIndex]->setSelected(true);
+				uiManager.buttons[uiManager.currentButtonIndex]->setHighlighted(true);
 			}
 		}
 	}

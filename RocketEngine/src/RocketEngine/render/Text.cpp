@@ -5,7 +5,7 @@
 
 namespace RKTEngine
 {
-	int Text::sDefaultTextSize = 32;
+	int Text::sDefaultTextSize = 28;
 
 	Text* Text::create(Font* fontData, std::string& text, int fontSize)
 	{

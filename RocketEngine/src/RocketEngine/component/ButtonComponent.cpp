@@ -30,6 +30,9 @@ namespace RKTEngine
 
 	void ButtonComponent::cleanup()
 	{
+		mData.mCallbackVoid = nullptr;
+		mData.mCallbackBool = nullptr;
+		mData.mCallbackInt = nullptr;
 		delete mData.mText.mTextInfo;
 	}
 
@@ -63,7 +66,7 @@ namespace RKTEngine
 
 	void ButtonComponent::processSprite(const glm::vec2& position, const glm::vec2& scale, float rotationAngle)
 	{
-		if (mData.mSelected)
+		if (mData.mHighlighted)
 		{
 			processSprite(mData.mHighlightSprite, position, scale, rotationAngle);
 		}
@@ -96,7 +99,7 @@ namespace RKTEngine
 		{
 			if (mRenderInfo.rotation != 0)
 			{
-				if (mData.mSelected)
+				if (mData.mHighlighted)
 				{
 					if(mHighlightAtlasInitialized)
 						RenderCommand::drawRotatedQuad(mRenderInfo.position, mRenderInfo.scale, mRenderInfo.rotation, mData.mHighlightSprite.pSprite, mHighlightAtlasCoords, 1.0f, mData.mHighlightSprite.mColor);
@@ -113,7 +116,7 @@ namespace RKTEngine
 			}
 			else
 			{
-				if (mData.mSelected)
+				if (mData.mHighlighted)
 				{
 					if (mHighlightAtlasInitialized)
 						RenderCommand::drawQuad(mRenderInfo.position, mRenderInfo.scale, mData.mHighlightSprite.pSprite, mHighlightAtlasCoords, 1.0f, mData.mHighlightSprite.mColor);
@@ -202,8 +205,20 @@ namespace RKTEngine
 		mRenderInfo.rotation = rotationAngle;
 	}
 
-	void ButtonComponent::setSelected(bool selected)
+
+	void ButtonComponent::onSelected()
 	{
-		mData.mSelected = selected;
+		if(mData.mCallbackVoid != nullptr)
+			mData.mCallbackVoid();
+	}
+
+	void ButtonComponent::setHighlighted(bool highlighted)
+	{
+		mData.mHighlighted = highlighted;
+	}
+
+	void ButtonComponent::setOnSelected(ButtonCallbackVoid func)
+	{
+		mData.mCallbackVoid = func;
 	}
 }

@@ -10,7 +10,7 @@ namespace RKTEngine
 	#define RKT_RENDER_STATS 0
 	#define BITSHIFT(x) (1 << x)
 	#define RKT_BIND_MESSAGE_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
-
+	#define RKT_BIND_CALLBACK_FN(funcRef) std::bind(&funcRef, this)
 	#define OVERRIDE_REQUIRED =0
 
 	typedef unsigned int uint32;

@@ -353,6 +353,19 @@ namespace RKTEngine
 		}
 	}
 
+	void GameObjectManager::setButtonCallback(uint32 handle, ButtonCallbackVoid callback)
+	{
+		auto gameObj = findGameObject(handle);
+		if (gameObj != nullptr)
+		{
+			auto btnComp = gameObj->getButton();
+			if (btnComp != nullptr)
+			{
+				btnComp->setOnSelected(callback);
+			}
+		}
+	}
+
 	int GameObjectManager::getNumGameObjects()
 	{
 		return mGameObjMap.size();

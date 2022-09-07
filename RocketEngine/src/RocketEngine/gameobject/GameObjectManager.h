@@ -123,6 +123,8 @@ namespace RKTEngine
 			///Access the player gameobject
 			GameObject* getPlayerObject() { return mGameObjMap[PLAYER_OBJ_ID]; }
 
+			void setButtonCallback(uint32 handle, ButtonCallbackVoid callback);
+
 		private:
 			static GameObjectId msNextUnitId;
 
