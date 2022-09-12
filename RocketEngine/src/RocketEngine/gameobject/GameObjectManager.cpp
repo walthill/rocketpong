@@ -1,6 +1,7 @@
 #include "GameObjectManager.h"
 #include "GameObject.h"
 #include "RocketEngine/core/EngineCore.h"
+#include "RocketEngine/core/Log.h"
 #include "RocketEngine/asset/scene/SceneManager.h"
 #include "RocketEngine/core/ComponentManager.h"
 #include "RocketEngine/render/shader/ShaderManager.h"
@@ -181,7 +182,7 @@ namespace RKTEngine
 				newObj->connectLabel(newLabelId);
 			}
 
-			addNativeScript(newObj->getId());
+			addNativeScript(nullptr, newObj->getId());
 
 			EngineCore::getInstance()->getSceneManager()->registerEntity(newObj);
 		}
@@ -221,7 +222,7 @@ namespace RKTEngine
 
 
 
-	void GameObjectManager::addAudioSource(int objId, const std::string& audio, float vol, float pan)
+	void GameObjectManager::addAudioSource(int objId, const std::string& audio, float vol, float pan, bool enabled)
 	{
 		auto it = mGameObjMap.find(objId);
 		if (it != mGameObjMap.end())
@@ -233,7 +234,7 @@ namespace RKTEngine
 		}
 	}
 
-	void GameObjectManager::addBoxCollider(int objId, int w, int h, const std::string& t)
+	void GameObjectManager::addBoxCollider(int objId, int w, int h, const std::string& t, bool enabled)
 	{
 		auto it = mGameObjMap.find(objId);
 		if (it != mGameObjMap.end())
@@ -245,24 +246,24 @@ namespace RKTEngine
 		}
 	}
 
-	void GameObjectManager::addSprite(int objId, const std::string& spriteToLoad, const std::string& tileName, Color color)
+	void GameObjectManager::addSprite(int objId, const std::string& spriteToLoad, const std::string& tileName, Color color, bool enabled)
 	{
 		auto it = mGameObjMap.find(objId);
 		if (it != mGameObjMap.end())
 		{
-			SpriteComponentData spriteData = SpriteComponentData(spriteToLoad, tileName, color);
+			SpriteComponentData spriteData = SpriteComponentData(spriteToLoad, tileName, color, enabled);
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
 			ComponentId newSpriteId = pComponentManager->allocateSpriteComponent(spriteData);
 			it->second->connectSprite(newSpriteId);
 		}
 	}
 
-	void GameObjectManager::addUILabel(int objId, const std::string& font, const std::string& text, int size, Color color)
+	void GameObjectManager::addUILabel(int objId, const std::string& font, const std::string& text, int size, Color color, bool enabled)
 	{
 		auto it = mGameObjMap.find(objId);
 		if (it != mGameObjMap.end())
 		{
-			TextData data = TextData(font, text, size, color);
+			TextData data = TextData(font, text, size, color, enabled);
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
 			ComponentId id = pComponentManager->allocateTextComponent(data);
 			it->second->connectLabel(id);
@@ -271,7 +272,7 @@ namespace RKTEngine
 
 	void GameObjectManager::addButton(int objId, const std::string& font, const std::string& text, int size, Color textColor, 
 									  const std::string& spriteToLoad, const std::string& tileName, Color sprColor, const std::string& highlightSpriteToLoad, 
-									  const std::string& highlightTileName, Color highlightSprColor)
+									  const std::string& highlightTileName, Color highlightSprColor, bool enabled)
 	{
 		auto it = mGameObjMap.find(objId);
 		if (it != mGameObjMap.end())
@@ -279,7 +280,7 @@ namespace RKTEngine
 			TextData textData = TextData(font, text, size, textColor);
 			SpriteComponentData spriteData = SpriteComponentData(spriteToLoad);
 			SpriteComponentData highlightSpriteData = SpriteComponentData(highlightSpriteToLoad);
-			ButtonComponentData btnData = { spriteData, highlightSpriteData, textData };
+			ButtonComponentData btnData = ButtonComponentData(spriteData, highlightSpriteData, textData, enabled);
 			
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
 			ComponentId id = pComponentManager->allocateButtonComponent(btnData);
@@ -287,7 +288,7 @@ namespace RKTEngine
 		}
 	}
 
-	void GameObjectManager::addNativeScript(int objId)
+	void GameObjectManager::addNativeScript(std::shared_ptr<Actor> actor, int objId, bool enabled)
 	{
 		auto it = mGameObjMap.find(objId);
 		if (it != mGameObjMap.end())
@@ -295,6 +296,9 @@ namespace RKTEngine
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
 			ComponentId id = pComponentManager->allocateNativeScriptComponent(objId);
 			it->second->connectNativeScript(id);
+
+			if(actor != nullptr)
+				it->second->getNativeScript()->setInstance(actor, objId, enabled);
 		}
 	}
 
@@ -311,10 +315,13 @@ namespace RKTEngine
 	{
 		auto it = mGameObjMap.find(id);
 
-		if (it != mGameObjMap.end())//found?
+		if (it != mGameObjMap.end())
 			return it->second;
 		else
+		{
+			RKT_ERROR("{0} Failed to find gameobject with id '{1}'", LOG_SUBSYS(GameObjectManager), id);
 			return nullptr;
+		}
 	}
 
 	void GameObjectManager::destroy(const GameObjectId& id)

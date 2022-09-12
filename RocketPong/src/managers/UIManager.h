@@ -32,13 +32,11 @@ class UIManager : public RKTEngine::Actor
 		{
 			ar(CEREAL_NVP(playButtonId), CEREAL_NVP(exitButtonId), CEREAL_NVP(controlsButtonId), CEREAL_NVP(controlsBackButtonId));
 		}
-
-protected:
-	virtual void onDeserialize(int id) override;
+		
+		virtual void onDeserialize(int id) override;
 
 		#pragma endregion
 };
 
-REGISTER_ACTOR(UIManager);
 
 #endif // !UI_MAN_H

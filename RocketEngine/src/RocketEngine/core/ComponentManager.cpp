@@ -485,6 +485,9 @@ namespace RKTEngine
 			if (!it.second->pInstance)
 				continue;
 
+			if (!it.second->pInstance->isEnabled)
+				continue;
+
 			if (it.second->pInstance->mFirstUpdate)
 			{
 				it.second->pInstance->mFirstUpdate = false;

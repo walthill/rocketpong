@@ -46,6 +46,9 @@ namespace RKTEngine
 			return;
 		}
 
+		if (!mAudioSourceData.isEnabled)
+			return;
+
 		setVolume(vol);
 		setPan(pan);
 		setPauseFlag(false);

@@ -128,7 +128,24 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			p1Score->name = "p1score";
 			GameObject* p2Score = GameObjManager->createLabel(std::to_string(pGameManager->mP2Score), { w / 2 + 32, 10 }, glm::vec2(1.0f), 0, "Arkitech-Medium");
 			p2Score->name = "p2score";
+			GameObject* pause = GameObjManager->createLabel("Paused", { w / 2 - 128, h / 6 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
+			pause->name = "pause-text";
+			pause->getUILabel()->setEnabled(false);
 
+			GameObject* pause1 = GameObjManager->createButton();
+			pause1->getButton()->setFont("Arkitech-Medium");
+			pause1->getButton()->setText("Play");
+			pause1->getTransform()->setPosition({ w / 2, h / 2 - 64 });
+			pause1->getButton()->setEnabled(false);
+			GameObject* pause2 = GameObjManager->createButton();
+			pause2->getButton()->setFont("Arkitech-Medium");
+			pause2->getButton()->setText("Quit");
+			pause2->getTransform()->setPosition({ w / 2, h / 2 });
+			pause2->getButton()->setEnabled(false);
+
+			pGameManager->resumeButtonId = pause1->getId();
+			pGameManager->quitButtonId = pause2->getId();
+			pGameManager->pauseTextId = pause->getId();
 			pGameManager->setBallHandle(pBall->getId());
 			pGameManager->setScoreUI(p1Score->getId(), p2Score->getId());
 		}
@@ -279,7 +296,9 @@ bool GameApp::back(RKTEngine::KeyDownMessage& msg)
 	if (msg.getKeyCode() == KeyCode::Escape)
 	{
 		if (RocketEngine->getSceneManager()->isActiveScene("game"))
-			RocketEngine->getSceneManager()->loadScene("main");
+		{
+			GameObjManager->findGameObject(mGameManagerId)->getScript<GameManager>()->onPlaySelected();
+		}
 		else if (RocketEngine->getSceneManager()->isActiveScene("controls"))
 			RocketEngine->getSceneManager()->loadScene("main");
 		else

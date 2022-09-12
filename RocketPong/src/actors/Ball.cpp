@@ -3,6 +3,8 @@
 #include "managers/GameManager.h"
 #include "RocketEngine.h"
 
+REGISTER_ACTOR(Ball); 
+
 void Ball::onCreate()
 {
 }
@@ -96,20 +98,6 @@ void Ball::onMessage(RKTEngine::Message& message)
 {
 	RKTEngine::MessageDispatcher dispatcher(message);
 	dispatcher.dispatch<RKTEngine::CollisionEnterMessage>(RKT_BIND_MESSAGE_FN(Ball::onCollisionEnter));
-}
-
-void Ball::onDeserialize(int id)
-{
-	auto obj = GameObjManager->findGameObject(id);
-	if (obj != nullptr)
-	{
-		auto script = obj->getNativeScript();
-		script->bind<Ball>(id);
-		auto inst = script->get<Ball>();
-
-		inst->mStartPos = mStartPos;
-		inst->mSpeed = mSpeed;
-	}
 }
 
 void Ball::reset()

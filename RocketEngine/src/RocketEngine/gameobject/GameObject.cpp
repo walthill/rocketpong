@@ -30,7 +30,7 @@ namespace RKTEngine
 
 	void GameObject::update(float elapsedTime)
 	{
-		if (mpTransform->hasChanged())
+		//if (mpTransform->hasChanged())	//allow for processing changes when transform hasn't been altered
 		{
 			SpriteComponent* spriteComponent = getSprite();
 			if (spriteComponent != nullptr)
@@ -114,34 +114,34 @@ namespace RKTEngine
 
 	void GameObject::addSpriteComponent(const SpriteComponentData& data)
 	{
-		EngineCore::getInstance()->getEntityManager()->addSprite(mId, data.mSpriteName, data.mTileName, data.mColor);
+		EngineCore::getInstance()->getEntityManager()->addSprite(mId, data.mSpriteName, data.mTileName, data.mColor, data.isEnabled);
 	}
 	
 	void GameObject::addBoxColliderComponent(const BoxColliderData& data)
 	{
-		EngineCore::getInstance()->getEntityManager()->addBoxCollider(mId, data.width, data.height, data.tag);
+		EngineCore::getInstance()->getEntityManager()->addBoxCollider(mId, data.width, data.height, data.tag, data.isEnabled);
 	}
 
 	void GameObject::addAudioSourceComponent(const AudioSourceComponentData& data)
 	{
-		EngineCore::getInstance()->getEntityManager()->addAudioSource(mId, data.mAudioFileName);
+		EngineCore::getInstance()->getEntityManager()->addAudioSource(mId, data.mAudioFileName, data.isEnabled);
 	}
 
 	void GameObject::addUILabelComponent(const TextData& data)
 	{
-		EngineCore::getInstance()->getEntityManager()->addUILabel(mId, data.mFontName, data.mText, data.mFontSize, data.mColor);
+		EngineCore::getInstance()->getEntityManager()->addUILabel(mId, data.mFontName, data.mText, data.mFontSize, data.mColor, data.isEnabled);
 	}
 
 	void GameObject::addButtonComponent(const ButtonComponentData& data)
 	{
 		EngineCore::getInstance()->getEntityManager()->addButton(mId, data.mText.mFontName, data.mText.mText, data.mText.mFontSize, data.mText.mColor,
 																 data.mSprite.mSpriteName, data.mSprite.mTileName, data.mSprite.mColor, 
-																 data.mHighlightSprite.mSpriteName, data.mHighlightSprite.mTileName, data.mHighlightSprite.mColor);
+																 data.mHighlightSprite.mSpriteName, data.mHighlightSprite.mTileName, data.mHighlightSprite.mColor, data.isEnabled);
 	}
 
-	void GameObject::addNativeScriptComponent()
+	void GameObject::addNativeScriptComponent(std::shared_ptr<Actor> actor)
 	{
-		EngineCore::getInstance()->getEntityManager()->addNativeScript(mId);
+		EngineCore::getInstance()->getEntityManager()->addNativeScript(actor, mId, actor->isEnabled);
 	}
 
 

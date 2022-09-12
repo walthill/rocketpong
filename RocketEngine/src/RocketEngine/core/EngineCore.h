@@ -42,6 +42,7 @@ namespace RKTEngine
 			int getWindowWidth();
 
 			static float sDeltaTime;
+			static bool sTimeScaleActive;
 
 		private:
 			RKTUtil::Timer* mpMasterTimer = nullptr;

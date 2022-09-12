@@ -33,15 +33,13 @@ class Ball : public RKTEngine::Actor
 		template <class Archive>
 		void serialize(Archive& ar)
 		{
-			ar(CEREAL_NVP(mSpeed), CEREAL_NVP(mStartPos));
+			ar(CEREAL_NVP(mSpeed), CEREAL_NVP(mStartPos), CEREAL_ACTOR());
 		}
 
-protected:
-	virtual void onDeserialize(int id) override;
+		void onDeserialize(int id) override;
 
 	#pragma endregion
 };
 
-REGISTER_ACTOR(Ball);	//Attachs actor to serialization engine.
 
 #endif // !BALL_H

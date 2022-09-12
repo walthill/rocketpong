@@ -8,20 +8,20 @@ namespace RKTEngine
 {
 	class TransformComponent;
 
-	struct BoxColliderData : ColliderData
+	struct BoxColliderData : ComponentData
 	{
 		int width;
 		int height;
 		std::string tag;
 
-		BoxColliderData() : ColliderData(), width(0), height(0), tag("") {};
-		BoxColliderData(int w, int h, const std::string& t = "") : ColliderData(), width(w), height(h), tag(t) {};
+		BoxColliderData() : ComponentData(), width(0), height(0), tag("") {};
+		BoxColliderData(int w, int h, const std::string& t = "", bool enabled = true) : ComponentData(enabled), width(w), height(h), tag(t) {};
 
 		template<class Archive>
 		void save(Archive& archive) const
 		{
 			if(this != nullptr)
-				archive(CEREAL_NVP(width), CEREAL_NVP(height), CEREAL_NVP(tag));
+				archive(CEREAL_NVP(isEnabled), CEREAL_NVP(width), CEREAL_NVP(height), CEREAL_NVP(tag));
 		}
 
 		template<class Archive>
@@ -29,7 +29,7 @@ namespace RKTEngine
 		{
 			try
 			{
-				archive(CEREAL_NVP(width), CEREAL_NVP(height), CEREAL_NVP(tag));
+				archive(CEREAL_NVP(isEnabled), CEREAL_NVP(width), CEREAL_NVP(height), CEREAL_NVP(tag));
 			}
 			catch (cereal::Exception&)
 			{
@@ -77,6 +77,8 @@ namespace RKTEngine
 			inline int getWidth() { return mBoxColliderData.width; }
 			inline int getHeight() { return mBoxColliderData.height; }
 			inline TransformComponent* getTransform() { return mpParentTransform; }
+			virtual inline bool isEnabled() override { return mBoxColliderData.isEnabled; }
+			virtual inline void setEnabled(bool enabled) override { mBoxColliderData.isEnabled = enabled; }
 
 		private:
 			TransformComponent* mpParentTransform = nullptr;

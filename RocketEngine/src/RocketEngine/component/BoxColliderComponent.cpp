@@ -23,6 +23,9 @@ namespace RKTEngine
 
 	void BoxColliderComponent::renderOverlay()
 	{
+		if (!mBoxColliderData.isEnabled)
+			return;
+
 		auto scale = mpParentTransform->getScale();
 		scale = glm::vec2(scale.x * getWidth(), scale.y * getHeight());
 
@@ -38,6 +41,9 @@ namespace RKTEngine
 
 	CollisionType BoxColliderComponent::checkCollision(BoxColliderComponent* collider)
 	{
+		if (!mBoxColliderData.isEnabled)
+			return CollisionType::NONE;
+
 		auto posA = mpParentTransform->getPosition();
 		auto posB = collider->mpParentTransform->getPosition();
 		bool collided = false;
@@ -69,6 +75,7 @@ namespace RKTEngine
 		mBoxColliderData.width = data.width;
 		mBoxColliderData.height = data.height;
 		mBoxColliderData.tag = data.tag;
+		mBoxColliderData.isEnabled = data.isEnabled;
 	}
 
 	CollisionType BoxColliderComponent::getCollisionType(const CollisionData& data)

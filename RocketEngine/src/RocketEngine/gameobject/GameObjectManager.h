@@ -102,18 +102,19 @@ namespace RKTEngine
 									 //text
 									 const std::string& text = "New Text", const std::string& fontName = AssetManager::sDEFAULT_FONT, int fontSize = Text::sDefaultTextSize);
 
-			void addAudioSource(int objId, const std::string& audio, float vol = -1.0f, float pan = 0.0f);
+			void addAudioSource(int objId, const std::string& audio, float vol = -1.0f, float pan = 0.0f, bool enabled = true);
 			void addButton(int objId, const std::string& font, const std::string& text, int size, Color textColor, 
 						   const std::string& spriteToLoad = AssetManager::sDEFAULT_BTN_SPRITE, const std::string& tileName = "", Color sprColor = Color::white,
-						   const std::string& highlightSpriteToLoad = AssetManager::sDEFAULT_BTN_HIGHLIGHT_SPRITE, const std::string& highlightTileName = "", Color highlightSprColor = Color::red);
-			void addBoxCollider(int objId, int w, int h, const std::string& t = "untagged");
-			void addSprite(int objId, const std::string& spriteToLoad = AssetManager::sDEFAULT_SPRITE, const std::string& tileName = "", Color color = Color::white);
-			void addUILabel(int objId, const std::string& font, const std::string& text, int size, Color color);
-			void addNativeScript(int objId);
+						   const std::string& highlightSpriteToLoad = AssetManager::sDEFAULT_BTN_HIGHLIGHT_SPRITE, const std::string& highlightTileName = "", 
+						   Color highlightSprColor = Color::red, bool enabled = true);
+			void addBoxCollider(int objId, int w, int h, const std::string& t = "untagged", bool enabled = true);
+			void addSprite(int objId, const std::string& spriteToLoad = AssetManager::sDEFAULT_SPRITE, const std::string& tileName = "", Color color = Color::white, bool enabled = true);
+			void addUILabel(int objId, const std::string& font, const std::string& text, int size, Color color, bool enabled = true);
+			void addNativeScript(std::shared_ptr<Actor> actor, int objId, bool enabled = true);
 
 			/**********************************************************************//**
 			* Destroy GameObject and remove from manager based on its id
-			*
+			*	
 			* @param id The unique identifier for the GameObject to destroy
 			*************************************************************************/
 			void destroy(const GameObjectId& id);

@@ -14,6 +14,7 @@
 namespace RKTEngine
 {
 	float EngineCore::sDeltaTime = 0;
+	bool EngineCore::sTimeScaleActive = true;
 	
 	EngineCore::EngineCore()
 	{
@@ -110,7 +111,8 @@ namespace RKTEngine
 	void EngineCore::calculateDeltaTime()
 	{
 		float currentFrame = (float)getTime();
-		sDeltaTime = (currentFrame - mLastFrame) / 1000;
+		sDeltaTime = (currentFrame - mLastFrame);		
+		sDeltaTime = sTimeScaleActive ? sDeltaTime * 0.001f : 0; // divide by 1000;
 		mLastFrame = currentFrame;
 	}
 
@@ -122,11 +124,7 @@ namespace RKTEngine
 	RenderCore* EngineCore::getRenderer() { return mpRenderCore; }
 	InputSystem* EngineCore::getInputSystem() { return mpInputSystem; }
 	MessageManager* EngineCore::getMessageManager() { return mpMessageManager; }
-
-	ShaderManager* EngineCore::getShaderManager()
-	{
-		return mpRenderCore->getShaderManager();
-	}
+	ShaderManager* EngineCore::getShaderManager() { return mpRenderCore->getShaderManager(); }
 
 	void EngineCore::showDebugWireframes(bool show)
 	{

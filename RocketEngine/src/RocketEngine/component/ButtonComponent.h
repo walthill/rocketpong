@@ -14,7 +14,8 @@ namespace RKTEngine
 	typedef std::function<void(bool)> ButtonCallbackBool;
 	typedef std::function<void(int)> ButtonCallbackInt;
 
-	struct ButtonComponentData
+
+	struct ButtonComponentData : ComponentData
 	{
 		SpriteComponentData mSprite;
 		SpriteComponentData mHighlightSprite;
@@ -24,7 +25,7 @@ namespace RKTEngine
 		ButtonCallbackBool mCallbackBool;	//wip
 		ButtonCallbackInt mCallbackInt;		//wip
 
-		ButtonComponentData() 
+		ButtonComponentData() : ComponentData()
 		{
 			mHighlighted = false;
 			mSprite = SpriteComponentData();
@@ -35,8 +36,8 @@ namespace RKTEngine
 			mCallbackInt = nullptr;
 		}
 
-		ButtonComponentData(const SpriteComponentData& spr, const SpriteComponentData& highlightSpr, const TextData& tData)
-			: mHighlighted(false)
+		ButtonComponentData(const SpriteComponentData& spr, const SpriteComponentData& highlightSpr, const TextData& tData, bool enabled = true)
+			: ComponentData(enabled), mHighlighted(false)
 		{
 			mSprite = spr;
 			mHighlightSprite = highlightSpr;
@@ -50,7 +51,7 @@ namespace RKTEngine
 		void save(Archive& archive) const
 		{
 			if (this != nullptr)
-				archive(CEREAL_NVP(mSprite), CEREAL_NVP(mHighlightSprite), CEREAL_NVP(mText));
+				archive(CEREAL_NVP(isEnabled), CEREAL_NVP(mSprite), CEREAL_NVP(mHighlightSprite), CEREAL_NVP(mText));
 		}
 
 		template<class Archive>
@@ -58,7 +59,7 @@ namespace RKTEngine
 		{
 			try
 			{
-				archive(CEREAL_NVP(mSprite), CEREAL_NVP(mHighlightSprite), CEREAL_NVP(mText));
+				archive(CEREAL_NVP(isEnabled), CEREAL_NVP(mSprite), CEREAL_NVP(mHighlightSprite), CEREAL_NVP(mText));
 			}
 			catch (cereal::Exception&)
 			{
@@ -101,6 +102,9 @@ namespace RKTEngine
 		void setOnSelected(ButtonCallbackVoid func);
 		//void setOnSelected(ButtonCallbackBool func);
 		//void setOnSelected(ButtonCallbackInt func);	//wip
+
+		inline virtual bool isEnabled() override { return mData.isEnabled; }
+		inline virtual void setEnabled(bool enabled) override { mData.isEnabled = enabled; }
 
 	private:
 		const std::string mTEXT_COLOR_UNIFORM = "textColor";

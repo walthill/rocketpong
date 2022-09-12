@@ -71,10 +71,14 @@ namespace RKTEngine
 		mData.mSprite = data.mSprite;
 		mData.mHighlightSprite = data.mHighlightSprite;
 		mData.mText = data.mText;
+		mData.isEnabled = data.isEnabled;
 	}
 
 	void ButtonComponent::processSprite(const glm::vec2& position, const glm::vec2& scale, float rotationAngle)
 	{
+		if (!mData.isEnabled)
+			return;
+
 		if (mData.mHighlighted)
 		{
 			processSprite(mData.mHighlightSprite, position, scale, rotationAngle);
@@ -87,6 +91,9 @@ namespace RKTEngine
 
 	void ButtonComponent::processText(const glm::vec2& position, const glm::vec2& scale, float rotationAngle)
 	{
+		if (!mData.isEnabled)
+			return;
+
 		mModelMatrix = glm::mat4(1.0f);
 		mModelMatrix = glm::translate(mModelMatrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
@@ -104,7 +111,7 @@ namespace RKTEngine
 
 	void ButtonComponent::renderSprite()
 	{
-		if (mIsEnabled)
+		if (mData.isEnabled)
 		{
 			if (mRenderInfo.rotation != 0)
 			{
@@ -145,6 +152,9 @@ namespace RKTEngine
 	
 	void ButtonComponent::renderText()
 	{
+		if (!mData.isEnabled)
+			return;
+
 		const auto& shaderManager = EngineCore::getInstance()->getShaderManager();
 		shaderManager->useShaderByKey(mSHADER_ID);
 		shaderManager->setShaderMat4(mMODEL_UNIFORM, mModelMatrix);
@@ -213,6 +223,9 @@ namespace RKTEngine
 	}
 	void ButtonComponent::processSprite(SpriteComponentData& sprData, const glm::vec2& position, const glm::vec2& scale, float rotationAngle)
 	{
+		if (!mData.isEnabled)
+			return;
+
 		mRenderInfo.position = { position.x, position.y, 0.0f };
 		mRenderInfo.scale = glm::vec2(scale.x * sprData.mWidth, scale.y * sprData.mHeight); //scale sprite based on dimensions 
 		mRenderInfo.rotation = rotationAngle;
@@ -221,7 +234,7 @@ namespace RKTEngine
 
 	void ButtonComponent::onSelected()
 	{
-		if(mData.mCallbackVoid != nullptr)
+		if(mData.mCallbackVoid != nullptr && mData.isEnabled)
 			mData.mCallbackVoid();
 	}
 

@@ -1,5 +1,7 @@
 #include "Paddle.h"
 
+REGISTER_ACTOR(Paddle);
+
 void Paddle::onCreate()
 {
 	mSpeed = 300;
@@ -50,22 +52,3 @@ void Paddle::onUpdate()
 		transform->setPosition(oldPos);
 	}
 }
-
-#pragma region Serialization
-
-void Paddle::onDeserialize(int id)
-{
-	auto obj = GameObjManager->findGameObject(id);
-	if (obj != nullptr)
-	{
-		auto script = obj->getNativeScript();
-		script->bind<Paddle>(id);
-		auto inst = script->get<Paddle>();
-		
-		//assign vars
-		inst->mIsP1 = mIsP1;
-		inst->mSpeed = mSpeed;
-	}
-}
-
-#pragma endregion

@@ -4,7 +4,11 @@
 #define RocketEngine RKTEngine::EngineCore::getInstance()
 #define GameObjManager RocketEngine->getEntityManager()
 #define MSG_COMPLETE return true
-#define REGISTER_ACTOR(x) CEREAL_REGISTER_TYPE(x); CEREAL_REGISTER_POLYMORPHIC_RELATION(RKTEngine::Actor, x)
+#define DESERIALIZE(classname) void classname::onDeserialize(int id){auto obj = GameObjManager->findGameObject(id); if (obj != nullptr) obj->getNativeScript()->bind<classname>(id);}
+//Attachs actor to serialization engine.
+#define REGISTER_ACTOR(x)  CEREAL_REGISTER_TYPE(x); CEREAL_REGISTER_POLYMORPHIC_RELATION(RKTEngine::Actor, x); DESERIALIZE(x);
+#define CEREAL_ACTOR() cereal::base_class<RKTEngine::Actor>(this)
+#define CEREAL_BASE_CLASS(classname) cereal::base_class<classname>(this)
 
 #include <RKTUtils/Trackable.h>
 #include <RocketEngine/input/MessageDefines.h>
@@ -24,6 +28,7 @@ namespace RKTEngine
 
 			TransformComponent* Actor::getTransform();
 			GameObject* getGameObject();
+			bool isEnabled = true;
 
 		protected:
 			friend GameObject;
@@ -38,8 +43,6 @@ namespace RKTEngine
 			virtual void onMessage(Message& message) {};
 			virtual bool onCollisionEnter(RKTEngine::CollisionEnterMessage& message);
 			
-			virtual void onDeserialize(int id) {};
-			
 			uint32 gameObjectId;
 		private:
 			friend class ComponentManager;
@@ -49,9 +52,11 @@ namespace RKTEngine
 
 			friend cereal::access;
 			template<class Archive>
-			void serialize(Archive& archive)
+			void serialize(Archive& ar)
 			{
+				ar(CEREAL_NVP(isEnabled));
 			}
+			virtual void onDeserialize(int id) {};
 
 	};
 }

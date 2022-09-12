@@ -8,7 +8,7 @@
 
 namespace RKTEngine
 {
-	struct TextData
+	struct TextData : ComponentData
 	{
 		Text* mTextInfo;
 		std::string mFontName;
@@ -16,15 +16,15 @@ namespace RKTEngine
 		Color mColor;
 		int mFontSize;
 
-		TextData() : mTextInfo(nullptr), mText("New Text"), mColor(), mFontSize(Text::sDefaultTextSize), mFontName("") {}
-		TextData(const std::string& fontName, const std::string& text, int fontSize = Text::sDefaultTextSize, Color color = Color::white) 
-			: mFontName(fontName), mTextInfo(nullptr), mText(text), mColor(color), mFontSize(fontSize) {}
+		TextData() : ComponentData(), mTextInfo(nullptr), mText("New Text"), mColor(), mFontSize(Text::sDefaultTextSize), mFontName("") {}
+		TextData(const std::string& fontName, const std::string& text, int fontSize = Text::sDefaultTextSize, Color color = Color::white, bool enabled = true) 
+			: ComponentData(enabled), mFontName(fontName), mTextInfo(nullptr), mText(text), mColor(color), mFontSize(fontSize) {}
 	
 		template<class Archive>
 		void save(Archive& archive) const
 		{
 			if (this != nullptr)
-				archive(  CEREAL_NVP(mFontName), CEREAL_NVP(mText), CEREAL_NVP(mFontSize), MAKE_NVP("Color", mColor));
+				archive(CEREAL_NVP(isEnabled), CEREAL_NVP(mFontName), CEREAL_NVP(mText), CEREAL_NVP(mFontSize), MAKE_NVP("Color", mColor));
 		}
 
 		template<class Archive>
@@ -32,7 +32,7 @@ namespace RKTEngine
 		{
 			try
 			{
-				archive(CEREAL_NVP(mFontName), CEREAL_NVP(mText), CEREAL_NVP(mFontSize), MAKE_NVP("Color", mColor));
+				archive(CEREAL_NVP(isEnabled), CEREAL_NVP(mFontName), CEREAL_NVP(mText), CEREAL_NVP(mFontSize), MAKE_NVP("Color", mColor));
 			}
 			catch (cereal::Exception&)
 			{
@@ -74,6 +74,9 @@ namespace RKTEngine
 			void setText(int text);
 			void setColor(const Color& color);
 			void setFontSize(int fontSize);
+
+			inline virtual bool isEnabled() override { return mTextData.isEnabled; }
+			inline virtual void setEnabled(bool enabled) override { mTextData.isEnabled = enabled; }
 
 		private:
 			const std::string mTEXT_COLOR_UNIFORM = "textColor";

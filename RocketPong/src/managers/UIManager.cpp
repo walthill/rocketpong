@@ -1,6 +1,8 @@
 #include "UIManager.h"
 #include "GameApp.h"
 
+REGISTER_ACTOR(UIManager);
+
 UIManager::UIManager()
 {
 }
@@ -35,21 +37,4 @@ void UIManager::onControlsSelected()
 void UIManager::onControlsBackSelected()
 {
 	RocketEngine->getSceneManager()->loadScene("main");
-}
-
-void UIManager::onDeserialize(int id)
-{
-	auto obj = GameObjManager->findGameObject(id);
-	if (obj != nullptr)
-	{
-		auto scriptComp = obj->getNativeScript();
-		scriptComp->bind<UIManager>(id);
-		auto inst = scriptComp->get<UIManager>();
-
-		//restore serialized values here
-		inst->playButtonId = playButtonId;
-		inst->exitButtonId = exitButtonId;
-		inst->controlsButtonId = controlsButtonId;
-		inst->controlsBackButtonId = controlsBackButtonId;
-	}
 }

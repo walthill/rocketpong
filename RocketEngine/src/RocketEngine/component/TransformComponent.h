@@ -54,7 +54,7 @@ namespace RKTEngine
 	 * This struct contains data and constructors that will serve as foundational data
 	 * for every gameobject's transform
 	 ******************************************************************************/
-	struct TransformData
+	struct TransformData : ComponentData
 	{
 		Rotation mRotation;	///< Transform rotation data
 		glm::vec2 mPosition;	///< Transform position value
@@ -153,6 +153,9 @@ namespace RKTEngine
 			 * @param changed Boolean to switch mDataChanged flag.
 			 *************************************************************************/
 			void setHasChanged(bool changed) { mDataChanged = changed; }
+
+			inline virtual bool isEnabled() override { return mTransformData.isEnabled; }
+			inline virtual void setEnabled(bool enabled) override { mTransformData.isEnabled = enabled; }
 
 		private:
 			TransformData mTransformData;

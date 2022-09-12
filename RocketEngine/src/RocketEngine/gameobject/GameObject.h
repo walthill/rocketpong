@@ -123,7 +123,7 @@ namespace RKTEngine
 			void addAudioSourceComponent(const AudioSourceComponentData& data);
 			void addUILabelComponent(const TextData& data);
 			void addButtonComponent(const ButtonComponentData& data);
-			void addNativeScriptComponent();
+			void addNativeScriptComponent(std::shared_ptr<Actor> actor);
 
 			void setName();
 
@@ -250,7 +250,7 @@ namespace RKTEngine
 				}
 				if (pActor.get() != nullptr)
 				{					
-					addNativeScriptComponent();
+					addNativeScriptComponent(pActor);
 					pActor->onDeserialize(mId);
 				}
 			}

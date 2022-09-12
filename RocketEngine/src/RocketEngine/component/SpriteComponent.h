@@ -33,7 +33,7 @@ namespace RKTEngine
 	 * This struct contains data and constructors that will serve as foundational data
 	 * for every mesh
 	 ******************************************************************************/
-	struct SpriteComponentData
+	struct SpriteComponentData : ComponentData
 	{
 		bool isLoaded;			///< Flag to set when model is loaded
 		std::string mSpriteName;  ///< Name of model to load
@@ -46,20 +46,20 @@ namespace RKTEngine
 
 		///Default constructor sets all values to zero
 		SpriteComponentData() :
-			isLoaded(false), pSprite(nullptr), mSpriteName(""), mColor(Color::white), mWidth(0), mHeight(0), mTileName("") {};
+			ComponentData(), isLoaded(false), pSprite(nullptr), mSpriteName(""), mColor(Color::white), mWidth(0), mHeight(0), mTileName("") {};
 
 		///Constructor that takes in values for struct variables 
 		//width/height set when reading in sprite
 		//tileName used for id'ing atlased sprite cells
-		SpriteComponentData(std::string name, std::string tileName = "", Color color = Color::white) :
-			isLoaded(false), pSprite(nullptr), mSpriteName(name), mColor(color),
+		SpriteComponentData(std::string name, std::string tileName = "", Color color = Color::white, bool enabled = true) :
+			ComponentData(enabled), isLoaded(false), pSprite(nullptr), mSpriteName(name), mColor(color),
 			mWidth(0), mHeight(0), mTileName(tileName) {};
 
 		template<class Archive>
 		void save(Archive& archive) const
 		{
 			if (this != nullptr)
-				archive(CEREAL_NVP(mSpriteName), CEREAL_NVP(mTileName), MAKE_NVP("Color", mColor));
+				archive(CEREAL_NVP(isEnabled), CEREAL_NVP(mSpriteName), CEREAL_NVP(mTileName), MAKE_NVP("Color", mColor));
 		}
 
 		template<class Archive>
@@ -67,7 +67,7 @@ namespace RKTEngine
 		{
 			try
 			{
-				archive(CEREAL_NVP(mSpriteName), CEREAL_NVP(mTileName), MAKE_NVP("Color", mColor));
+				archive(CEREAL_NVP(isEnabled), CEREAL_NVP(mSpriteName), CEREAL_NVP(mTileName), MAKE_NVP("Color", mColor));
 			}
 			catch (cereal::Exception&)
 			{
@@ -153,6 +153,10 @@ namespace RKTEngine
 		 * @param shaderMan A reference to the shader manager to set model matrix uniform
 		 *************************************************************************/
 		void render();
+
+		inline virtual bool isEnabled() override { return mSpriteData.isEnabled; }
+		inline virtual void setEnabled(bool enabled) override { mSpriteData.isEnabled = enabled; }
+
 
 	private:
 		SpriteRenderData mRenderInfo;

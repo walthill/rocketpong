@@ -19,6 +19,9 @@ namespace RKTEngine
 			virtual ~ColliderComponent();
 			virtual inline const std::string& getTag() OVERRIDE_REQUIRED;
 			virtual inline void setTag(const std::string& tag) OVERRIDE_REQUIRED;
+			virtual inline bool isEnabled() override { return true; }
+			virtual inline void setEnabled(bool enabled) override { }
+
 		private:
 			ColliderData mData;
 	};

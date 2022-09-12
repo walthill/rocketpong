@@ -38,6 +38,9 @@ namespace RKTEngine
 
 	void TextComponent::process(const glm::vec2& position, const glm::vec2& scale, float rotationAngle)
 	{
+		if (!mTextData.isEnabled)
+			return;
+
 		mModelMatrix = glm::mat4(1.0f);
 		mModelMatrix = glm::translate(mModelMatrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 		
@@ -55,6 +58,9 @@ namespace RKTEngine
 
 	void TextComponent::render()
 	{
+		if (!mTextData.isEnabled)
+			return;
+
 		const auto& shaderManager = EngineCore::getInstance()->getShaderManager();
 		shaderManager->useShaderByKey(mSHADER_ID);
 		shaderManager->setShaderMat4(mMODEL_UNIFORM, mModelMatrix);
@@ -70,6 +76,7 @@ namespace RKTEngine
 		mTextData.mColor = data.mColor;
 		mTextData.mFontSize = data.mFontSize;
 		mTextData.mFontName = data.mFontName;
+		mTextData.isEnabled = data.isEnabled;
 	}
 
 	void TextComponent::setText(const std::string& text)

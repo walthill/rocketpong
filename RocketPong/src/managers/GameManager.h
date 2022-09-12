@@ -2,6 +2,7 @@
 #define GAME_MAN_H
 
 #include <RocketEngine/actor/Actor.h>
+#include <RocketEngine.h>
 
 class GameManager : public RKTEngine::Actor
 {
@@ -9,6 +10,7 @@ class GameManager : public RKTEngine::Actor
 		GameManager();
 		~GameManager();
 
+		void onStart() override;
 		void onCreate() override;
 		void onUpdate() override;
 		
@@ -18,12 +20,21 @@ class GameManager : public RKTEngine::Actor
 		void setBallHandle(int ballId);
 		void setScoreUI(int p1ScoreId, int p2ScoreId);
 
+		void onPlaySelected();
+
 		int mP1Score, mP2Score;
+		
+		//handles
+		unsigned int pauseTextId;
+		unsigned int resumeButtonId;
+		unsigned int quitButtonId;
+
 	private:
 		unsigned int mBallId;
 		unsigned int mP1ScoreId;
 		unsigned int mP2ScoreId;
 
+		void onQuitSelected();
 		
 	//Save & load Actor variables here.
 	#pragma region Serialization
@@ -32,15 +43,15 @@ class GameManager : public RKTEngine::Actor
 		template <class Archive>
 		void serialize(Archive& ar)
 		{
-			ar(CEREAL_NVP(mBallId), CEREAL_NVP(mP1ScoreId), CEREAL_NVP(mP2ScoreId));
+			ar(CEREAL_NVP(mBallId), CEREAL_NVP(mP1ScoreId), CEREAL_NVP(mP2ScoreId), CEREAL_ACTOR(), 
+				CEREAL_NVP(quitButtonId), CEREAL_NVP(resumeButtonId), CEREAL_NVP(pauseTextId));
 		}
-
-protected:
-	virtual void onDeserialize(int id) override;
+		
+		void onDeserialize(int id) override;
 
 	#pragma endregion
+
 };
 
-REGISTER_ACTOR(GameManager);
 
 #endif // !GAME_MAN_H

@@ -58,6 +58,13 @@ namespace RKTEngine
 
 	const uint32 INVALID_COMPONENT_ID = UINT_MAX;
 
+	struct ComponentData
+	{
+		bool isEnabled;
+		ComponentData() : isEnabled(true) {};
+		ComponentData(bool enabled) : isEnabled(enabled) {};
+	};
+
 	/***************************************************************************//**
 	 * @brief 	The base class for all component classes.
 	 *
@@ -74,7 +81,7 @@ namespace RKTEngine
 		 *
 		 * @param id ComponentId value assigned to this instance of the Component class
 		 *************************************************************************/
-		Component(const ComponentId& id) : mIsEnabled(true) { mId = id; };
+		Component(const ComponentId& id) : mId(id) { };
 
 		/*
 			"Virtual destructors are useful when you might potentially delete
@@ -92,10 +99,10 @@ namespace RKTEngine
 
 		///Access the id of the component
 		inline ComponentId getId() { return mId; }
+		virtual bool isEnabled() =0;
+		virtual void setEnabled(bool enabled) =0;	
 	protected:
 		ComponentId mId;
-	protected:
-		bool mIsEnabled;
 	};
 }
 

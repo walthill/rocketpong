@@ -64,7 +64,7 @@ namespace RKTEngine
 
 	void SpriteComponent::render()
 	{
-		if (mIsEnabled)
+		if (mSpriteData.isEnabled)
 		{
 			if (mRenderInfo.rotation != 0)
 			{
@@ -102,6 +102,6 @@ namespace RKTEngine
 
 	void SpriteComponent::setSpriteVisible(bool show)
 	{
-		mIsEnabled = show;
+		mSpriteData.isEnabled = show;
 	}
 }

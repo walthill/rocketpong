@@ -172,7 +172,7 @@ namespace RKTEngine
 
 		if (moveDown)
 		{			
-			if (uiManager.buttons[uiManager.currentButtonIndex]->mIsEnabled)
+			if (uiManager.buttons[uiManager.currentButtonIndex]->isEnabled())
 			{
 				uiManager.buttons[uiManager.currentButtonIndex]->setHighlighted(false);
 				if (uiManager.currentButtonIndex == uiManager.buttons.size() - 1)
@@ -189,7 +189,7 @@ namespace RKTEngine
 		}
 		else
 		{
-			if (uiManager.buttons[uiManager.currentButtonIndex]->mIsEnabled)
+			if (uiManager.buttons[uiManager.currentButtonIndex]->isEnabled())
 			{
 				uiManager.buttons[uiManager.currentButtonIndex]->setHighlighted(false);
 				if (uiManager.currentButtonIndex == 0)

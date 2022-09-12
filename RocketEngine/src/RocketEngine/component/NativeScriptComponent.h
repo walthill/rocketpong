@@ -12,6 +12,8 @@ namespace RKTEngine
 
 	class NativeScriptComponent : public Component
 	{
+		friend class Actor;
+		friend class GameObjectManager;
 		public:
 		
 		/**********************************************************************//**
@@ -32,13 +34,16 @@ namespace RKTEngine
 
 			template<typename T>
 			void bind(uint32 id)
-			{		
+			{
 				instantiateScript = []() { return static_cast<std::shared_ptr<Actor>>(new T()); };
 				destroyScript = [](NativeScriptComponent* nsc) { nsc->pInstance.reset(); nsc->pInstance = nullptr; };
 
-				pInstance = instantiateScript();
-				pInstance->gameObjectId = id;
-				pInstance->onCreate();
+				if (pInstance == nullptr)
+				{
+					pInstance = instantiateScript();
+					pInstance->gameObjectId = id;
+					pInstance->onCreate();
+				}
 			}
 
 			template<typename T>
@@ -51,6 +56,13 @@ namespace RKTEngine
 			}
 
 		private:
+
+			void setInstance(std::shared_ptr<Actor> actor, int id, bool enabled = true);
+
+			//dont use dis
+			inline virtual bool isEnabled() override { return false; }
+			inline virtual void setEnabled(bool enabled) override {  };
+
 	};
 
 }

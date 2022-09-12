@@ -23,16 +23,13 @@ class Paddle : public RKTEngine::Actor
 		template <class Archive>
 		void serialize(Archive& ar)
 		{
-			ar(CEREAL_NVP(mSpeed), CEREAL_NVP(mIsP1));
+			ar(CEREAL_NVP(mSpeed), CEREAL_NVP(mIsP1), CEREAL_ACTOR());
 		}
 	
-	protected:	
 		virtual void onDeserialize(int id) override;
 
 	#pragma endregion
 
 };
-
-REGISTER_ACTOR(Paddle);
 
 #endif //!PADDLE_H

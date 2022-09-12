@@ -14,7 +14,7 @@ namespace RKTEngine
 	 * This struct contains data and constructors that will serve as foundational data
 	 * for every audio source
 	 ******************************************************************************/
-	struct AudioSourceComponentData
+	struct AudioSourceComponentData : ComponentData
 	{
 		std::string mAudioFileName;
 		AudioSource* audioSource;
@@ -31,7 +31,7 @@ namespace RKTEngine
 		void save(Archive& archive) const
 		{
 			if (this != nullptr)
-				archive(CEREAL_NVP(mAudioFileName), CEREAL_NVP(mVolume), CEREAL_NVP(mPan));
+				archive(CEREAL_NVP(isEnabled), CEREAL_NVP(mAudioFileName), CEREAL_NVP(mVolume), CEREAL_NVP(mPan));
 		}
 
 		template<class Archive>
@@ -39,7 +39,7 @@ namespace RKTEngine
 		{
 			try
 			{
-				archive(CEREAL_NVP(mAudioFileName), CEREAL_NVP(mVolume), CEREAL_NVP(mPan));
+				archive(CEREAL_NVP(isEnabled), CEREAL_NVP(mAudioFileName), CEREAL_NVP(mVolume), CEREAL_NVP(mPan));
 			}
 			catch (cereal::Exception&)
 			{
@@ -86,6 +86,9 @@ namespace RKTEngine
 		AudioSourceComponentData* getData() { return &mAudioSourceData; }
 	
 		void setData(const AudioSourceComponentData& data);
+
+		inline virtual bool isEnabled() override { return mAudioSourceData.isEnabled; }
+		inline virtual void setEnabled(bool enabled) override { mAudioSourceData.isEnabled = enabled; }
 
 	private:
 		static const float mDEFAULT_VOL;

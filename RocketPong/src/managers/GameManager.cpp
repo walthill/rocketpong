@@ -3,6 +3,8 @@
 #include "../GameApp.h"
 #include "../actors/Ball.h"
 
+REGISTER_ACTOR(GameManager);
+
 GameManager::GameManager() : 
 	mP1Score(0), mP2Score(0)
 {
@@ -10,6 +12,12 @@ GameManager::GameManager() :
 
 GameManager::~GameManager()
 {
+}
+
+void GameManager::onStart()
+{
+	GameObjManager->setButtonCallback(resumeButtonId, RKT_BIND_CALLBACK_FN(GameManager::onPlaySelected));
+	GameObjManager->setButtonCallback(quitButtonId, RKT_BIND_CALLBACK_FN(GameManager::onQuitSelected));
 }
 
 void GameManager::onCreate()
@@ -30,7 +38,7 @@ void GameManager::score(bool p1Scored)
 	if (p1Scored)
 	{
 		mP1Score++;
-		auto gameObj = RocketEngine->getSceneManager()->findGameObjectInScene(mP1ScoreId);
+		auto gameObj = GameObjManager->findGameObject(mP1ScoreId);
 		if (gameObj)
 		{
 			auto label = gameObj->getUILabel();
@@ -41,7 +49,7 @@ void GameManager::score(bool p1Scored)
 	else
 	{
 		mP2Score++;
-		auto gameObj = RocketEngine->getSceneManager()->findGameObjectInScene(mP2ScoreId);
+		auto gameObj = GameObjManager->findGameObject(mP2ScoreId);
 		if (gameObj)
 		{
 			auto label = gameObj->getUILabel();
@@ -53,12 +61,12 @@ void GameManager::score(bool p1Scored)
 
 void GameManager::reset()
 {
-	auto ball = RocketEngine->getSceneManager()->findGameObjectInScene(mBallId);
+	auto ball = GameObjManager->findGameObject(mBallId);
 	ball->getNativeScript()->get<Ball>()->reset();
 
-	auto p1ScoreUI = RocketEngine->getSceneManager()->findGameObjectInScene(mP1ScoreId);
+	auto p1ScoreUI = GameObjManager->findGameObject(mP1ScoreId);
 	p1ScoreUI->getUILabel()->setText(0);
-	auto p2ScoreUI = RocketEngine->getSceneManager()->findGameObjectInScene(mP2ScoreId);
+	auto p2ScoreUI = GameObjManager->findGameObject(mP2ScoreId);
 	p2ScoreUI->getUILabel()->setText(0);
 
 	mP1Score = 0;
@@ -71,24 +79,63 @@ void GameManager::setScoreUI(int p1ScoreId, int p2ScoreId)
 	mP2ScoreId = p2ScoreId;
 }
 
+void GameManager::onPlaySelected()
+{
+	RocketEngine->sTimeScaleActive = !RocketEngine->sTimeScaleActive;
+	auto pauseText = GameObjManager->findGameObject(pauseTextId);
+	if (pauseText != nullptr)
+	{
+		auto label = pauseText->getUILabel();
+		if (label != nullptr)
+		{
+			label->setEnabled(!label->isEnabled());
+		}
+	}
+
+	auto gameObj = GameObjManager->findGameObject(mP2ScoreId);
+	if (gameObj)
+	{
+		auto label = gameObj->getUILabel();
+		if (label)
+			label->setEnabled(!label->isEnabled());
+	}
+
+	gameObj = GameObjManager->findGameObject(mP1ScoreId);
+	if (gameObj)
+	{
+		auto label = gameObj->getUILabel();
+		if (label)
+			label->setEnabled(!label->isEnabled());
+	}
+
+	auto playBtn = GameObjManager->findGameObject(resumeButtonId);
+	if (playBtn != nullptr)
+	{
+		auto btn = playBtn->getButton();
+		if (btn != nullptr)
+		{
+			btn->setEnabled(!btn->isEnabled());
+		}
+	}
+
+	auto quitBtn = GameObjManager->findGameObject(quitButtonId);
+	if (quitBtn != nullptr)
+	{
+		auto btn = quitBtn->getButton();
+		if (btn != nullptr)
+		{
+			btn->setEnabled(!btn->isEnabled());
+		}
+	}
+}
+
+void GameManager::onQuitSelected()
+{
+	RocketEngine->sTimeScaleActive = true;
+	RocketEngine->getSceneManager()->loadScene("main");
+}
+
 void GameManager::setBallHandle(int ballId)
 {
 	mBallId = ballId;
-}
-
-
-void GameManager::onDeserialize(int id)
-{
-	auto obj = GameObjManager->findGameObject(id);
-	if (obj != nullptr)
-	{
-		auto script = obj->getNativeScript();
-		script->bind<GameManager>(id);
-		auto inst = script->get<GameManager>();
-
-		//restore serialized values here
-		inst->mP1ScoreId = mP1ScoreId;
-		inst->mP2ScoreId = mP2ScoreId;
-		inst->mBallId = mBallId;
-	}
 }
