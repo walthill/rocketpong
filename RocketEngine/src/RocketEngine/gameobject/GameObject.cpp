@@ -106,7 +106,7 @@ namespace RKTEngine
 		return pComponent;
 	}
 
-	NativeScriptComponent* GameObject::getScript()
+	NativeScriptComponent* GameObject::getNativeScript()
 	{
 		auto pComponent = EngineCore::getInstance()->getComponentManager()->getNativeScriptComponent(mNativeScriptId);
 		return pComponent;

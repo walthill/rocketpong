@@ -30,8 +30,6 @@
 
 namespace RKTEngine
 {
-	class NativeScriptComponent;
-
 	/***************************************************************************//**
 	 * @brief 	GameObject class with identifiers for components.
 	 *
@@ -85,7 +83,18 @@ namespace RKTEngine
 			TextComponent* getUILabel();
 			ButtonComponent* getButton();
 			AudioSourceComponent* getAudioSource();
-			NativeScriptComponent* getScript();
+			NativeScriptComponent* getNativeScript();
+			
+			template<typename T>
+			T* getScript()
+			{
+				auto scriptComp = getNativeScript();
+				if (scriptComp == nullptr)
+					return nullptr;
+
+				return scriptComp->get<T>();
+			};
+
 
 			std::string name;
 

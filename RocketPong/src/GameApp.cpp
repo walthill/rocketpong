@@ -87,12 +87,12 @@ void GameApp::generateSceneData(bool quitOnComplete)
 		{
 			GameObject* gameMan = GameObjManager->createActor();
 			gameMan->name = "GameManager";
-			gameMan->getScript()->bind<GameManager>(gameMan->getId());
-			auto pGameManager = gameMan->getScript()->get<GameManager>();
+			gameMan->getNativeScript()->bind<GameManager>(gameMan->getId());
+			auto pGameManager = gameMan->getNativeScript()->get<GameManager>();
 			
 			GameObject* pPlayer1 = GameObjManager->createActor();
-			pPlayer1->getScript()->bind<Paddle>(pPlayer1->getId());
-			pPlayer1->getScript()->get<Paddle>()->mIsP1 = true;
+			pPlayer1->getNativeScript()->bind<Paddle>(pPlayer1->getId());
+			pPlayer1->getNativeScript()->get<Paddle>()->mIsP1 = true;
 			pPlayer1->name = "P1 Paddle";
 			pPlayer1->getTransform()->setPosition({ 100, h / 2 });
 			GameObjManager->addSprite(pPlayer1->getId(), "paddle");
@@ -101,8 +101,8 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			pPlayer1->getBoxCollider()->setTag("lp");
 
 			GameObject* pPlayer2 = GameObjManager->createActor();
-			pPlayer2->getScript()->bind<Paddle>(pPlayer2->getId());
-			pPlayer2->getScript()->get<Paddle>()->mIsP1 = false;
+			pPlayer2->getNativeScript()->bind<Paddle>(pPlayer2->getId());
+			pPlayer2->getNativeScript()->get<Paddle>()->mIsP1 = false;
 			pPlayer2->name = "P2 Paddle";
 			pPlayer2->getTransform()->setPosition({ w - 100, h / 2 });
 			GameObjManager->addSprite(pPlayer2->getId(), "paddle");
@@ -111,8 +111,8 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			pPlayer2->getBoxCollider()->setTag("rp");
 
 			auto pBall = GameObjManager->createActor();
-			pBall->getScript()->bind<Ball>(pBall->getId());
-			pBall->getScript()->get<Ball>()->mStartPos = { w / 2,h / 2 };
+			pBall->getNativeScript()->bind<Ball>(pBall->getId());
+			pBall->getNativeScript()->get<Ball>()->mStartPos = { w / 2,h / 2 };
 			pBall->name = "Ball";
 			GameObjManager->addSprite(pBall->getId(), "ball");
 			spr = pBall->getSprite();
@@ -124,9 +124,9 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			midlineSprite->getSprite()->setColor(RKTEngine::Color(127.5f, 127.5f, 127.5f, .2f));
 			midlineSprite->name = "midline";
 
-			GameObject* p1Score = GameObjManager->createLabel(std::to_string(pGameManager->mP1Score), { w / 2 - 72, 10 }, glm::vec2(1.0f), 0, "Arkitech-Medium", RKTEngine::Text::sDefaultTextSize);
+			GameObject* p1Score = GameObjManager->createLabel(std::to_string(pGameManager->mP1Score), { w / 2 - 72, 10 }, glm::vec2(1.0f), 0, "Arkitech-Medium");
 			p1Score->name = "p1score";
-			GameObject* p2Score = GameObjManager->createLabel(std::to_string(pGameManager->mP2Score), { w / 2 + 32, 10 }, glm::vec2(1.0f), 0, "Arkitech-Medium", RKTEngine::Text::sDefaultTextSize);
+			GameObject* p2Score = GameObjManager->createLabel(std::to_string(pGameManager->mP2Score), { w / 2 + 32, 10 }, glm::vec2(1.0f), 0, "Arkitech-Medium");
 			p2Score->name = "p2score";
 
 			pGameManager->setBallHandle(pBall->getId());
@@ -138,19 +138,58 @@ void GameApp::generateSceneData(bool quitOnComplete)
 		{
 			GameObject* gameMan = GameObjManager->createActor();
 			gameMan->name = "UIManager";
-			gameMan->getScript()->bind<UIManager>(gameMan->getId());
-			auto pUIManager = gameMan->getScript()->get<UIManager>();
+			gameMan->getNativeScript()->bind<UIManager>(gameMan->getId());
+			auto pUIManager = gameMan->getNativeScript()->get<UIManager>();
+
+			GameObject* title = GameObjManager->createLabel("Pong Type-R", { w / 2 - 160, h / 6}, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
+			title->name = "title-text";
+			GameObject* credits = GameObjManager->createLabel("a walter hill game", { 0, h - 32 }, glm::vec2(1.0f), 0, "Calibri", 18);
+			credits->name = "credits-text";
 
 			GameObject* main1 = GameObjManager->createButton();
-			main1->getTransform()->setPosition({ w / 2 - 64, h / 2 });
+			main1->getButton()->setFont("Arkitech-Medium");
+			main1->getButton()->setText("Play");
+			main1->getTransform()->setPosition({ w / 2, h / 2 - 64});
 			GameObject* main2 = GameObjManager->createButton();
-			main2->getButton()->setText("Quit");
-			main2->getTransform()->setPosition({ w / 2 - 64, h / 2 + 128});
+			main2->getButton()->setFont("Arkitech-Medium");
+			main2->getButton()->setText("Controls");
+			main2->getTransform()->setPosition({ w / 2, h / 2});
+			GameObject* main3 = GameObjManager->createButton();
+			main3->getButton()->setFont("Arkitech-Medium");
+			main3->getButton()->setText("Quit");
+			main3->getTransform()->setPosition({ w / 2, h / 2 + 64});
 
 			pUIManager->playButtonId = main1->getId();
-			pUIManager->exitButtonId = main2->getId();
+			pUIManager->controlsButtonId = main2->getId();
+			pUIManager->exitButtonId = main3->getId();
 		}
 		RocketEngine->getSceneManager()->endScene();
+
+		RocketEngine->getSceneManager()->beginScene("controls");
+		{
+			GameObject* gameMan = GameObjManager->createActor();
+			gameMan->name = "UIManager";
+			gameMan->getNativeScript()->bind<UIManager>(gameMan->getId());
+			auto pUIManager = gameMan->getNativeScript()->get<UIManager>();
+
+			GameObject* title = GameObjManager->createLabel("Controls", { w / 2 - 160, h / 6 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
+			title->name = "title-text";
+
+			GameObject* p1Text = GameObjManager->createLabel("Left Paddle Move: W/S Keys", {w / 6, h / 2 - 64}, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
+			p1Text->name = "p1-text";
+			GameObject* p2Text = GameObjManager->createLabel("Right Paddle Move: P/L Keys", { w / 6, h / 2 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
+			p2Text->name = "p2-text";
+			GameObject* pause = GameObjManager->createLabel("Pause Game: Escape", { w / 6, h / 2 + 64 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
+			pause->name = "pause-text";
+
+			GameObject* backButton = GameObjManager->createButton();
+			backButton->getButton()->setText("Back");
+			backButton->getTransform()->setPosition({ w / 2, h / 2 + 128 });
+
+			pUIManager->controlsBackButtonId = backButton->getId();
+		}
+		RocketEngine->getSceneManager()->endScene();
+
 	}
 
 	if (quitOnComplete)
@@ -203,17 +242,7 @@ void GameApp::update()
 	RocketEngine->update();
 
 #ifdef RKP_DEBUG  
-	if (Input::getKeyDown(KeyCode::Escape))
-	{
-		mIsRunning = false;
-	}
-	if (Input::getKeyDown(KeyCode::Q))
-	{
-		if (RocketEngine->getSceneManager()->isActiveScene("game"))
-			RocketEngine->getSceneManager()->loadScene("main");
-		else
-			RocketEngine->getSceneManager()->loadScene("game");
-	}
+	
 #endif
 }
 
@@ -225,6 +254,7 @@ void GameApp::render()
 void GameApp::onMessage(RKTEngine::Message& message)
 {
 	RKTEngine::MessageDispatcher dispatcher(message);
+	dispatcher.dispatch<RKTEngine::KeyDownMessage>(RKT_BIND_MESSAGE_FN(GameApp::back));
 	dispatcher.dispatch<RKTEngine::ExitMessage>(RKT_BIND_MESSAGE_FN(GameApp::quit));
 
 /*#ifdef RKP_DEBUG  
@@ -236,12 +266,26 @@ void GameApp::onMessage(RKTEngine::Message& message)
 
 GameManager* GameApp::getGameManager()
 {
-	return RocketEngine->getSceneManager()->findGameObjectInScene(mGameManagerId)->getScript()->get<GameManager>();
+	return RocketEngine->getSceneManager()->findGameObjectInScene(mGameManagerId)->getNativeScript()->get<GameManager>();
 }
 
 double GameApp::getTime()
 {
 	return RKTEngine::EngineCore::getInstance()->getTime();
+}
+
+bool GameApp::back(RKTEngine::KeyDownMessage& msg)
+{
+	if (msg.getKeyCode() == KeyCode::Escape)
+	{
+		if (RocketEngine->getSceneManager()->isActiveScene("game"))
+			RocketEngine->getSceneManager()->loadScene("main");
+		else if (RocketEngine->getSceneManager()->isActiveScene("controls"))
+			RocketEngine->getSceneManager()->loadScene("main");
+		else
+			mIsRunning = false;
+	}
+	return true;
 }
 
 bool GameApp::quit(RKTEngine::ExitMessage& msg)

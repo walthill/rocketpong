@@ -58,7 +58,7 @@ void Paddle::onDeserialize(int id)
 	auto obj = GameObjManager->findGameObject(id);
 	if (obj != nullptr)
 	{
-		auto script = obj->getScript();
+		auto script = obj->getNativeScript();
 		script->bind<Paddle>(id);
 		auto inst = script->get<Paddle>();
 		

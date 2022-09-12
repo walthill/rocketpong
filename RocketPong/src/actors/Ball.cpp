@@ -103,7 +103,7 @@ void Ball::onDeserialize(int id)
 	auto obj = GameObjManager->findGameObject(id);
 	if (obj != nullptr)
 	{
-		auto script = obj->getScript();
+		auto script = obj->getNativeScript();
 		script->bind<Ball>(id);
 		auto inst = script->get<Ball>();
 

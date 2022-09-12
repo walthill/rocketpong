@@ -89,6 +89,7 @@ namespace RKTEngine
 
 		void setText(const std::string& text);
 		void setText(int text);
+		void setFont(const std::string& font);
 		void setData(const ButtonComponentData& data);
 		
 		void processSprite(const glm::vec2& position, const glm::vec2& scale, float rotationAngle);

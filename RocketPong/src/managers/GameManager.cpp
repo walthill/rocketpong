@@ -54,7 +54,7 @@ void GameManager::score(bool p1Scored)
 void GameManager::reset()
 {
 	auto ball = RocketEngine->getSceneManager()->findGameObjectInScene(mBallId);
-	ball->getScript()->get<Ball>()->reset();
+	ball->getNativeScript()->get<Ball>()->reset();
 
 	auto p1ScoreUI = RocketEngine->getSceneManager()->findGameObjectInScene(mP1ScoreId);
 	p1ScoreUI->getUILabel()->setText(0);
@@ -82,7 +82,7 @@ void GameManager::onDeserialize(int id)
 	auto obj = GameObjManager->findGameObject(id);
 	if (obj != nullptr)
 	{
-		auto script = obj->getScript();
+		auto script = obj->getNativeScript();
 		script->bind<GameManager>(id);
 		auto inst = script->get<GameManager>();
 

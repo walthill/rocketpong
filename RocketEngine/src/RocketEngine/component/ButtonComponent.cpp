@@ -57,6 +57,15 @@ namespace RKTEngine
 		mData.mText.mTextInfo->setText(str, mData.mText.mFontSize);
 	}
 
+	void ButtonComponent::setFont(const std::string& font)
+	{
+		if (!font.empty() && mData.mText.mFontName.compare(font) != 0)
+		{
+			mData.mText.mFontName = font;
+			loadText();
+		}
+	}
+
 	void ButtonComponent::setData(const ButtonComponentData& data)
 	{
 		mData.mSprite = data.mSprite;
@@ -191,6 +200,10 @@ namespace RKTEngine
 		if (!mData.mText.mFontName.empty())
 		{
 			auto fontData = EngineCore::getInstance()->getAssetManager()->loadFontAsset(mData.mText.mFontName);
+			
+			if (mData.mText.mTextInfo != nullptr)
+				delete mData.mText.mTextInfo;
+
 			mData.mText.mTextInfo = Text::create(fontData, mData.mText.mText, mData.mText.mFontSize);
 		}
 		else

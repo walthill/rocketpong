@@ -11,14 +11,17 @@ class UIManager : public RKTEngine::Actor
 
 		void onStart() override;
 
-		void onQuitSelected();
-		void onStartSelected();
-
 		//GameObject handles
 		unsigned int playButtonId;
 		unsigned int exitButtonId;
-	
+		unsigned int controlsButtonId;
+		unsigned int controlsBackButtonId;
+
 	private:
+		void onQuitSelected();
+		void onStartSelected();
+		void onControlsSelected();
+		void onControlsBackSelected();
 
 		//Save & load Actor variables here.
 		#pragma region Serialization
@@ -27,7 +30,7 @@ class UIManager : public RKTEngine::Actor
 		template <class Archive>
 		void serialize(Archive& ar)
 		{
-			ar(CEREAL_NVP(playButtonId), CEREAL_NVP(exitButtonId));
+			ar(CEREAL_NVP(playButtonId), CEREAL_NVP(exitButtonId), CEREAL_NVP(controlsButtonId), CEREAL_NVP(controlsBackButtonId));
 		}
 
 protected:

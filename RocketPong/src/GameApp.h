@@ -30,6 +30,7 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 
 		double getTime();
 
+		bool back(RKTEngine::KeyDownMessage& msg);
 		bool quit(RKTEngine::ExitMessage& msg);
 
 	protected:

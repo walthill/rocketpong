@@ -44,6 +44,9 @@ namespace RKTEngine
 			template<typename T>
 			T* get()
 			{
+				if (pInstance == nullptr)
+					return nullptr;
+
 				return static_cast<T*>(pInstance.get());
 			}
 
