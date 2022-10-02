@@ -73,6 +73,8 @@ namespace RKTEngine
 			***/
 			void setViewport(int x, int y, int width, int height);
 
+			void setVSync(bool enable);
+
 			/***
 				* Flip double buffer and display rendered visuals
 			***/

@@ -125,6 +125,8 @@ namespace RKTEngine
 			return false;
 		}
 
+		mpWindowHandle->setVSync(true);
+
 		return true;
 	}
 }

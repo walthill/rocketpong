@@ -160,6 +160,11 @@ namespace RKTEngine
 		glViewport(x, y, mWidth, mHeight);
 	}
 
+	void Window::setVSync(bool enable)
+	{
+		enable ? glfwSwapInterval(1) : glfwSwapInterval(0);
+	}
+
 	void Window::swapBuffers()
 	{
 		// swap the buffers
