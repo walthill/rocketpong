@@ -135,11 +135,13 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			GameObject* pause1 = GameObjManager->createButton();
 			pause1->getButton()->setFont("Arkitech-Medium");
 			pause1->getButton()->setText("Play");
+			pause1->getButton()->setFontSize(22);
 			pause1->getTransform()->setPosition({ w / 2, h / 2 - 64 });
 			pause1->getButton()->setEnabled(false);
 			GameObject* pause2 = GameObjManager->createButton();
 			pause2->getButton()->setFont("Arkitech-Medium");
 			pause2->getButton()->setText("Quit");
+			pause2->getButton()->setFontSize(22);
 			pause2->getTransform()->setPosition({ w / 2, h / 2 });
 			pause2->getButton()->setEnabled(false);
 
@@ -164,14 +166,17 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			credits->name = "credits-text";
 
 			GameObject* main1 = GameObjManager->createButton();
+			main1->getButton()->setFontSize(22);
 			main1->getButton()->setFont("Arkitech-Medium");
 			main1->getButton()->setText("Play");
 			main1->getTransform()->setPosition({ w / 2, h / 2 - 64});
 			GameObject* main2 = GameObjManager->createButton();
+			main2->getButton()->setFontSize(22);
 			main2->getButton()->setFont("Arkitech-Medium");
-			main2->getButton()->setText("Controls");
+			main2->getButton()->setText("Help");
 			main2->getTransform()->setPosition({ w / 2, h / 2});
 			GameObject* main3 = GameObjManager->createButton();
+			main3->getButton()->setFontSize(22);
 			main3->getButton()->setFont("Arkitech-Medium");
 			main3->getButton()->setText("Quit");
 			main3->getTransform()->setPosition({ w / 2, h / 2 + 64});
@@ -189,14 +194,14 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			gameMan->getNativeScript()->bind<UIManager>(gameMan->getId());
 			auto pUIManager = gameMan->getNativeScript()->get<UIManager>();
 
-			GameObject* title = GameObjManager->createLabel("Controls", { w / 2 - 160, h / 6 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
+			GameObject* title = GameObjManager->createLabel("Help", { w / 2 - 64, h / 6 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
 			title->name = "title-text";
 
-			GameObject* p1Text = GameObjManager->createLabel("Left Paddle Move: W/S Keys", {w / 6, h / 2 - 64}, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
+			GameObject* p1Text = GameObjManager->createLabel("Left Paddle Move: W/S Keys", {w / 6, h / 2 - 96}, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
 			p1Text->name = "p1-text";
-			GameObject* p2Text = GameObjManager->createLabel("Right Paddle Move: P/L Keys", { w / 6, h / 2 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
+			GameObject* p2Text = GameObjManager->createLabel("Right Paddle Move: P/L Keys", { w / 6, h / 2 - 32 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
 			p2Text->name = "p2-text";
-			GameObject* pause = GameObjManager->createLabel("Pause Game: Escape", { w / 6, h / 2 + 64 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
+			GameObject* pause = GameObjManager->createLabel("Pause Game: Escape", { w / 6, h / 2 + 32 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
 			pause->name = "pause-text";
 
 			GameObject* backButton = GameObjManager->createButton();

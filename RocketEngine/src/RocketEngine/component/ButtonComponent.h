@@ -90,6 +90,7 @@ namespace RKTEngine
 
 		void setText(const std::string& text);
 		void setText(int text);
+		void setFontSize(int fontSize, bool refreshText = false);
 		void setFont(const std::string& font);
 		void setData(const ButtonComponentData& data);
 		

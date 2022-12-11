@@ -57,6 +57,13 @@ namespace RKTEngine
 		mData.mText.mTextInfo->setText(str, mData.mText.mFontSize);
 	}
 
+	void ButtonComponent::setFontSize(int fontSize, bool refreshText)
+	{
+		mData.mText.mFontSize = fontSize;
+		if(refreshText)
+			loadText();
+	}
+
 	void ButtonComponent::setFont(const std::string& font)
 	{
 		if (!font.empty() && mData.mText.mFontName.compare(font) != 0)
@@ -94,9 +101,15 @@ namespace RKTEngine
 		if (!mData.isEnabled)
 			return;
 
-		mModelMatrix = glm::mat4(1.0f);
-		mModelMatrix = glm::translate(mModelMatrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+		//Force button text to position w/in button bounds
+		auto margin = 10;
+		auto leftX = mRenderInfo.position.x - mData.mSprite.mWidth / 2 + margin;
+		auto topY = mRenderInfo.position.y - mData.mSprite.mHeight / 3;
+		auto newPosition = glm::vec2(leftX, topY);
 
+		mModelMatrix = glm::mat4(1.0f);
+		mModelMatrix = glm::translate(mModelMatrix, glm::vec3(newPosition, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+		
 		if (rotationAngle != 0.0f)
 		{
 			mModelMatrix = glm::translate(mModelMatrix, glm::vec3(0.5f * scale.x, 0.5f * scale.y, 0.0f)); // move origin of rotation to center of quad
@@ -221,6 +234,7 @@ namespace RKTEngine
 			RKT_CORE_ERROR("'{0}' Font name is empty!", LOG_SUBSYS(ButtonComponent));
 		}
 	}
+
 	void ButtonComponent::processSprite(SpriteComponentData& sprData, const glm::vec2& position, const glm::vec2& scale, float rotationAngle)
 	{
 		if (!mData.isEnabled)
@@ -229,6 +243,21 @@ namespace RKTEngine
 		mRenderInfo.position = { position.x, position.y, 0.0f };
 		mRenderInfo.scale = glm::vec2(scale.x * sprData.mWidth, scale.y * sprData.mHeight); //scale sprite based on dimensions 
 		mRenderInfo.rotation = rotationAngle;
+
+		/*
+				
+		mModelMatrix = glm::mat4(1.0f);
+		mModelMatrix = glm::translate(mModelMatrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+		if (rotationAngle != 0.0f)
+		{
+			mModelMatrix = glm::translate(mModelMatrix, glm::vec3(0.5f * scale.x, 0.5f * scale.y, 0.0f)); // move origin of rotation to center of quad
+			mModelMatrix = glm::rotate(mModelMatrix, glm::radians(rotationAngle), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
+			mModelMatrix = glm::translate(mModelMatrix, glm::vec3(-0.5f * scale.x, -0.5f * scale.y, 0.0f)); // move origin back	}
+		}
+
+		mModelMatrix = glm::scale(mModelMatrix, glm::vec3(scale, 1.0f));
+		*/
 	}
 
 
