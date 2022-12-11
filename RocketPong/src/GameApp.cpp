@@ -128,7 +128,7 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			p1Score->name = "p1score";
 			GameObject* p2Score = GameObjManager->createLabel(std::to_string(pGameManager->mP2Score), { w / 2 + 32, 10 }, glm::vec2(1.0f), 0, "Arkitech-Medium");
 			p2Score->name = "p2score";
-			GameObject* pause = GameObjManager->createLabel("Paused", { w / 2 - 128, h / 6 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
+			GameObject* pause = GameObjManager->createLabel("Paused", { w / 2 - 110, h / 6 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
 			pause->name = "pause-text";
 			pause->getUILabel()->setEnabled(false);
 
@@ -160,9 +160,9 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			gameMan->getNativeScript()->bind<UIManager>(gameMan->getId());
 			auto pUIManager = gameMan->getNativeScript()->get<UIManager>();
 
-			GameObject* title = GameObjManager->createLabel("Pong Type-R", { w / 2 - 160, h / 6}, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
+			GameObject* title = GameObjManager->createLabel("Pong Type-R", { w / 2 - 200, h / 5}, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
 			title->name = "title-text";
-			GameObject* credits = GameObjManager->createLabel("a walter hill game", { 0, h - 32 }, glm::vec2(1.0f), 0, "Calibri", 18);
+			GameObject* credits = GameObjManager->createLabel("a walter hill game", { 10, h - 32 }, glm::vec2(1.0f), 0, "Calibri", 18);
 			credits->name = "credits-text";
 
 			GameObject* main1 = GameObjManager->createButton();
@@ -197,11 +197,11 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			GameObject* title = GameObjManager->createLabel("Help", { w / 2 - 64, h / 6 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
 			title->name = "title-text";
 
-			GameObject* p1Text = GameObjManager->createLabel("Left Paddle Move: W/S Keys", {w / 6, h / 2 - 96}, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
+			GameObject* p1Text = GameObjManager->createLabel("Move: W/S + P/L Keys", {w / 3.5f, h / 2 - 128}, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
 			p1Text->name = "p1-text";
-			GameObject* p2Text = GameObjManager->createLabel("Right Paddle Move: P/L Keys", { w / 6, h / 2 - 32 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
+			GameObject* p2Text = GameObjManager->createLabel("Fast Move: Shift Key", { w / 3.5f, h / 2 - 64 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
 			p2Text->name = "p2-text";
-			GameObject* pause = GameObjManager->createLabel("Pause Game: Escape", { w / 6, h / 2 + 32 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
+			GameObject* pause = GameObjManager->createLabel("Pause Game: Escape", { w / 3.5f, h / 2 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
 			pause->name = "pause-text";
 
 			GameObject* backButton = GameObjManager->createButton();

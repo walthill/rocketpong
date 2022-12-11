@@ -11,7 +11,9 @@ void Ball::onCreate()
 
 void Ball::onStart()
 {
-	mSpeed = 250;
+	mSpeed = 325;
+	mSpeedScaler = 1.5f;
+	mVolleyBoostThreshold = 8;
 	reset();
 }
 
@@ -24,7 +26,6 @@ void Ball::onUpdate()
 	}
 	else if (mStartMoving)
 	{
-
 		auto tr = getTransform();
 		auto pos = tr->getPosition();
 
@@ -61,6 +62,21 @@ bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
 		{
 			if (other->getTag().compare("lp") == 0)
 			{
+				if (!mP1LastPaddleHit)
+				{
+					mP1LastPaddleHit = true;
+					mVolleyCounter += 1;
+				}
+				else
+				{
+					mVolleyCounter = 0;
+				}
+
+				if (mVolleyCounter != 0 && mVolleyCounter % mVolleyBoostThreshold == 0)
+				{
+					mSpeed *= mSpeedScaler;
+				}
+
 				auto ballTr = getTransform();
 				auto ballPos = getTransform()->getPosition();
 				auto racketPos = other->getTransform()->getPosition();
@@ -76,6 +92,21 @@ bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
 			}
 			else if (other->getTag().compare("rp") == 0)
 			{
+				if (mP1LastPaddleHit)
+				{
+					mP1LastPaddleHit = false;
+					mVolleyCounter += 1;
+				}
+				else
+				{
+					mVolleyCounter = 0;
+				}
+
+				if (mVolleyCounter != 0 && mVolleyCounter % mVolleyBoostThreshold == 0)
+				{
+					mSpeed *= mSpeedScaler;
+				}
+
 				auto ballTr = getTransform();
 				auto ballPos = getTransform()->getPosition();
 				auto racketPos = other->getTransform()->getPosition();
@@ -102,6 +133,8 @@ void Ball::onMessage(RKTEngine::Message& message)
 
 void Ball::reset()
 {
+	mVolleyCounter = 0;
+	mSpeed = 300;
 	bool dir = Random::range(0, 1);
 	mDir = dir == 0 ? glm::vec2(-1, 0) : glm::vec2(1, 0);
 

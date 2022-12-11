@@ -23,7 +23,11 @@ class Ball : public RKTEngine::Actor
 
 		glm::vec2 mDir;
 		float mSpeed;
+		float mSpeedScaler;
 		bool mStartMoving = false;
+		bool mP1LastPaddleHit = false;
+		int mVolleyCounter = 0;
+		int mVolleyBoostThreshold;
 		RKTUtil::Timer startTimer;
 
 	//Save & load Actor variables here.
@@ -33,7 +37,7 @@ class Ball : public RKTEngine::Actor
 		template <class Archive>
 		void serialize(Archive& ar)
 		{
-			ar(CEREAL_NVP(mSpeed), CEREAL_NVP(mStartPos), CEREAL_ACTOR());
+			ar(CEREAL_NVP(mSpeed), CEREAL_NVP(mSpeedScaler), CEREAL_NVP(mVolleyBoostThreshold), CEREAL_NVP(mStartPos), CEREAL_ACTOR());
 		}
 
 		void onDeserialize(int id) override;

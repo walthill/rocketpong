@@ -12,10 +12,15 @@ class Paddle : public RKTEngine::Actor
 		virtual void onDestroy() override;
 		virtual void onUpdate() override;
 
+		void onMessage(RKTEngine::Message& message);
+		bool onKeyUp(RKTEngine::KeyUpMessage& msg);
+
 		bool mIsP1;
 
 	private:
 		float mSpeed = 20;
+		float mSprintScaler = 1.5f;
+		bool mSprinting = false;
 
 	#pragma region Serialization
 
@@ -23,7 +28,7 @@ class Paddle : public RKTEngine::Actor
 		template <class Archive>
 		void serialize(Archive& ar)
 		{
-			ar(CEREAL_NVP(mSpeed), CEREAL_NVP(mIsP1), CEREAL_ACTOR());
+			ar(CEREAL_NVP(mSpeed), CEREAL_NVP(mSprintScaler), CEREAL_NVP(mIsP1), CEREAL_ACTOR());
 		}
 	
 		virtual void onDeserialize(int id) override;
