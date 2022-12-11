@@ -110,6 +110,11 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			GameObjManager->addBoxCollider(pPlayer2->getId(), spr->getData()->mWidth, spr->getData()->mHeight);
 			pPlayer2->getBoxCollider()->setTag("rp");
 
+			//midline
+			auto midlineSprite = RocketEngine->getEntityManager()->createSprite("paddle", { w / 2, h / 2 }, { 0.25f, 100.0f });
+			midlineSprite->getSprite()->setColor(RKTEngine::Color(127.5f, 127.5f, 127.5f, 255 * .35f));
+			midlineSprite->name = "midline";
+
 			auto pBall = GameObjManager->createActor();
 			pBall->getNativeScript()->bind<Ball>(pBall->getId());
 			pBall->getNativeScript()->get<Ball>()->mStartPos = { w / 2,h / 2 };
@@ -118,11 +123,6 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			spr = pBall->getSprite();
 			GameObjManager->addBoxCollider(pBall->getId(), spr->getData()->mWidth / 2, spr->getData()->mHeight / 2);
 			GameObjManager->addAudioSource(pBall->getId(), "winwin");
-
-			//midline
-			auto midlineSprite = RocketEngine->getEntityManager()->createSprite("paddle", { w / 2, h / 2 }, { 0.25f, 100.0f });
-			midlineSprite->getSprite()->setColor(RKTEngine::Color(127.5f, 127.5f, 127.5f, .2f));
-			midlineSprite->name = "midline";
 
 			GameObject* p1Score = GameObjManager->createLabel(std::to_string(pGameManager->mP1Score), { w / 2 - 72, 10 }, glm::vec2(1.0f), 0, "Arkitech-Medium");
 			p1Score->name = "p1score";
