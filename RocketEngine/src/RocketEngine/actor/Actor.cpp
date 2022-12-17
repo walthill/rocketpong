@@ -8,7 +8,8 @@ namespace RKTEngine
 {
 	TransformComponent* Actor::getTransform()
 	{
-		return getGameObject()->getTransform();
+		auto obj = getGameObject();
+		return obj != nullptr ? obj->getTransform() : nullptr;
 	}
 	GameObject* Actor::getGameObject()
 	{

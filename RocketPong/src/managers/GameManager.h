@@ -19,7 +19,7 @@ class GameManager : public RKTEngine::Actor
 
 		void setBallHandle(int ballId);
 		void setScoreUI(int p1ScoreId, int p2ScoreId);
-
+		bool isGameOver();
 		void onPlaySelected();
 
 		int mP1Score, mP2Score;
@@ -33,6 +33,7 @@ class GameManager : public RKTEngine::Actor
 		unsigned int mBallId;
 		unsigned int mP1ScoreId;
 		unsigned int mP2ScoreId;
+		const	 int mSCORE_TO_WIN = 11;
 
 		void onQuitSelected();
 		

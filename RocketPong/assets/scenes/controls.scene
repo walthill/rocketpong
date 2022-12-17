@@ -1,1 +1,290 @@
-{"Scene Data":{"GameObjects":[{"name":"UIManager","mId":17,"TransformComponent":{"isEnabled":true,"mPosition":{"x":0.0,"y":0.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":0.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{},"ButtonComponent":{},"Native Script":{"polymorphic_id":2147483649,"polymorphic_name":"UIManager","ptr_wrapper":{"id":2147483649,"data":{"playButtonId":3452816845,"exitButtonId":3452816845,"controlsButtonId":3452816845,"controlsBackButtonId":22}}}},{"name":"title-text","mId":18,"TransformComponent":{"isEnabled":true,"mPosition":{"x":240.0,"y":133.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":1.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{"isEnabled":true,"mFontName":"Arkitech-Medium","mText":"Controls","mFontSize":34,"Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"ButtonComponent":{},"Native Script":{"polymorphic_id":0}},{"name":"p1-text","mId":19,"TransformComponent":{"isEnabled":true,"mPosition":{"x":133.0,"y":336.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":1.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{"isEnabled":true,"mFontName":"Arkitech-Medium","mText":"Left Paddle Move: W/S Keys","mFontSize":18,"Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"ButtonComponent":{},"Native Script":{"polymorphic_id":0}},{"name":"p2-text","mId":20,"TransformComponent":{"isEnabled":true,"mPosition":{"x":133.0,"y":400.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":1.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{"isEnabled":true,"mFontName":"Arkitech-Medium","mText":"Right Paddle Move: P/L Keys","mFontSize":18,"Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"ButtonComponent":{},"Native Script":{"polymorphic_id":0}},{"name":"pause-text","mId":21,"TransformComponent":{"isEnabled":true,"mPosition":{"x":133.0,"y":464.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":1.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{"isEnabled":true,"mFontName":"Arkitech-Medium","mText":"Pause Game: Escape","mFontSize":18,"Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"ButtonComponent":{},"Native Script":{"polymorphic_id":0}},{"name":"New GameObject(22)","mId":22,"TransformComponent":{"isEnabled":true,"mPosition":{"x":400.0,"y":528.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":1.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{},"ButtonComponent":{"isEnabled":true,"mSprite":{"isEnabled":true,"mSpriteName":"defaultbtn","mTileName":"","Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"mHighlightSprite":{"isEnabled":true,"mSpriteName":"defaultbtn_highlight","mTileName":"","Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"mText":{"isEnabled":true,"mFontName":"calibri","mText":"Back","mFontSize":28,"Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}}},"Native Script":{"polymorphic_id":0}}]}}
+{
+    "Scene Data": {
+        "GameObjects": [
+            {
+                "name": "UIManager",
+                "mId": 17,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {},
+                "ButtonComponent": {},
+                "Native Script": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "UIManager",
+                    "ptr_wrapper": {
+                        "id": 2147483649,
+                        "data": {
+                            "playButtonId": 3452816845,
+                            "exitButtonId": 3452816845,
+                            "controlsButtonId": 3452816845,
+                            "controlsBackButtonId": 22
+                        }
+                    }
+                }
+            },
+            {
+                "name": "title-text",
+                "mId": 18,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 336.0,
+                        "y": 133.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {
+                    "isEnabled": true,
+                    "mFontName": "Arkitech-Medium",
+                    "mText": "Help",
+                    "mFontSize": 34,
+                    "Color": {
+                        "data": {
+                            "x": 255.0,
+                            "y": 255.0,
+                            "z": 255.0,
+                            "w": 255.0
+                        }
+                    }
+                },
+                "ButtonComponent": {},
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
+            },
+            {
+                "name": "p1-text",
+                "mId": 19,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 228.57142639160157,
+                        "y": 272.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {
+                    "isEnabled": true,
+                    "mFontName": "Arkitech-Medium",
+                    "mText": "Move: W/S + P/L Keys",
+                    "mFontSize": 18,
+                    "Color": {
+                        "data": {
+                            "x": 255.0,
+                            "y": 255.0,
+                            "z": 255.0,
+                            "w": 255.0
+                        }
+                    }
+                },
+                "ButtonComponent": {},
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
+            },
+            {
+                "name": "p2-text",
+                "mId": 20,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 228.57142639160157,
+                        "y": 336.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {
+                    "isEnabled": true,
+                    "mFontName": "Arkitech-Medium",
+                    "mText": "Fast Move: Shift Key",
+                    "mFontSize": 18,
+                    "Color": {
+                        "data": {
+                            "x": 255.0,
+                            "y": 255.0,
+                            "z": 255.0,
+                            "w": 255.0
+                        }
+                    }
+                },
+                "ButtonComponent": {},
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
+            },
+            {
+                "name": "pause-text",
+                "mId": 21,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 228.57142639160157,
+                        "y": 400.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {
+                    "isEnabled": true,
+                    "mFontName": "Arkitech-Medium",
+                    "mText": "Pause Game: Escape",
+                    "mFontSize": 18,
+                    "Color": {
+                        "data": {
+                            "x": 255.0,
+                            "y": 255.0,
+                            "z": 255.0,
+                            "w": 255.0
+                        }
+                    }
+                },
+                "ButtonComponent": {},
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
+            },
+            {
+                "name": "New GameObject(22)",
+                "mId": 22,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 400.0,
+                        "y": 528.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {},
+                "ButtonComponent": {
+                    "isEnabled": true,
+                    "mSprite": {
+                        "isEnabled": true,
+                        "mSpriteName": "defaultbtn",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mHighlightSprite": {
+                        "isEnabled": true,
+                        "mSpriteName": "defaultbtn_highlight",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mText": {
+                        "isEnabled": true,
+                        "mFontName": "Arkitech-Medium",
+                        "mText": "Back",
+                        "mFontSize": 22,
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    }
+                },
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
+            }
+        ]
+    }
+}

@@ -89,7 +89,8 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			gameMan->name = "GameManager";
 			gameMan->getNativeScript()->bind<GameManager>(gameMan->getId());
 			auto pGameManager = gameMan->getNativeScript()->get<GameManager>();
-			
+			GameObjManager->addAudioSource(gameMan->getId(), "goal");
+
 			GameObject* pPlayer1 = GameObjManager->createActor();
 			pPlayer1->getNativeScript()->bind<Paddle>(pPlayer1->getId());
 			pPlayer1->getNativeScript()->get<Paddle>()->mIsP1 = true;
@@ -122,7 +123,7 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			GameObjManager->addSprite(pBall->getId(), "ball");
 			spr = pBall->getSprite();
 			GameObjManager->addBoxCollider(pBall->getId(), spr->getData()->mWidth / 2, spr->getData()->mHeight / 2);
-			GameObjManager->addAudioSource(pBall->getId(), "winwin");
+			GameObjManager->addAudioSource(pBall->getId(), "ballhit");
 
 			GameObject* p1Score = GameObjManager->createLabel(std::to_string(pGameManager->mP1Score), { w / 2 - 72, 10 }, glm::vec2(1.0f), 0, "Arkitech-Medium");
 			p1Score->name = "p1score";
@@ -159,6 +160,7 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			gameMan->name = "UIManager";
 			gameMan->getNativeScript()->bind<UIManager>(gameMan->getId());
 			auto pUIManager = gameMan->getNativeScript()->get<UIManager>();
+			GameObjManager->addAudioSource(gameMan->getId(), "main");
 
 			GameObject* title = GameObjManager->createLabel("Pong Type-R", { w / 2 - 200, h / 5}, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
 			title->name = "title-text";
@@ -205,6 +207,8 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			pause->name = "pause-text";
 
 			GameObject* backButton = GameObjManager->createButton();
+			backButton->getButton()->setFont("Arkitech-Medium");
+			backButton->getButton()->setFontSize(22);
 			backButton->getButton()->setText("Back");
 			backButton->getTransform()->setPosition({ w / 2, h / 2 + 128 });
 

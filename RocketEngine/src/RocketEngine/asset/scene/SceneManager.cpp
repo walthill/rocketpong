@@ -2,6 +2,7 @@
 #include "RocketEngine/asset/Serialization.h"
 #include <RocketEngine/core/Log.h>
 #include "RocketEngine/input/KeyCodes.h"
+#include <RocketEngine/core/MessageManager.h>
 
 namespace RKTEngine
 {
@@ -90,6 +91,12 @@ namespace RKTEngine
 
 	void SceneManager::loadScene(const std::string& sceneName, bool destroySceneData, bool makeActiveScene)
 	{
+		auto pMessage = new LoadSceneMessage(sceneName, destroySceneData, makeActiveScene);
+		EngineCore::getInstance()->getMessageManager()->addMessage(pMessage, 1);
+	}
+
+	void SceneManager::loadSceneInternal(const std::string& sceneName, bool destroySceneData, bool makeActiveScene)
+	{
 		RKT_PROFILE_FUNCTION();
 
 		if (makeActiveScene)
@@ -135,6 +142,13 @@ namespace RKTEngine
 	{
 		RKTEngine::MessageDispatcher dispatcher(message);
 		dispatcher.dispatch<RKTEngine::KeyDownMessage>(RKT_BIND_MESSAGE_FN(SceneManager::onKeyDown));
+		dispatcher.dispatch<RKTEngine::LoadSceneMessage>(RKT_BIND_MESSAGE_FN(SceneManager::onLoadScene));
+	}
+
+	bool SceneManager::onLoadScene(RKTEngine::LoadSceneMessage& msg)
+	{
+		loadSceneInternal(msg.sceneToLoad, msg.destroyExistingScene, msg.setNewSceneActive);
+		return true;
 	}
 
 	bool SceneManager::onKeyDown(RKTEngine::KeyDownMessage& msg)

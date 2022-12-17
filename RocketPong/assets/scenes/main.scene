@@ -1,1 +1,353 @@
-{"Scene Data":{"GameObjects":[{"name":"UIManager","mId":11,"TransformComponent":{"isEnabled":true,"mPosition":{"x":0.0,"y":0.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":0.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{},"ButtonComponent":{},"Native Script":{"polymorphic_id":2147483649,"polymorphic_name":"UIManager","ptr_wrapper":{"id":2147483649,"data":{"playButtonId":14,"exitButtonId":16,"controlsButtonId":15,"controlsBackButtonId":3452816845}}}},{"name":"title-text","mId":12,"TransformComponent":{"isEnabled":true,"mPosition":{"x":240.0,"y":133.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":1.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{"isEnabled":true,"mFontName":"Arkitech-Medium","mText":"Pong Type-R","mFontSize":34,"Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"ButtonComponent":{},"Native Script":{"polymorphic_id":0}},{"name":"credits-text","mId":13,"TransformComponent":{"isEnabled":true,"mPosition":{"x":0.0,"y":768.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":1.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{"isEnabled":true,"mFontName":"Calibri","mText":"a walter hill game","mFontSize":18,"Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"ButtonComponent":{},"Native Script":{"polymorphic_id":0}},{"name":"New GameObject(14)","mId":14,"TransformComponent":{"isEnabled":true,"mPosition":{"x":400.0,"y":336.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":1.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{},"ButtonComponent":{"isEnabled":true,"mSprite":{"isEnabled":true,"mSpriteName":"defaultbtn","mTileName":"","Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"mHighlightSprite":{"isEnabled":true,"mSpriteName":"defaultbtn_highlight","mTileName":"","Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"mText":{"isEnabled":true,"mFontName":"Arkitech-Medium","mText":"Play","mFontSize":28,"Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}}},"Native Script":{"polymorphic_id":0}},{"name":"New GameObject(15)","mId":15,"TransformComponent":{"isEnabled":true,"mPosition":{"x":400.0,"y":400.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":1.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{},"ButtonComponent":{"isEnabled":true,"mSprite":{"isEnabled":true,"mSpriteName":"defaultbtn","mTileName":"","Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"mHighlightSprite":{"isEnabled":true,"mSpriteName":"defaultbtn_highlight","mTileName":"","Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"mText":{"isEnabled":true,"mFontName":"Arkitech-Medium","mText":"Controls","mFontSize":28,"Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}}},"Native Script":{"polymorphic_id":0}},{"name":"New GameObject(16)","mId":16,"TransformComponent":{"isEnabled":true,"mPosition":{"x":400.0,"y":464.0},"mScale":{"x":1.0,"y":1.0},"mRotation":{"angle":0.0,"rotationAxis":{"x":0.0,"y":0.0,"z":1.0}}},"SpriteComponent":{},"BoxColliderComponent":{},"AudioSourceComponent":{},"UILabelComponent":{},"ButtonComponent":{"isEnabled":true,"mSprite":{"isEnabled":true,"mSpriteName":"defaultbtn","mTileName":"","Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"mHighlightSprite":{"isEnabled":true,"mSpriteName":"defaultbtn_highlight","mTileName":"","Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}},"mText":{"isEnabled":true,"mFontName":"Arkitech-Medium","mText":"Quit","mFontSize":28,"Color":{"data":{"x":255.0,"y":255.0,"z":255.0,"w":255.0}}}},"Native Script":{"polymorphic_id":0}}]}}
+{
+    "Scene Data": {
+        "GameObjects": [
+            {
+                "name": "UIManager",
+                "mId": 11,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {
+                    "isEnabled": true,
+                    "mAudioFileName": "main",
+                    "mVolume": -1.0,
+                    "mPan": 0.0
+                },
+                "UILabelComponent": {},
+                "ButtonComponent": {},
+                "Native Script": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "UIManager",
+                    "ptr_wrapper": {
+                        "id": 2147483649,
+                        "data": {
+                            "playButtonId": 14,
+                            "exitButtonId": 16,
+                            "controlsButtonId": 15,
+                            "controlsBackButtonId": 3452816845
+                        }
+                    }
+                }
+            },
+            {
+                "name": "title-text",
+                "mId": 12,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 200.0,
+                        "y": 160.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {
+                    "isEnabled": true,
+                    "mFontName": "Arkitech-Medium",
+                    "mText": "Pong Type-R",
+                    "mFontSize": 34,
+                    "Color": {
+                        "data": {
+                            "x": 255.0,
+                            "y": 255.0,
+                            "z": 255.0,
+                            "w": 255.0
+                        }
+                    }
+                },
+                "ButtonComponent": {},
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
+            },
+            {
+                "name": "credits-text",
+                "mId": 13,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 10.0,
+                        "y": 768.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {
+                    "isEnabled": true,
+                    "mFontName": "Calibri",
+                    "mText": "a walter hill game",
+                    "mFontSize": 18,
+                    "Color": {
+                        "data": {
+                            "x": 255.0,
+                            "y": 255.0,
+                            "z": 255.0,
+                            "w": 255.0
+                        }
+                    }
+                },
+                "ButtonComponent": {},
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
+            },
+            {
+                "name": "New GameObject(14)",
+                "mId": 14,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 400.0,
+                        "y": 336.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {},
+                "ButtonComponent": {
+                    "isEnabled": true,
+                    "mSprite": {
+                        "isEnabled": true,
+                        "mSpriteName": "defaultbtn",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mHighlightSprite": {
+                        "isEnabled": true,
+                        "mSpriteName": "defaultbtn_highlight",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mText": {
+                        "isEnabled": true,
+                        "mFontName": "Arkitech-Medium",
+                        "mText": "Play",
+                        "mFontSize": 22,
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    }
+                },
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
+            },
+            {
+                "name": "New GameObject(15)",
+                "mId": 15,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 400.0,
+                        "y": 400.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {},
+                "ButtonComponent": {
+                    "isEnabled": true,
+                    "mSprite": {
+                        "isEnabled": true,
+                        "mSpriteName": "defaultbtn",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mHighlightSprite": {
+                        "isEnabled": true,
+                        "mSpriteName": "defaultbtn_highlight",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mText": {
+                        "isEnabled": true,
+                        "mFontName": "Arkitech-Medium",
+                        "mText": "Help",
+                        "mFontSize": 22,
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    }
+                },
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
+            },
+            {
+                "name": "New GameObject(16)",
+                "mId": 16,
+                "TransformComponent": {
+                    "mPosition": {
+                        "x": 400.0,
+                        "y": 464.0
+                    },
+                    "mScale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "mRotation": {
+                        "angle": 0.0,
+                        "rotationAxis": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 1.0
+                        }
+                    }
+                },
+                "SpriteComponent": {},
+                "BoxColliderComponent": {},
+                "AudioSourceComponent": {},
+                "UILabelComponent": {},
+                "ButtonComponent": {
+                    "isEnabled": true,
+                    "mSprite": {
+                        "isEnabled": true,
+                        "mSpriteName": "defaultbtn",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mHighlightSprite": {
+                        "isEnabled": true,
+                        "mSpriteName": "defaultbtn_highlight",
+                        "mTileName": "",
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    },
+                    "mText": {
+                        "isEnabled": true,
+                        "mFontName": "Arkitech-Medium",
+                        "mText": "Quit",
+                        "mFontSize": 22,
+                        "Color": {
+                            "data": {
+                                "x": 255.0,
+                                "y": 255.0,
+                                "z": 255.0,
+                                "w": 255.0
+                            }
+                        }
+                    }
+                },
+                "Native Script": {
+                    "polymorphic_id": 0
+                }
+            }
+        ]
+    }
+}

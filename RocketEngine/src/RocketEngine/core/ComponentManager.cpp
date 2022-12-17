@@ -482,7 +482,7 @@ namespace RKTEngine
 	{
 		for (auto& it : mNativeScriptComponentMap)
 		{
-			if (!it.second->pInstance)
+			if (it.second == nullptr || !it.second->pInstance)
 				continue;
 
 			if (!it.second->pInstance->isEnabled)

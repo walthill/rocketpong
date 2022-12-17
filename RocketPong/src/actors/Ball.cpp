@@ -21,6 +21,9 @@ void Ball::onUpdate()
 {
 	if (!mStartMoving && startTimer.getTimeElapsedInSeconds() > mSTART_DELAY)
 	{
+		if(GameApp::getInstance()->getGameManager()->isGameOver())
+			RocketEngine->getSceneManager()->loadScene("main");
+
 		mStartMoving = true;
 		startTimer.stop();
 	}
@@ -140,5 +143,7 @@ void Ball::reset()
 
 	mStartMoving = false;
 	startTimer.start();
-	getTransform()->setPosition(mStartPos);
+	auto transform = getTransform();
+	if(transform != nullptr)
+		transform->setPosition(mStartPos);
 }

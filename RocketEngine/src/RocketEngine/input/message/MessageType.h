@@ -9,6 +9,7 @@ enum class MessageType
 	KEY_UP,
 	COLLISION,
 	AUDIO_PLAY_WAV,
+	LOAD_SCENE,
 	NUM_MSG_TYPES
 };
 

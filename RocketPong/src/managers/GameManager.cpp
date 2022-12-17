@@ -57,6 +57,13 @@ void GameManager::score(bool p1Scored)
 				label->setText(mP2Score);
 		}
 	}
+	
+	getGameObject()->getAudioSource()->play();
+}
+
+bool GameManager::isGameOver()
+{
+	return mP1Score == mSCORE_TO_WIN || mP2Score == mSCORE_TO_WIN;
 }
 
 void GameManager::reset()

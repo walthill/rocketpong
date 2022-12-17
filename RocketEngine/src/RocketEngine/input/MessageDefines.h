@@ -5,5 +5,6 @@
 #include "RocketEngine/input/message/KeyMessage.h"
 #include "RocketEngine/input/message/UpdateMessage.h"
 #include "RocketEngine/input/message/CollisionEnterMessage.h"
+#include "RocketEngine/input/message/LoadSceneMessage.h"
 
 #endif // !MSG_DEF_H

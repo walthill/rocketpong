@@ -318,10 +318,7 @@ namespace RKTEngine
 		if (it != mGameObjMap.end())
 			return it->second;
 		else
-		{
-			RKT_ERROR("{0} Failed to find gameobject with id '{1}'", LOG_SUBSYS(GameObjectManager), id);
 			return nullptr;
-		}
 	}
 
 	void GameObjectManager::destroy(const GameObjectId& id)

@@ -90,6 +90,7 @@ namespace RKTEngine
 		bool isActiveScene(const std::string& sceneName);
 
 		void onMessage(RKTEngine::Message& message);
+		bool onLoadScene(RKTEngine::LoadSceneMessage& msg);
 		bool onKeyDown(RKTEngine::KeyDownMessage& msg);
 		void updateButtonNavigation(bool moveDown);
 
@@ -98,6 +99,8 @@ namespace RKTEngine
 	private:
 		std::map<std::string, Scene*> mScenes;
 		Scene* mpActiveScene = nullptr;
+
+		void loadSceneInternal(const std::string& sceneName, bool destroySceneData = true, bool makeActiveScene = true);
 
 		void cleanupScenes();
 		void cleanSceneElements(Scene* scene);
