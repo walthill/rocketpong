@@ -1,4 +1,7 @@
 #include "Paddle.h"
+#include "GameApp.h"
+#include "managers/GameManager.h"
+#include "Ball.h"
 
 REGISTER_ACTOR(Paddle);
 
@@ -10,6 +13,10 @@ void Paddle::onCreate()
 
 void Paddle::onStart()
 {
+	if (!mIsP1)
+	{
+		mHasAIInput = true;
+	}
 }
 
 void Paddle::onDestroy()
@@ -42,23 +49,32 @@ void Paddle::onUpdate()
 	}
 	else
 	{
+		mHasPlayerInput = false;
 		if (Input::getKeyDown(KeyCode::P))
 		{
 			auto pos = transform->getPosition();
 			transform->setPosition(pos.x, pos.y - mSpeed * RocketEngine->sDeltaTime);
+			mHasPlayerInput = true;
 		}
 		else if (Input::getKeyDown(KeyCode::L))
 		{
 			auto pos = transform->getPosition();
 			transform->setPosition(pos.x, pos.y + mSpeed * RocketEngine->sDeltaTime);
+			mHasPlayerInput = true;
 		}
 
 		if (!mSprinting && Input::getKeyDown(KeyCode::RightShift))
 		{
 			mSprinting = true;
 			mSpeed *= mSprintScaler;
+			mHasPlayerInput = true;
 		}
 
+		if (mHasAIInput)
+		{
+			UpdatePaddleAI(transform);
+		}
+		UpdatePlayerInputTimer();
 	}
 
 	if (transform->getPosition().y > RocketEngine->getWindowHeight() || transform->getPosition().y < 0)
@@ -71,6 +87,38 @@ void Paddle::onMessage(RKTEngine::Message& message)
 {
 	RKTEngine::MessageDispatcher dispatcher(message);
 	dispatcher.dispatch<RKTEngine::KeyUpMessage>(RKT_BIND_MESSAGE_FN(Paddle::onKeyUp));
+}
+
+void Paddle::UpdatePaddleAI(RKTEngine::TransformComponent* transform)
+{
+	if (!mIsP1)
+	{
+		auto pos = transform->getPosition();
+		auto ballScript = GameApp::getInstance()->getGameManager()->getBall();
+		auto ballPos = ballScript->getGameObject()->getTransform()->getPosition();
+
+		auto aiMaxSpeed = ballScript->getSpeed() * mAISpeedPercent;
+
+		float diffY = (ballPos.y - pos.y) * mAISpeed;
+		if (diffY > aiMaxSpeed) diffY = aiMaxSpeed;
+		if (diffY < -aiMaxSpeed) diffY = -aiMaxSpeed;
+
+		transform->setPosition(pos.x, pos.y + diffY * RocketEngine->sDeltaTime);
+	}
+}
+
+void Paddle::UpdatePlayerInputTimer()
+{
+	if (mHasPlayerInput)
+	{
+		mInputTimer.start();
+		mHasAIInput = false;
+	}
+
+	if (mInputTimer.getTimeElapsedInSeconds() > mAIControlThreshold)
+	{
+		mHasAIInput = true;
+	}
 }
 
 

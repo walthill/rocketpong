@@ -19,8 +19,18 @@ class Paddle : public RKTEngine::Actor
 
 	private:
 		float mSpeed = 20;
+		float mAISpeed = 4;
+		float mAISpeedPercent = 0.43f;
 		float mSprintScaler = 1.5f;
+		int mAIControlThreshold = 15;
 		bool mSprinting = false;
+		bool mHasPlayerInput = true;
+		bool mHasAIInput = false;
+		RKTUtil::Timer mInputTimer;
+
+		void UpdatePaddleAI(RKTEngine::TransformComponent* transform);
+		void UpdatePlayerInputTimer();
+
 
 	#pragma region Serialization
 

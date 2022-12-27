@@ -11,9 +11,6 @@ void Ball::onCreate()
 
 void Ball::onStart()
 {
-	mSpeed = 325;
-	mSpeedScaler = 1.5f;
-	mVolleyBoostThreshold = 6;
 	reset();
 }
 
@@ -136,11 +133,17 @@ void Ball::onMessage(RKTEngine::Message& message)
 
 void Ball::reset()
 {
+	mSpeed = 350;
+	mSpeedScaler = 1.5f;
+	mVolleyBoostThreshold = 6;
 	mVolleyCounter = 0;
-	mSpeed = 300;
-	bool dir = Random::range(0, 1);
-	mDir = dir == 0 ? glm::vec2(-1, 0) : glm::vec2(1, 0);
-
+	
+	float dir = Random::range_real(0.45f, 0.55f);
+	float angle = 360 * dir;
+	angle = glm::radians(angle);
+	mDir = glm::vec2(cosf(angle), sinf(angle));
+	mDir = glm::normalize(mDir);
+	
 	mStartMoving = false;
 	startTimer.start();
 	auto transform = getTransform();

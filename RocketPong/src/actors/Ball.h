@@ -16,6 +16,7 @@ class Ball : public RKTEngine::Actor
 		virtual bool onCollisionEnter(RKTEngine::CollisionEnterMessage& message) override;
 		virtual void onMessage(RKTEngine::Message& message) override;
 
+		float getSpeed() { return mSpeed; }
 		glm::vec2 mStartPos;
 	
 	private:

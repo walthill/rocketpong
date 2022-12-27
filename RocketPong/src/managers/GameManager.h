@@ -4,6 +4,8 @@
 #include <RocketEngine/actor/Actor.h>
 #include <RocketEngine.h>
 
+class Ball;
+
 class GameManager : public RKTEngine::Actor
 {
 	public:
@@ -16,6 +18,8 @@ class GameManager : public RKTEngine::Actor
 		
 		void score(bool p1Scored);
 		void reset();
+
+		Ball* getBall();
 
 		void setBallHandle(int ballId);
 		void setScoreUI(int p1ScoreId, int p2ScoreId);

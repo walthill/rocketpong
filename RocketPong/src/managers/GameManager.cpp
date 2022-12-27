@@ -80,6 +80,15 @@ void GameManager::reset()
 	mP2Score = 0;
 }
 
+Ball* GameManager::getBall()
+{
+	auto ballObj = GameObjManager->findGameObject(mBallId);
+	if (ballObj != nullptr)
+		return ballObj->getNativeScript()->get<Ball>();
+	else
+		return nullptr;
+}
+
 void GameManager::setScoreUI(int p1ScoreId, int p2ScoreId)
 {
 	mP1ScoreId = p1ScoreId;
