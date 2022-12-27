@@ -3,6 +3,7 @@
 
 #include <RocketEngine/input/message/Message.h>
 #include <RocketEngine/input/message/AudioPlayWAVMessage.h>
+#include <RocketEngine/input/message/AudioStopWAVMessage.h>
 
 namespace RKTEngine
 {
@@ -13,6 +14,7 @@ namespace RKTEngine
 			~AudioManager();
 
 			bool playSound(RKTEngine::AudioPlayWAVMessage& msg);
+			bool stopSound(RKTEngine::AudioStopWAVMessage& msg);
 
 			void onMessage(RKTEngine::Message& message);
 			

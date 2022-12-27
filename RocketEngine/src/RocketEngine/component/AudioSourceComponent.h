@@ -20,7 +20,9 @@ namespace RKTEngine
 		AudioSource* audioSource;
 		float mVolume = -1.0f;
 		float mPan = 0.0f;
+		bool mPlaying = false;
 		bool mPaused = false;
+		bool mLooping = false;
 
 		///Default constructor sets all values to zero
 		AudioSourceComponentData() : mAudioFileName(""), audioSource(nullptr) {};
@@ -77,22 +79,27 @@ namespace RKTEngine
 		///Cleanup
 		void cleanup();
 
-		void play(float vol = mDEFAULT_VOL, float pan = mDEFAULT_PAN);
+		void play(float vol = sDEFAULT_VOL, float pan = sDEFAULT_PAN, bool isLooping = false);
+		void stop();
 		void setVolume(float vol);
 		void setPan(float pan);
+		void setPlaying(bool playing);
 		void setPauseFlag(bool pause);
+		void setLooping(bool isLooping);
 
 		///Access the Audio Source component data
 		AudioSourceComponentData* getData() { return &mAudioSourceData; }
 	
 		void setData(const AudioSourceComponentData& data);
 
+		inline bool isPlaying() { return mAudioSourceData.mPlaying; }
 		inline virtual bool isEnabled() override { return mAudioSourceData.isEnabled; }
 		inline virtual void setEnabled(bool enabled) override { mAudioSourceData.isEnabled = enabled; }
 
+		static const float sDEFAULT_VOL;
+		static const float sDEFAULT_PAN;
+
 	private:
-		static const float mDEFAULT_VOL;
-		static const float mDEFAULT_PAN;
 		AudioSourceComponentData mAudioSourceData;
 	};
 }

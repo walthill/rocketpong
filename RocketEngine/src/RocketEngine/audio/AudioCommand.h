@@ -19,9 +19,14 @@ namespace RKTEngine
 			}
 
 
-			inline static uint32 play(AudioSource* source, float vol = -1.0f, float pan = 0.0f, bool paused = false)
+			inline static uint32 play(AudioSource* source, float vol = -1.0f, float pan = 0.0f, bool isLooping = false, bool paused = false)
 			{
-				return spAudioAPI->play(source, vol, pan, paused);
+				return spAudioAPI->play(source, vol, pan, isLooping, paused);
+			}
+
+			inline static void stop(AudioSource* source)
+			{
+				spAudioAPI->stop(source);
 			}
 
 		private:

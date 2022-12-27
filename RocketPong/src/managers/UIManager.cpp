@@ -17,6 +17,17 @@ void UIManager::onStart()
 	GameObjManager->setButtonCallback(controlsButtonId, RKT_BIND_CALLBACK_FN(UIManager::onControlsSelected));
 	GameObjManager->setButtonCallback(controlsBackButtonId, RKT_BIND_CALLBACK_FN(UIManager::onControlsBackSelected));
 	GameObjManager->setButtonCallback(exitButtonId, RKT_BIND_CALLBACK_FN(UIManager::onQuitSelected));
+
+	auto audioSrc = getGameObject()->getAudioSource();
+	if(audioSrc != nullptr)
+		audioSrc->play(RKTEngine::AudioSourceComponent::sDEFAULT_VOL, RKTEngine::AudioSourceComponent::sDEFAULT_PAN, true);
+}
+
+void UIManager::onDestroy()
+{
+	auto audioSrc = getGameObject()->getAudioSource();	
+	if (audioSrc != nullptr)
+		audioSrc->stop();
 }
 
 void UIManager::onQuitSelected()

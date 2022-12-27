@@ -5,11 +5,12 @@
 #include <RocketEngine/core/Log.h>
 #include "RocketEngine/audio/AudioSource.h"
 #include <RocketEngine/input/message/AudioPlayWAVMessage.h>
+#include <RocketEngine/input/message/AudioStopWAVMessage.h>
 
 namespace RKTEngine
 {
-	const float AudioSourceComponent::mDEFAULT_VOL = -1.0f;
-	const float AudioSourceComponent::mDEFAULT_PAN = 0.0f;
+	const float AudioSourceComponent::sDEFAULT_VOL = -1.0f;
+	const float AudioSourceComponent::sDEFAULT_PAN = 0.0f;
 
 
 	AudioSourceComponent::AudioSourceComponent(const ComponentId& id) :
@@ -38,8 +39,11 @@ namespace RKTEngine
 
 	}
 
-	void AudioSourceComponent::play(float vol, float pan)
+	void AudioSourceComponent::play(float vol, float pan, bool isLooping)
 	{
+		if (mAudioSourceData.audioSource == nullptr)
+			return;
+
 		if (!mAudioSourceData.audioSource->isInitialized())
 		{
 			RKT_WARN("AudioSourceComponent::Attempting to play a missing audio source!");
@@ -51,9 +55,29 @@ namespace RKTEngine
 
 		setVolume(vol);
 		setPan(pan);
+		setLooping(isLooping);
 		setPauseFlag(false);
-		auto pMessage = new AudioPlayWAVMessage(mAudioSourceData.audioSource, mAudioSourceData.mVolume, mAudioSourceData.mPan, mAudioSourceData.mPaused);
+		auto pMessage = new AudioPlayWAVMessage(mAudioSourceData.audioSource, mAudioSourceData.mVolume, mAudioSourceData.mPan, mAudioSourceData.mLooping, mAudioSourceData.mPaused);
 		EngineCore::getInstance()->getMessageManager()->addMessage(pMessage, 1);
+	}
+
+	void AudioSourceComponent::stop()
+	{
+		if (mAudioSourceData.audioSource == nullptr)
+			return;
+
+		if (!mAudioSourceData.audioSource->isInitialized())
+		{
+			RKT_WARN("AudioSourceComponent::Attempting to play a missing audio source!");
+			return;
+		}
+
+		if (!mAudioSourceData.isEnabled)
+			return;
+
+		auto pMessage = new AudioStopWAVMessage(mAudioSourceData.audioSource);
+		EngineCore::getInstance()->getMessageManager()->addMessage(pMessage, 1);
+
 	}
 
 	void AudioSourceComponent::setVolume(float vol)
@@ -69,6 +93,11 @@ namespace RKTEngine
 	void AudioSourceComponent::setPauseFlag(bool pause)
 	{
 		mAudioSourceData.mPaused = pause;
+	}
+
+	void AudioSourceComponent::setLooping(bool isLooping)
+	{
+		mAudioSourceData.mLooping = isLooping;
 	}
 
 	void AudioSourceComponent::setData(const AudioSourceComponentData& data)

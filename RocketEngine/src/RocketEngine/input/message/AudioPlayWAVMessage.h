@@ -10,8 +10,8 @@ namespace RKTEngine
 	class AudioPlayWAVMessage : public Message
 	{
 		public:
-			AudioPlayWAVMessage(AudioSource* audio, float vol = -1.0f, float pan = 0.0f, bool paused = false)
-				: mpAudio(audio), mVolume(vol), mPan(pan), mPaused(paused), Message(MessageType::AUDIO_PLAY_WAV) {};
+			AudioPlayWAVMessage(AudioSource* audio, float vol = -1.0f, float pan = 0.0f, bool isLooping = false, bool paused = false)
+				: mpAudio(audio), mVolume(vol), mPan(pan), mLooping(isLooping), mPaused(paused), Message(MessageType::AUDIO_PLAY_WAV) {};
 
 			~AudioPlayWAVMessage() {};
 
@@ -19,6 +19,7 @@ namespace RKTEngine
 			inline float getVolume() { return mVolume; }
 			inline float getPan() { return mPan; }
 			inline bool isPaused() { return mPaused; }
+			inline bool isLooping() { return mLooping; }
 
 			std::string toString() const override
 			{
@@ -35,6 +36,7 @@ namespace RKTEngine
 			float mVolume = -1.0f;
 			float mPan = 0.0f;
 			bool mPaused = false;
+			bool mLooping = false;
 	};
 }
 #endif // !AUDIO_PLAY_WAV_MSG_H

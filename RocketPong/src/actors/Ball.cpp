@@ -13,7 +13,7 @@ void Ball::onStart()
 {
 	mSpeed = 325;
 	mSpeedScaler = 1.5f;
-	mVolleyBoostThreshold = 8;
+	mVolleyBoostThreshold = 6;
 	reset();
 }
 

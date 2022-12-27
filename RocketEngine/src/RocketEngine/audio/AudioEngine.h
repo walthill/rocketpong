@@ -13,7 +13,8 @@ namespace RKTEngine
 
 			virtual void initialize() =0;
 			virtual void cleanup() =0;
-			virtual uint32 play(AudioSource* source, float vol = -1.0f, float pan = 0.0f, bool paused = false) =0;
+			virtual uint32 play(AudioSource* source, float vol = -1.0f, float pan = 0.0f, bool isLooping = false, bool paused = false) =0;
+			virtual void stop(AudioSource* source) = 0;
 
 			inline static AudioEngine::API getAPI() { return msAPI; };
 		private:

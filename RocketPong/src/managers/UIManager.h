@@ -10,6 +10,7 @@ class UIManager : public RKTEngine::Actor
 		~UIManager();
 
 		void onStart() override;
+		void onDestroy() override;
 
 		//GameObject handles
 		unsigned int playButtonId;

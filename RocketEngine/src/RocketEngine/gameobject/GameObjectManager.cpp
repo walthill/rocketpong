@@ -328,19 +328,18 @@ namespace RKTEngine
 		{
 			GameObject* obj = it->second;//hold for later
 
-			//remove from map
-			mGameObjMap.erase(it);
-
 			//remove components from manager
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
+			pComponentManager->deallocateNativeScriptComponent(obj->getNativeScriptId());
 			pComponentManager->deallocateTransformComponent(obj->getTransformId());
 			pComponentManager->deallocateSpriteComponent(obj->getSpriteId());
 			pComponentManager->deallocateTextComponent(obj->getLabelId());
 			pComponentManager->deallocateBoxColliderComponent(obj->getColliderId());
 			pComponentManager->deallocateAudioSourceComponent(obj->getAudioSourceId());
 			pComponentManager->deallocateButtonComponent(obj->getButtonId());
-			pComponentManager->deallocateNativeScriptComponent(obj->getNativeScriptId());
-
+			
+			//remove from map
+			mGameObjMap.erase(it);
 			//call destructor on gameObj
 			obj->~GameObject();
 
