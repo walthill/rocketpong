@@ -20,7 +20,6 @@ namespace RKTEngine
 		AudioSource* audioSource;
 		float mVolume = -1.0f;
 		float mPan = 0.0f;
-		bool mPlaying = false;
 		bool mPaused = false;
 		bool mLooping = false;
 
@@ -83,7 +82,6 @@ namespace RKTEngine
 		void stop();
 		void setVolume(float vol);
 		void setPan(float pan);
-		void setPlaying(bool playing);
 		void setPauseFlag(bool pause);
 		void setLooping(bool isLooping);
 
@@ -92,7 +90,6 @@ namespace RKTEngine
 	
 		void setData(const AudioSourceComponentData& data);
 
-		inline bool isPlaying() { return mAudioSourceData.mPlaying; }
 		inline virtual bool isEnabled() override { return mAudioSourceData.isEnabled; }
 		inline virtual void setEnabled(bool enabled) override { mAudioSourceData.isEnabled = enabled; }
 
