@@ -19,9 +19,9 @@ namespace RKTEngine
 			return ss.str();
 		};
 
-		std::string sceneToLoad;
-		bool destroyExistingScene;
-		bool setNewSceneActive;
+		std::string sceneToLoad = "";
+		bool destroyExistingScene = false;
+		bool setNewSceneActive = false;
 
 		EVENT_CLASS_TYPE(LOAD_SCENE)
 		EVENT_CLASS_CATEGORY(MSG_CATEGORY_APP)

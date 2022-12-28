@@ -41,7 +41,7 @@ namespace RKTEngine
 
 	CollisionType BoxColliderComponent::checkCollision(BoxColliderComponent* collider)
 	{
-		if (!mBoxColliderData.isEnabled)
+		if (!mBoxColliderData.isEnabled || mpParentTransform == nullptr)
 			return CollisionType::NONE;
 
 		auto posA = mpParentTransform->getPosition();

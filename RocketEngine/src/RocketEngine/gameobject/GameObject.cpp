@@ -70,8 +70,7 @@ namespace RKTEngine
 		//create version of this gameObj in the ecs system. Will be used to register deserialized components later in SceneManager.h
 		EngineCore::getInstance()->getEntityManager()->createGameObject(transformData, mId);
 		auto pComponentManager = EngineCore::getInstance()->getComponentManager();
-		connectTransform(pComponentManager->allocateTransformComponent(transformData));
-		auto trComp = pComponentManager->getTransformComponent(mTransformId);
+		connectTransformId(pComponentManager->allocateTransformComponent(transformData));
 		setTransformHandle(pComponentManager->getTransformComponent(mTransformId));
 	}
 

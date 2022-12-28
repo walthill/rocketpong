@@ -52,7 +52,7 @@ namespace RKTEngine
 			static Color clear; // (0, 0, 0, 0)
 
 		private:
-			glm::vec4 mColorValue;
+			glm::vec4 mColorValue = glm::vec4(0);
 			static const float RGB01_CONVERSION;
 
 			friend cereal::access;

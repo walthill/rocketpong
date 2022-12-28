@@ -10,11 +10,11 @@ namespace RKTEngine
 {
 	struct TextData : ComponentData
 	{
-		Text* mTextInfo;
-		std::string mFontName;
-		std::string mText;
+		Text* mTextInfo = nullptr;
+		std::string mFontName = "";
+		std::string mText = "";
 		Color mColor;
-		int mFontSize;
+		int mFontSize = 0;
 
 		TextData() : ComponentData(), mTextInfo(nullptr), mText("New Text"), mColor(), mFontSize(Text::sDefaultTextSize), mFontName("") {}
 		TextData(const std::string& fontName, const std::string& text, int fontSize = Text::sDefaultTextSize, Color color = Color::white, bool enabled = true) 
@@ -83,7 +83,7 @@ namespace RKTEngine
 			const std::string mSHADER_ID = "text";
 			const std::string mMODEL_UNIFORM = "model";
 			
-			glm::mat4 mModelMatrix;
+			glm::mat4 mModelMatrix = glm::mat4(1);
 			TextData mTextData;
 	};
 }

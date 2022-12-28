@@ -102,7 +102,7 @@ namespace RKTEngine
 		virtual bool isEnabled() =0;
 		virtual void setEnabled(bool enabled) =0;	
 	protected:
-		ComponentId mId;
+		ComponentId mId = 0;
 	};
 }
 

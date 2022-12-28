@@ -15,6 +15,7 @@ namespace RKTEngine
 	GameObjectManager::GameObjectManager(uint32 maxSize) :
 		mGameObjectPool(maxSize, sizeof(GameObject))
 	{
+		mGameObjMap = std::map<GameObjectId, GameObject*>();
 	}
 
 	GameObjectManager::~GameObjectManager()
@@ -47,7 +48,7 @@ namespace RKTEngine
 
 			//TRANSFORM
 			ComponentId newTransformId = pComponentManager->allocateTransformComponent(transform);
-			newObj->connectTransform(newTransformId);
+			newObj->connectTransformId(newTransformId);
 			newObj->setTransformHandle(pComponentManager->getTransformComponent(newTransformId));
 
 			//SPRITE
@@ -104,7 +105,7 @@ namespace RKTEngine
 
 			//TRANSFORM
 			ComponentId newTransformId = pComponentManager->allocateTransformComponent(transform);
-			newObj->connectTransform(newTransformId);
+			newObj->connectTransformId(newTransformId);
 			newObj->setTransformHandle(pComponentManager->getTransformComponent(newTransformId));
 
 			EngineCore::getInstance()->getSceneManager()->registerEntity(newObj);
@@ -120,12 +121,13 @@ namespace RKTEngine
 			auto newObj = it->second;
 			newObj->name = obj.name;
 
-			auto trId = obj.getTransformId();
+			auto trId = newObj->getTransformId();
 
 			////Hook up components
 			ComponentManager* pComponentManager = EngineCore::getInstance()->getComponentManager();
-			newObj->connectTransform(trId);
-			newObj->setTransformHandle(pComponentManager->getTransformComponent(trId));
+			//newObj->getTransform()->setData(obj.getTransform()->getData());			
+			//newObj->connectTransformId(trId);
+			//newObj->setTransformHandle(pComponentManager->getTransformComponent(trId));
 
 			auto box = newObj->getBoxCollider();
 			if (box)
@@ -163,7 +165,7 @@ namespace RKTEngine
 
 			//TRANSFORM
 			ComponentId newTransformId = pComponentManager->allocateTransformComponent(transform);
-			newObj->connectTransform(newTransformId);
+			newObj->connectTransformId(newTransformId);
 			newObj->setTransformHandle(pComponentManager->getTransformComponent(newTransformId));
 
 			//SPRITE

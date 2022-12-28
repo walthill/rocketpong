@@ -14,14 +14,14 @@ namespace RKTEngine
 {
 	struct UIManager
 	{
-		int currentButtonIndex;
-		std::vector<ButtonComponent*> buttons;
+		int currentButtonIndex = 0;
+		std::vector<ButtonComponent*> buttons = std::vector<ButtonComponent*>();
 	};
 
 	struct Scene
 	{
-		std::string name;
-		std::vector<GameObject*> entities;
+		std::string name = "";
+		std::vector<GameObject*> entities = std::vector<GameObject*>();
 		UIManager uiManager;
 
 		#pragma region Serialization

@@ -25,12 +25,12 @@ namespace RKTEngine
 
 		private:
 			const int mSTART_CURSOR_Y = 25;
-			OpenGLFont* mFontData;
-			std::shared_ptr<VertexArray> glyphVA;
-			std::shared_ptr<VertexBuffer> glyphVB;
-			std::shared_ptr<IndexBuffer> glyphIB;
-			int width, height;
-			int cursorX, cursorY;
+			OpenGLFont* mFontData = nullptr;
+			std::shared_ptr<VertexArray> glyphVA = nullptr;
+			std::shared_ptr<VertexBuffer> glyphVB = nullptr;
+			std::shared_ptr<IndexBuffer> glyphIB = nullptr;
+			int width = 0, height = 0;
+			int cursorX = 0, cursorY = 0;
 
 			void initText(std::string& text, int fontSize);
 			void generateBuffers();

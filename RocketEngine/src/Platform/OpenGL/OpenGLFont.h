@@ -21,7 +21,7 @@ namespace RKTEngine
 
 	private:
 		TTAFont mFontHandle;
-		std::shared_ptr<RawTexture> rawTexture;
+		std::shared_ptr<RawTexture> rawTexture = nullptr;
 		unsigned char* mFontFileData = nullptr;
 	};
 }

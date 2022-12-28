@@ -82,7 +82,10 @@ namespace RKTEngine
 
 	void SceneManager::endScene(bool destroySceneData)
 	{
+#ifdef RKT_DEBUG
 		Serialization::serializeScene(mpActiveScene);
+#endif // !RKT_DEBUG
+
 		if (destroySceneData)
 		{
 			cleanActiveScene();
@@ -114,10 +117,10 @@ namespace RKTEngine
 				mpActiveScene = new Scene{ sceneName, std::vector<GameObject*>() };
 				mpActiveScene = Serialization::deserializeScene(sceneName);
 				mScenes[sceneName] = mpActiveScene;
-
-				if(mpActiveScene->uiManager.buttons.size() > 0)
-					mpActiveScene->uiManager.buttons[0]->setHighlighted(true);
 			}
+
+			if (mpActiveScene->uiManager.buttons.size() > 0)
+				mpActiveScene->uiManager.buttons[0]->setHighlighted(true);
 		}
 		else
 		{

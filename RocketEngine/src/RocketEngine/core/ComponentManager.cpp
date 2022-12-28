@@ -8,14 +8,14 @@
 
 namespace RKTEngine
 {
-	ComponentId ComponentManager::msNextMaterialComponentId = 0;
-	ComponentId ComponentManager::msNextSpriteComponentId = 0;
-	ComponentId ComponentManager::msNextTextComponentId = 0;
-	ComponentId ComponentManager::msNextTransformComponentId = 0;
-	ComponentId ComponentManager::msNextColliderComponentId = 0;
-	ComponentId ComponentManager::msNextAudioSourceComponentId = 0;
-	ComponentId ComponentManager::msNextNativeScriptComponentId = 0;
-	ComponentId ComponentManager::msNextButtonComponentId = 0;
+	ComponentId ComponentManager::msNextMaterialComponentId = 1;
+	ComponentId ComponentManager::msNextSpriteComponentId = 1;
+	ComponentId ComponentManager::msNextTextComponentId = 1;
+	ComponentId ComponentManager::msNextTransformComponentId = 1;
+	ComponentId ComponentManager::msNextColliderComponentId = 1;
+	ComponentId ComponentManager::msNextAudioSourceComponentId = 1;
+	ComponentId ComponentManager::msNextNativeScriptComponentId = 1;
+	ComponentId ComponentManager::msNextButtonComponentId = 1;
 
 	ComponentManager::ComponentManager(uint32 maxSize)
 		: mTransformPool(maxSize, sizeof(TransformComponent))
@@ -26,6 +26,13 @@ namespace RKTEngine
 		, mNativeScriptPool(maxSize, sizeof(NativeScriptComponent))
 		, mButtonPool(maxSize, sizeof(ButtonComponent))
 	{
+		mTransformComponentMap = std::map<ComponentId, TransformComponent*>();
+		mTextComponentMap = std::map<ComponentId, TextComponent*>();
+		mSpriteComponentMap = std::map<ComponentId, SpriteComponent*>();
+		mColliderComponentMap = std::map<ComponentId, BoxColliderComponent*>();
+		mAudioSourceComponentMap = std::map<ComponentId, AudioSourceComponent*>();
+		mNativeScriptComponentMap = std::map<ComponentId, NativeScriptComponent*>();
+		mButtonComponentMap = std::map<ComponentId, ButtonComponent*>();
 	}
 
 	ComponentManager::~ComponentManager()

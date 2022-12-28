@@ -43,7 +43,7 @@ namespace RKTEngine
 			virtual void onMessage(Message& message) {};
 			virtual bool onCollisionEnter(RKTEngine::CollisionEnterMessage& message);
 			
-			uint32 gameObjectId;
+			uint32 gameObjectId = 0;
 		private:
 			friend class ComponentManager;
 			friend class Serialization;

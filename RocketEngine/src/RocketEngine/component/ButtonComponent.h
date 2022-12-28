@@ -21,9 +21,9 @@ namespace RKTEngine
 		SpriteComponentData mHighlightSprite;
 		TextData mText;
 		bool mHighlighted;
-		ButtonCallbackVoid mCallbackVoid;
-		ButtonCallbackBool mCallbackBool;	//wip
-		ButtonCallbackInt mCallbackInt;		//wip
+		ButtonCallbackVoid mCallbackVoid = nullptr;
+		ButtonCallbackBool mCallbackBool = nullptr;		//wip
+		ButtonCallbackInt mCallbackInt = nullptr;		//wip
 
 		ButtonComponentData() : ComponentData()
 		{
@@ -116,7 +116,7 @@ namespace RKTEngine
 		AtlasCoordinateData mAtlasCoords, mHighlightAtlasCoords;
 		bool mAtlasInitialized = false, mHighlightAtlasInitialized = false;
 		SpriteRenderData mRenderInfo;
-		glm::mat4 mModelMatrix;
+		glm::mat4 mModelMatrix = glm::mat4(1);
 
 		AtlasCoordinateData calculateAtlasCoords(SpriteComponentData& sprData, int x, int y);
 		void loadSprite(SpriteComponentData& sprData, bool isHighlightSpr = false);

@@ -56,9 +56,9 @@ namespace RKTEngine
 	 ******************************************************************************/
 	struct TransformData : ComponentData
 	{
-		Rotation mRotation;	///< Transform rotation data
-		glm::vec2 mPosition;	///< Transform position value
-		glm::vec2 mScale;		///< Transform scale value
+		Rotation mRotation;						///< Transform rotation data
+		glm::vec2 mPosition = glm::vec2(0);		///< Transform position value
+		glm::vec2 mScale = glm::vec2(0);		///< Transform scale value
 
 		///Default constructor sets all values to zero
 		TransformData() : mPosition(glm::vec2(0,0)), mScale(glm::vec2(1,1)), mRotation() {};
@@ -159,7 +159,7 @@ namespace RKTEngine
 
 		private:
 			TransformData mTransformData;
-			bool mDataChanged;
+			bool mDataChanged= false;
 	};
 }
 #endif // !TRANSFORM_COMPONENT_H

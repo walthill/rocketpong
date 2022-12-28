@@ -46,7 +46,7 @@ class GameApp : public RKTUtil::Singleton<GameApp>
 		bool mIsRunning = false;
 		bool mDisplayFrameTime = false;
 		bool mShowFPS = false;
-		bool mRunSceneGenerator = true;
+		bool mSerializeAllScenes = true;
 
 		//Performance tracker data
 		RKTUtil::PerformanceTracker* pinitPerformanceTracker = nullptr;

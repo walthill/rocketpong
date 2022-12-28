@@ -3,6 +3,10 @@
 #include <RKTUtils/Profiling.h>
 #include "GameApp.h"
 
+#ifdef RKP_DIST
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#endif
+
 int main()
 {
 	RKT_LOGGER_INIT();

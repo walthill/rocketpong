@@ -36,12 +36,12 @@ namespace RKTEngine
 	struct SpriteComponentData : ComponentData
 	{
 		bool isLoaded;			///< Flag to set when model is loaded
-		std::string mSpriteName;  ///< Name of model to load
+		std::string mSpriteName = "";  ///< Name of model to load
 
-		std::string mTileName;
-		int mWidth, mHeight;
+		std::string mTileName = "";
+		int mWidth = 0, mHeight = 0;
 
-		Texture2D* pSprite;			///< Reference to the model
+		Texture2D* pSprite = nullptr;			///< Reference to the model
 		Color mColor;
 
 		///Default constructor sets all values to zero

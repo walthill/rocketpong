@@ -99,14 +99,14 @@ namespace RKTEngine
 			std::string name;
 
 		private:
-			uint32 mId;
-			ComponentId mSpriteId;
-			ComponentId mTransformId;
-			ComponentId mLabelId;
-			ComponentId mButtonId;
-			ComponentId mColliderId;
-			ComponentId mAudioSourceId;
-			ComponentId mNativeScriptId;
+			uint32 mId = 0;
+			ComponentId mSpriteId = 0;
+			ComponentId mTransformId = 0;
+			ComponentId mLabelId = 0;
+			ComponentId mButtonId = 0;
+			ComponentId mColliderId = 0;
+			ComponentId mAudioSourceId = 0;
+			ComponentId mNativeScriptId = 0;
 
 			TransformComponent* mpTransform = nullptr;
 
@@ -146,7 +146,7 @@ namespace RKTEngine
 			*
 			* @param transfromId Component identifier
 			*************************************************************************/
-			void connectTransform(ComponentId transfromId) { mTransformId = transfromId; }
+			void connectTransformId(const ComponentId& transfromId) { mTransformId = transfromId; }
 
 			/**********************************************************************//**
 			* Set GameObject's sprite id
@@ -225,7 +225,7 @@ namespace RKTEngine
 				auto aud = ZERO_AUDIO_SRC_DATA;
 				auto lbl = ZERO_LABEL_DATA;
 				auto btn = ZERO_BTN_DATA;
-				std::shared_ptr<Actor> pActor;
+				std::shared_ptr<Actor> pActor = nullptr;
 
 				archive(CEREAL_NVP(name), CEREAL_NVP(mId), cereal::make_nvp("TransformComponent", tr), cereal::make_nvp("SpriteComponent", spr),
 						cereal::make_nvp("BoxColliderComponent", box), cereal::make_nvp("AudioSourceComponent", aud), cereal::make_nvp("UILabelComponent", lbl),

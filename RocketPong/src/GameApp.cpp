@@ -48,9 +48,9 @@ void GameApp::beginInit()
 	mIsRunning = true;
 
 #ifdef RKP_DEBUG
-	mRunSceneGenerator = true;
+	mSerializeAllScenes = true;
 #else
-	mRunSceneGenerator = false;
+	mSerializeAllScenes = false;
 #endif // RKP_DEBUG
 
 }
@@ -71,18 +71,54 @@ void GameApp::endInit()
 void GameApp::loadStartupScene(const std::string& scene)
 {
 	RKT_PROFILE_FUNCTION();
-	RocketEngine->getSceneManager()->loadScene(scene);
+	RocketEngine->getSceneManager()->loadScene(scene, false);
 }
 
 void GameApp::generateSceneData(bool quitOnComplete)
 {
 	RKT_PROFILE_FUNCTION();
 
-	if (mRunSceneGenerator)
-	{
-		auto w = RocketEngine->getWindowWidth();
-		auto h = RocketEngine->getWindowHeight();
+	auto w = RocketEngine->getWindowWidth();
+	auto h = RocketEngine->getWindowHeight();
 
+	//start up scene
+	RocketEngine->getSceneManager()->beginScene("main");
+	{
+		GameObject* gameMan = GameObjManager->createActor();
+		gameMan->name = "UIManager";
+		gameMan->getNativeScript()->bind<UIManager>(gameMan->getId());
+		auto pUIManager = gameMan->getNativeScript()->get<UIManager>();
+		GameObjManager->addAudioSource(gameMan->getId(), "main");
+
+		GameObject* title = GameObjManager->createLabel("Pong Type-R", { w / 2 - 200, h / 5 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
+		title->name = "title-text";
+		GameObject* credits = GameObjManager->createLabel("a walter hill game", { 10, h - 32 }, glm::vec2(1.0f), 0, "Calibri", 18);
+		credits->name = "credits-text";
+
+		GameObject* main1 = GameObjManager->createButton();
+		main1->getButton()->setFontSize(22);
+		main1->getButton()->setFont("Arkitech-Medium");
+		main1->getButton()->setText("Play");
+		main1->getTransform()->setPosition({ w / 2, h / 2 - 64 });
+		GameObject* main2 = GameObjManager->createButton();
+		main2->getButton()->setFontSize(22);
+		main2->getButton()->setFont("Arkitech-Medium");
+		main2->getButton()->setText("Help");
+		main2->getTransform()->setPosition({ w / 2, h / 2 });
+		GameObject* main3 = GameObjManager->createButton();
+		main3->getButton()->setFontSize(22);
+		main3->getButton()->setFont("Arkitech-Medium");
+		main3->getButton()->setText("Quit");
+		main3->getTransform()->setPosition({ w / 2, h / 2 + 64 });
+
+		pUIManager->playButtonId = main1->getId();
+		pUIManager->controlsButtonId = main2->getId();
+		pUIManager->exitButtonId = main3->getId();
+	}
+	RocketEngine->getSceneManager()->endScene(false);	//keep startup scene in memory
+
+	if(mSerializeAllScenes)
+	{
 		RocketEngine->getSceneManager()->beginScene("game");
 		{
 			GameObject* gameMan = GameObjManager->createActor();
@@ -154,41 +190,6 @@ void GameApp::generateSceneData(bool quitOnComplete)
 		}
 		RocketEngine->getSceneManager()->endScene();
 
-		RocketEngine->getSceneManager()->beginScene("main");
-		{
-			GameObject* gameMan = GameObjManager->createActor();
-			gameMan->name = "UIManager";
-			gameMan->getNativeScript()->bind<UIManager>(gameMan->getId());
-			auto pUIManager = gameMan->getNativeScript()->get<UIManager>();
-			GameObjManager->addAudioSource(gameMan->getId(), "main");
-
-			GameObject* title = GameObjManager->createLabel("Pong Type-R", { w / 2 - 200, h / 5}, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
-			title->name = "title-text";
-			GameObject* credits = GameObjManager->createLabel("a walter hill game", { 10, h - 32 }, glm::vec2(1.0f), 0, "Calibri", 18);
-			credits->name = "credits-text";
-
-			GameObject* main1 = GameObjManager->createButton();
-			main1->getButton()->setFontSize(22);
-			main1->getButton()->setFont("Arkitech-Medium");
-			main1->getButton()->setText("Play");
-			main1->getTransform()->setPosition({ w / 2, h / 2 - 64});
-			GameObject* main2 = GameObjManager->createButton();
-			main2->getButton()->setFontSize(22);
-			main2->getButton()->setFont("Arkitech-Medium");
-			main2->getButton()->setText("Help");
-			main2->getTransform()->setPosition({ w / 2, h / 2});
-			GameObject* main3 = GameObjManager->createButton();
-			main3->getButton()->setFontSize(22);
-			main3->getButton()->setFont("Arkitech-Medium");
-			main3->getButton()->setText("Quit");
-			main3->getTransform()->setPosition({ w / 2, h / 2 + 64});
-
-			pUIManager->playButtonId = main1->getId();
-			pUIManager->controlsButtonId = main2->getId();
-			pUIManager->exitButtonId = main3->getId();
-		}
-		RocketEngine->getSceneManager()->endScene();
-
 		RocketEngine->getSceneManager()->beginScene("controls");
 		{
 			GameObject* gameMan = GameObjManager->createActor();
@@ -199,7 +200,7 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			GameObject* title = GameObjManager->createLabel("Help", { w / 2 - 64, h / 6 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 34);
 			title->name = "title-text";
 
-			GameObject* p1Text = GameObjManager->createLabel("Move: W/S + P/L Keys", {w / 3.5f, h / 2 - 128}, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
+			GameObject* p1Text = GameObjManager->createLabel("Move: W/S + P/L Keys", { w / 3.5f, h / 2 - 128 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
 			p1Text->name = "p1-text";
 			GameObject* p2Text = GameObjManager->createLabel("Fast Move: Shift Key", { w / 3.5f, h / 2 - 64 }, glm::vec2(1.0f), 0, "Arkitech-Medium", 18);
 			p2Text->name = "p2-text";
@@ -215,7 +216,6 @@ void GameApp::generateSceneData(bool quitOnComplete)
 			pUIManager->controlsBackButtonId = backButton->getId();
 		}
 		RocketEngine->getSceneManager()->endScene();
-
 	}
 
 	if (quitOnComplete)
@@ -310,8 +310,10 @@ bool GameApp::back(RKTEngine::KeyDownMessage& msg)
 		}
 		else if (RocketEngine->getSceneManager()->isActiveScene("controls"))
 			RocketEngine->getSceneManager()->loadScene("main");
+#ifdef RKP_DEBUG
 		else
 			mIsRunning = false;
+#endif
 	}
 	return true;
 }
