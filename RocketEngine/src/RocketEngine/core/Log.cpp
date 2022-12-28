@@ -28,7 +28,7 @@ namespace RKTEngine
 
 		std::vector<spdlog::sink_ptr> logSinks;
 		logSinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-		logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("RocketEngine.log", true));
+		logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("log.log", true));
 
 		logSinks[0]->set_pattern(coutPattern);
 		logSinks[1]->set_pattern(foutPattern);
