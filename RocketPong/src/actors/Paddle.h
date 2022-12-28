@@ -20,7 +20,7 @@ class Paddle : public RKTEngine::Actor
 	private:
 		float mSpeed = 20;
 		float mAISpeed = 4;
-		float mAISpeedPercent = 0.43f;
+		float mAISpeedPercent = 0.4f;
 		float mSprintScaler = 1.5f;
 		int mAIControlThreshold = 15;
 		bool mSprinting = false;

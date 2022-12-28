@@ -82,10 +82,10 @@ bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
 				auto racketPos = other->getTransform()->getPosition();
 
 				//help from https://www.noobtuts.com/cpp/2d-pong-game	
-				mDir = glm::normalize(ballPos);
+				//mDir = glm::normalize(ballPos);
 				auto ballMag = glm::length(ballPos);
 				float t = ((ballPos.y - racketPos.y) / other->getHeight());
-				mDir.x = 1;
+				mDir.x = -mDir.x;
 				mDir.y = t;
 
 				getGameObject()->getAudioSource()->play();
@@ -111,10 +111,10 @@ bool Ball::onCollisionEnter(RKTEngine::CollisionEnterMessage& message)
 				auto ballPos = getTransform()->getPosition();
 				auto racketPos = other->getTransform()->getPosition();
 
-				mDir = glm::normalize(ballPos);
+				//mDir = glm::normalize(ballPos);
 				auto ballMag = glm::length(ballPos);
 				float t = ((ballPos.y - racketPos.y) / other->getHeight());
-				mDir.x = -1;
+				mDir.x = -mDir.x;
 				mDir.y = t;
 
 				getGameObject()->getAudioSource()->play();
